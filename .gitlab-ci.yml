@@ -1,0 +1,65 @@
+stages:
+  - lint
+  - build
+  - deploy
+  - prepare_deploy
+
+cache:
+  paths:
+    - node_modules/
+
+check:
+  stage: lint
+  script:
+    - echo "Test typescript types"
+    - yarn check-types
+
+build:
+  stage: build
+  script:
+    - echo "Building deploy package"
+    - yarn install
+    - yarn build
+    - echo "Build successful"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - build
+      - dist
+  allow_failure: false
+
+deploy_production:
+  stage: deploy
+  script:
+    - echo "Copy config for deploy package"
+    - rm ./config.ts
+    - rm ./src/index.html
+    - mv -f ./config-prod.ts ./config.ts
+    - mv -f ./src/index-prod.html ./src/index.html
+
+    - echo "Building deploy package"
+    - yarn install
+    - yarn build
+    - echo "Build successful"
+
+    - echo "Deploying to server"
+    - mkdir -p /var/www/$CI_PROJECT_NAME
+    - rm -rf /var/www/$CI_PROJECT_NAME
+    - cp -rv ./dist /var/www/$CI_PROJECT_NAME
+    # - cp -rv ./node_modules /var/www/$CI_PROJECT_NAME
+    - echo "Deployed"
+  only:
+    - master
+    # when: manual
+
+deploy_dev:
+  stage: deploy
+  script:
+    - echo "Deploying to server"
+    - mkdir -p /var/www/$CI_PROJECT_NAME
+    - rm -rf /var/www/dev_$CI_PROJECT_NAME
+    - cp -rv ./dist /var/www/dev_$CI_PROJECT_NAME
+    # - cp -rv ./node_modules /var/www/dev_$CI_PROJECT_NAME
+    - echo "Deployed"
+  only:
+    - dev
