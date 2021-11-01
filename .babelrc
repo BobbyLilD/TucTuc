@@ -1,4 +1,8 @@
 {
   "presets": ["@babel/env", "@babel/react", "@babel/typescript", "mobx"],
-  "plugins": ["@emotion"]
+  "plugins": [
+    "@emotion",
+    ["@babel/plugin-proposal-private-methods", { "loose": true }],
+    ["@babel/plugin-proposal-private-property-in-object", { "loose": true }]
+  ]
 }

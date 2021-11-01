@@ -122,8 +122,6 @@ if (isProd) {
     open: true,
     hot: true,
     compress: true,
-    stats: 'errors-only',
-    overlay: true,
     // allowedHosts: ['all', '192.168.1.46'],
   };
 }
