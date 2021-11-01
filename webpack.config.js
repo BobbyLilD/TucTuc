@@ -83,12 +83,25 @@ const config = {
           name: 'static/js/[name].[hash:8].[ext]',
         },
       },
+      {
+        test: /locales\/.*\.(json)$/,
+        type: 'javascript/auto',
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[folder]/[name].[ext]',
+              outputPath: 'locales/',
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       filename: build.HTML1.filename,
-      title: 'Web Starter',
+      title: 'HandWriter - пишет от руки за тебя!',
       favicon: 'src/resources/images/common/favicon.svg',
       template: build.HTML1.template,
       chunks: ['index', 'vendors'],

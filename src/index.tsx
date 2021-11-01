@@ -10,6 +10,7 @@ import ServiceStatusStore from './stores/serviceStatusStore';
 import { isDesktop, isMobile, isTablet } from 'react-device-detect';
 import MobileApp from './MobileApp';
 import './styles.scss';
+import './i18n';
 
 const mainStore = new MainStore();
 
