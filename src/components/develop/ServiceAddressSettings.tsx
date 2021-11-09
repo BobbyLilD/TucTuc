@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { IoPulseOutline } from 'react-icons/io5';
-import { Button } from '../common/StyledComponents';
+import { Button, Card } from '@mui/material';
 
 type ServiceAdressSettingsProps = {
   serviceName: string;
-  getEndPoint: () => string;
-  setEndPoint: (string) => string | null;
-  onClick: () => void;
+  defaultUrl: string;
   status: string;
+  endPoint: string;
+  setEndPoint: (string) => void;
+  onClick: () => void;
 };
 
-const ComponentContainer = styled.div`
+const ComponentContainer = styled(Card)`
   padding: 15px;
 `;
 
@@ -34,19 +35,28 @@ const StyledStatusConteiner = styled.span`
   }
 `;
 
-export const ServiceAdressSettings = (props: ServiceAdressSettingsProps): JSX.Element => {
-  const [endPointState, setEndPointState] = useState<string>();
-  const [endPointCurrent, setEndPointCurrent] = useState<string>(props.getEndPoint);
+export const ServiceAddressSettings = ({
+  serviceName,
+  status,
+  defaultUrl,
+  endPoint,
+  setEndPoint,
+  onClick,
+}: ServiceAdressSettingsProps): JSX.Element => {
+  const [endPointState, setEndPointState] = useState<string>(defaultUrl);
+  const [endPointCurrent, setEndPointCurrent] = useState<string>(endPoint);
+
+  console.log(serviceName + ' ' + status);
 
   return (
     <ComponentContainer>
       <div>
-        <span>{`${props.serviceName}`}</span>
+        <span>{`${serviceName}`}</span>
         <StyledStatusConteiner>
-          {props.status == '200' ? (
+          {status == '200' ? (
             <IoPulseOutline size="25" />
           ) : (
-            <label style={{ color: 'red' }}>{props.status}</label>
+            <label style={{ color: 'red' }}>{status}</label>
           )}
         </StyledStatusConteiner>
       </div>
@@ -55,19 +65,20 @@ export const ServiceAdressSettings = (props: ServiceAdressSettingsProps): JSX.El
           <label>End point:</label>
           <StyledInput
             type="string"
-            defaultValue="https://"
+            defaultValue={defaultUrl}
             onChange={(e: any) => setEndPointState(e.target.value)}
           />
           <label>{`CurrentEndPoint: ${endPointCurrent}`}</label>
         </div>
         <Button
           onClick={() => {
+            console.log('change');
             if (endPointState) {
-              const result = props.setEndPoint(endPointState);
-              if (result) {
-                setEndPointCurrent(endPointState);
-              }
-              props.onClick();
+              console.log('change');
+
+              setEndPoint(endPointState);
+              setEndPointCurrent(endPointState);
+              onClick();
             }
           }}
         >

@@ -1,38 +1,55 @@
-import { inject, Observer } from 'mobx-react';
+import styled from '@emotion/styled';
+import { inject } from 'mobx-react';
 import React from 'react';
-import { changeDocumentsEndPoint, getDocumentsEndPoint } from '../../api/apiClient';
+import { storeApi } from '../../api/apiClient';
+import { storeRawApi } from '../../api/apiConfig';
 import { Stores } from '../../types';
-import { ServiceAdressSettings } from './ServiceAdressSettings';
+import { ServiceAddressSettings } from './ServiceAddressSettings';
 
 type ServiceStatusPanelProps = {
   converterStatus: string;
   storeStatus: string;
+  documentsStatus: string;
   pingServices: () => void;
 };
 
-const ServiceStatusPanel = (props: ServiceStatusPanelProps) => {
+const ServiceStatusContainer = styled.div`
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 30px;
+  overflow-y: scroll;
+  padding-right: 7px;
+  margin-right: -7px;
+  > * {
+    margin-bottom: 10px;
+  }
+`;
+
+const ServiceStatusPanel = ({
+  converterStatus,
+  storeStatus,
+  documentsStatus,
+  pingServices,
+}: ServiceStatusPanelProps) => {
   return (
-    <Observer>
-      {() => (
-        <>
-          <ServiceAdressSettings
-            serviceName="Converter"
-            getEndPoint={getDocumentsEndPoint}
-            setEndPoint={changeDocumentsEndPoint}
-            onClick={() => {
-              props.pingServices();
-            }}
-            status={props.converterStatus}
-          />
-          <div>{`Store: ${props.storeStatus}`}</div>
-        </>
-      )}
-    </Observer>
+    <ServiceStatusContainer>
+      <ServiceAddressSettings
+        defaultUrl="http://127.0.0.1:3001"
+        serviceName="Store"
+        endPoint={storeApi.getUrl()}
+        setEndPoint={(url: string) => storeApi.changeClient(url, storeRawApi)}
+        onClick={() => {
+          pingServices();
+        }}
+        status={storeStatus}
+      />
+    </ServiceStatusContainer>
   );
 };
 
-export default inject((stores: Stores) => ({
-  converterStatus: stores.serviceStatusStore.converterStatus,
-  storeStatus: stores.serviceStatusStore.storeStatus,
-  pingServices: stores.serviceStatusStore.pingServices,
+export default inject(({ serviceStatusStore }: Stores) => ({
+  storeStatus: serviceStatusStore.storeStatus,
+  pingServices: serviceStatusStore.pingServices,
 }))(ServiceStatusPanel);

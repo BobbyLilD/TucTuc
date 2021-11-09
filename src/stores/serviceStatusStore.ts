@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { action, makeObservable, observable } from 'mobx';
-import { pingDocuments, pingStore } from '../api/apiClient';
+import { storeApi } from '../api/apiClient';
 
 class ServiceStatusStore {
   converterStatus: number | undefined;
@@ -16,12 +16,8 @@ class ServiceStatusStore {
   }
 
   pingServices = () => {
-    pingDocuments()
-      .then((response: AxiosResponse) => (this.converterStatus = response.status))
-      .catch((error) => {
-        this.converterStatus = error.message;
-      });
-    pingStore()
+    storeApi
+      .ping()
       .then((response: AxiosResponse) => {
         this.storeStatus = response.status;
       })
