@@ -6,11 +6,15 @@ import { Provider } from 'mobx-react';
 import OptionsStore from './stores/optionsStore';
 import MainStore from './stores/mainStore';
 import ServiceStatusStore from './stores/serviceStatusStore';
+import UserStore from './stores/userStore';
+import AdminPanelStore from './stores/adminPanelStore';
+import ClientStore from './stores/clientStore';
 
 import { isDesktop, isMobile, isTablet } from 'react-device-detect';
 import MobileApp from './MobileApp';
 import './styles.scss';
 import './i18n';
+import RestaurantsStore from './stores/restaurantsStore';
 
 const mainStore = new MainStore();
 
@@ -18,6 +22,10 @@ const stores = {
   mainStore: mainStore,
   optionsStore: new OptionsStore(),
   serviceStatusStore: new ServiceStatusStore(),
+  userStore: new UserStore(),
+  adminPanelStore: new AdminPanelStore(),
+  clientStore: new ClientStore(),
+  restaurantsStore: new RestaurantsStore(),
 };
 
 ReactDOM.render(

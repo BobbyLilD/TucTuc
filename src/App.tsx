@@ -4,16 +4,17 @@ import Home from './view/desktop/Home';
 import { css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
 import { light } from './commons/colors';
+import AdminPanel from './view/desktop/AdminPanel';
+import ClientBase from './view/desktop/ClientBase';
 
 const AppContainer = styled.div`
   height: 100%;
-  padding: 20px 20px 0px 20px;
-  display: flex;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   flex-direction: column;
+  font-family: Arial
 `;
 
 export default function App() {
@@ -29,7 +30,8 @@ export default function App() {
       />
       <AppContainer>
         <Switch>
-          <Route path="/" component={Home} />
+          <Route path="/admin" component={AdminPanel}/>
+          <Route path='/' component={ClientBase}/>
         </Switch>
       </AppContainer>
     </>

@@ -17,7 +17,8 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "typeRoots": ["node_modules/@types", "src/types"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": "src"
   },
-  "include": ["src/types/*d.ts"]
+  "include": ["src/types/*d.ts", "src"]
 }
