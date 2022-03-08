@@ -20,9 +20,9 @@ const StyledIcon = styled.img`
 
 const CardComponent = () => {
   return (
-    <Card sx={{ minWidth: 296, maxWidth: 296, borderRadius: '12px' }}>
+    <Card sx={{ minWidth: 296, width: 364, borderRadius: '12px' }}>
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography variant="h5" fontWeight={600}>
           Soup
         </Typography>
         <Box sx={StyledContainer}>

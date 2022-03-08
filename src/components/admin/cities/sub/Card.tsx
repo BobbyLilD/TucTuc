@@ -8,7 +8,7 @@ const CardComponent = () => {
   return (
     <Card sx={{ minWidth: 0, width: '340px' }}>
       <CardContent>
-        <Typography variant='h5' sx={{marginBottom: 1}}>
+        <Typography variant='h5' fontWeight={600} sx={{marginBottom: 1}}>
           Москва
         </Typography>
         <Typography variant="h6" component="div">

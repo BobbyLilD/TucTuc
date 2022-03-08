@@ -7,6 +7,7 @@ import Footer from '../base/Footer';
 import InfoForm from './sub/InfoForm';
 import OrderCard from './sub/OrderCard';
 import OrderList from './sub/OrderList';
+import {useHistory} from 'react-router-dom';
 
 const containerWidth = 450;
 
@@ -49,9 +50,20 @@ type ProfileComponentProps = {
   changeOrderState: () => void;
   infoFormShow: boolean;
   changeFormState: () => void;
+  deleteAccessToken: () => void;
+  name: string;
+  surname: string;
+  phone: string;
+  email: string;
 };
 
-const ProfileComponent = ({ orderListShow, changeOrderState, infoFormShow, changeFormState }: ProfileComponentProps) => {
+const ProfileComponent = ({ orderListShow, changeOrderState, infoFormShow, changeFormState, deleteAccessToken, name, surname, email, phone }: ProfileComponentProps) => {
+  let history = useHistory();
+  const logout = () => {
+    deleteAccessToken();
+    history.push('/restaurants');
+  }
+
   return (
     <>
       <Box sx={{ paddingX: '18%' }}>
@@ -73,17 +85,17 @@ const ProfileComponent = ({ orderListShow, changeOrderState, infoFormShow, chang
                   Личные данные
                 </Typography>
                 <Typography variant="subtitle2" sx={{ marginBottom: 1, color: 'gray' }}>
-                  Имя: Тод Говард
+                  Имя: {`${name} ${surname}`}
                 </Typography>
                 <Typography variant="subtitle2" sx={{ marginBottom: 1, color: 'gray' }}>
-                  Номер телефона: +7(911) 164 86 54
+                  Номер телефона: {phone}
                 </Typography>
                 <Typography variant="subtitle2" sx={{ marginBottom: 1, color: 'gray' }}>
-                  E-mail: bethesda@gmail.com
+                  E-mail: {email}
                 </Typography>
                 <Box sx={{ display: 'flex', marginTop: 1, width: '100%' }}>
                   <Button sx={WhiteBaseButton} onClick={changeFormState}>Редактировать</Button>
-                  <Button sx={OrangeBaseButton}> Выйти</Button>
+                  <Button sx={OrangeBaseButton} onClick={logout}> Выйти</Button>
                 </Box>
               </Paper>
               <Paper elevation={4} sx={PaperBase}>
@@ -107,9 +119,14 @@ const ProfileComponent = ({ orderListShow, changeOrderState, infoFormShow, chang
   );
 };
 
-export default inject(({ clientStore }: Stores) => ({
+export default inject(({ clientStore,userStore }: Stores) => ({
   orderListShow: clientStore.showOrderList,
   changeOrderState: clientStore.changeShowOrderList,
   infoFormShow: clientStore.showInfoForm,
-  changeFormState: clientStore.changeShowInfoForm
+  changeFormState: clientStore.changeShowInfoForm,
+  deleteAccessToken: userStore.deleteAccessToken,
+  name: userStore.name,
+  surname: userStore.surname,
+  phone: userStore.phoneNum,
+  email: userStore.email
 }))(ProfileComponent);

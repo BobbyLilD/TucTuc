@@ -5,16 +5,16 @@ class UserStore{
     access_token: string | undefined | null;
     name: string | undefined;
     surname: string | undefined;
+    phoneNum: string | undefined;
+    email: string | undefined;
 
     showClientAuth: boolean;
 
-    phoneNum: string | undefined;
     phoneValid: boolean;
     messageCode: string | undefined;
 
     setPhoneNum = (phone: string) => {
-        this.phoneNum = phone;
-        this.phoneValid = true;
+        this.phoneValid = !this.phoneValid;
     }
 
     setMessageCode = (code: string) => {
@@ -25,18 +25,38 @@ class UserStore{
         this.showClientAuth = !this.showClientAuth;
     }
 
+    changeAccessToken = (token: string) => {
+        this.access_token = token;
+        console.log('token set!');
+        localStorage.setItem('accessToken', token);
+        console.log(this.access_token);
+    }
+
+    deleteAccessToken = () => {
+        localStorage.removeItem('accessToken');
+        this.access_token = undefined;
+    }
+
+    changeName = (name: string) => {
+        this.name = name;
+    }
+
+    changeSurname = (surname: string) => {
+        this.surname = surname;
+    }
+
     constructor() {
+        this.name='Тод';
+        this.surname='Говард';
+        this.phoneNum='+7(916)746-85-22';
+        this.email='bethesda@gmail.com';
+
         this.phoneValid = false;
         this.showClientAuth = false;
         if (localStorage.getItem('accessToken')!= null){
             console.log('token found');
             this.access_token = localStorage.getItem('accessToken');
             console.log(this.access_token);
-        }
-
-        {
-            this.name = 'Иван';
-            this.surname = 'Иванов';
         }
 
         makeObservable(this, {
@@ -63,25 +83,7 @@ class UserStore{
         })
     }
 
-    changeAccessToken = (token: string) => {
-        this.access_token = token;
-        console.log('token set!');
-        localStorage.setItem('accessToken', token);
-        console.log(this.access_token);
-    }
 
-    deleteAccessToken = () => {
-        localStorage.removeItem('accessToken');
-        this.access_token = undefined;
-    }
-
-    changeName = (name: string) => {
-        this.name = name;
-    }
-
-    changeSurname = (surname: string) => {
-        this.surname = surname;
-    }
 }
 
 export default UserStore;

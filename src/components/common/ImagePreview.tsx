@@ -15,7 +15,7 @@ border-radius: 12px;
 const ImagePreview = () => {
     return(
         <Box sx={{position: 'relative', width: 'fit-content', height: 'fit-content'}}>
-            <Button sx={{position:'absolute', top: 0, right: 0, color: "white", minWidth: 0, paddingRight: 1}}>X</Button>
+            <Button sx={{position:'absolute', top: 0, right: 0, color: "white", minWidth: 0, paddingRight: 1, color: 'red'}}>X</Button>
             <StyledImage src={imageDefault}/>
             {/* https://adstandards.com.au/sites/default/files/food_and_beverage.svg */}
         </Box>

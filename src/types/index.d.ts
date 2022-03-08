@@ -44,13 +44,14 @@ export type Color = {
 
 export type Restaurant = {
   name: string;
-  items: Map<string,Item> | undefined;
+  items: Item[];
   rating: number;
   categories: string[];
   delivery: number;
 }
 
 export type Item = {
+  id: string;
   name: string;
   description: string;
   price: number;
@@ -63,4 +64,57 @@ export type CartItem = {
   quantity: number;
   price: number;
   restaurantID: string;
+}
+
+export type Order = {
+  name: string | undefined;
+  surname: string | undefined;
+  phone: string | undefined;
+  address: string | undefined;
+  flat: string | undefined;
+  floor: number | undefined;
+  entranceCode: string | undefined;
+  promocode: string | undefined;
+  paymentMethod: string | undefined;
+  comment: string | undefined;
+  items: string[] | undefined;
+  servings: string | undefined;
+  deliveryPrice: string | undefined;
+  date: Date | undefined;
+}
+
+export type City = {
+  id: string;
+  name: string;
+  places: number;
+}
+
+export type Category = {
+  id: string;
+  name: string;
+  iconLocation: string;
+  items: number;
+}
+
+export type Client = {
+  id: string;
+  phone: string;
+  name: string;
+  email: string;
+}
+
+export type Admin = {
+  id: string;
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+}
+
+export type Place = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  photoLocation: string;
 }

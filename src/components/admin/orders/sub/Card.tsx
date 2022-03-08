@@ -16,14 +16,14 @@ const CardComponent = () => {
     <Card
       sx={{
         minWidth: 296,
-        maxWidth: 296,
+        width: 364,
         height: 296,
         // border: `1px solid ${orange[500]}`,
         position: 'relative',
       }}
     >
       <CardContent sx={{paddingTop: 2}}>
-        <Typography variant="h5">ID: 3904738403</Typography>
+        <Typography variant="h5" fontWeight={600}>ID: 3904738403</Typography>
         <Typography variant='h6' paddingTop={1}>
           Москва
         </Typography>
@@ -31,10 +31,10 @@ const CardComponent = () => {
           McDonald's
         </Typography>
         <Typography variant='subtitle1' paddingTop={1}>
-          Количество товаров - 6
+          Кол-во товаров: 6
         </Typography>
         <Typography variant='subtitle1' paddingTop={1}>
-          Количество персон - 3
+          Кол-во персон: 3
         </Typography>
         <Typography variant='subtitle1' paddingY={1}>
           7839 + 311 = 3834р.

@@ -6,6 +6,8 @@ import CartItem from '../common/CartItem';
 import { CartItem as cartItem, Stores } from '../../../types';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import {useHistory} from 'react-router-dom';
+import {IncDecButton, Icon} from '../../common/StyledComponents';
 
 type CartDrawerProps = {
   shown: boolean;
@@ -37,21 +39,6 @@ const DrawerSX = {
   paddingX: '5%',
 };
 
-const IncDecButton = {
-  p: 0,
-  minWidth: 0,
-  borderRadius: '60px',
-  ':hover': {
-      backgroundColor: 'white'
-  },
-  marginX: 1,
-};
-
-const Icon = {
-  color: 'orange',
-  fontSize: 16,
-};
-
 const OrderButton = {
     backgroundColor: 'orange',
     marginTop: 2,
@@ -65,8 +52,14 @@ const CartDrawer = ({ shown, changeShowState, cart, addServing, removeServing, s
   let items = [];
   for(let key of cart.keys()){
     items.push(
-      <CartItem item={cart.get(key)} itemID={key}/>
+      <CartItem itemID={key}/>
     )
+  }
+
+  let histoty = useHistory();
+  const forwardOrder = () => {
+    histoty.push('/order')
+    changeShowState()
   }
 
   return (
@@ -107,7 +100,7 @@ const CartDrawer = ({ shown, changeShowState, cart, addServing, removeServing, s
           <Typography variant="subtitle2">Итого</Typography>
           <Typography variant="subtitle2">{orderSum} руб.</Typography>
         </Box>
-        <Button sx={OrderButton}>Оформить заказ</Button>
+        <Button sx={OrderButton} onClick={forwardOrder}>Оформить заказ</Button>
       </Box>
     </Drawer>
   );

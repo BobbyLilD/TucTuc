@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { CartItem, Item, Restaurant } from '../types';
+import { CartItem, Item, Order, Restaurant } from '../types';
 
 class ClientStore {
     showCart: boolean;
@@ -9,6 +9,9 @@ class ClientStore {
     servings: number;
     orderSum: number;
     deliveryPrice: number;
+    newOrder: Order;
+    orderList: Map<string, Order>;
+
     changeShowCart = () =>{
         this.showCart = !this.showCart;
     }
@@ -54,6 +57,23 @@ class ClientStore {
     }
 
     constructor() {
+        this.newOrder = {
+            name: undefined,
+            surname: undefined,
+            phone: undefined,
+            address: undefined,
+            flat: undefined,
+            floor: undefined,
+            entranceCode: undefined,
+            promocode: undefined,
+            paymentMethod: undefined,
+            comment: undefined,
+            items: undefined,
+            servings: undefined,
+            deliveryPrice: undefined,
+            date: undefined,
+        };
+        this.orderList = new Map();
         this.deliveryPrice = 500;
         this.orderSum = 0 + this.deliveryPrice;
         this.servings = 1;
@@ -79,7 +99,8 @@ class ClientStore {
             addServing: action,
             removeServing: action,
 
-            orderSum: observable
+            orderSum: observable,
+
         })
     }
 }

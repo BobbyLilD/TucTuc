@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import { inject } from 'mobx-react';
-import React from 'react';
+import React, {} from 'react';
 import { Stores } from '../../../types';
 import SearchBlock from '../../common/SearchBlock';
 import AdminsForm from './sub/AdminsForm';
@@ -10,9 +10,11 @@ import {AdminContentSubContainer} from '../../common/StyledComponents';
 type AdminsProps = {
   adminAdd: boolean;
   adminAddChange: () => void;
+  
 };
 
-const adminsComponent = ({ adminAdd, adminAddChange }: AdminsProps) => {
+const adminsComponent = ({ adminAdd, adminAddChange, }: AdminsProps) => {
+
   return (
     <Box>
       {adminAdd ? (

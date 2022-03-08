@@ -14,10 +14,10 @@ const ItemGrid = ({ restaurants }: ItemGridProps) => {
   console.log(id);
 
   let cards = [];
-  for (let key of restaurants.get(id).items.keys()) {
+  for (let value of restaurants.get(id).items) {
     cards.push(
       <Grid item xs={4}>
-        <ItemCard itemKey={key} restaurantID={id}/>
+        <ItemCard item={value} restaurantID={id}/>
       </Grid>,
     );
   }

@@ -1,67 +1,58 @@
-import styled from '@emotion/styled';
-import { AppBar, Button, Paper, Toolbar, Typography } from '@mui/material';
-import { Box, flexbox } from '@mui/system';
+import {
+  AppBar,
+  Button,
+  Paper,
+  ToggleButton,
+  ToggleButtonGroup,
+  Toolbar,
+  Typography,
+} from '@mui/material';
+import { Box } from '@mui/system';
 import React from 'react';
 import banner from '../../../../commons/banner.jpeg';
-import { Search, StyledInputBase } from '../../../common/StyledComponents';
+import { Search, StyledInputBase, StyledNavLink } from '../../../common/StyledComponents';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SearchIcon from '@mui/icons-material/Search';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
+import {
+  CityButton,
+  ControlDiv,
+  containerHeight,
+  CategoryBox,
+  CategoryBoxContainer,
+  StyledImage,
+} from './StyledComponents';
+import { inject } from 'mobx-react';
+import { Stores } from '../../../../types';
 
-const containerHeight = '260px';
-const paddingPercentage = 22;
-
-const ControlDiv = styled.div`
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: calc(100vw * (1 - (${paddingPercentage} / 50)));
-  height: 100%;
-  margin-left: ${paddingPercentage}%;
-  margin-right: ${paddingPercentage}%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: start;
-`;
-
-const StyledImage = styled.img`
-  width: 100%;
-  height: ${containerHeight};
-  object-fit: cover;
-`;
-
-const CategoryBoxContainer = {
-  display: 'flex',
-  width: `calc(100vw * (1 - (${paddingPercentage} / 50)))`,
-  overflow: 'scroll',
-  height: 'fit-content',
-  justifyContent: 'start',
-  marginBottom: 0.5
+type ControlBlockProps = {
+  categories: string[];
+  selectedCategories: string[];
+  selectCategories: (categories: string[]) => void;
+  changeSearchQuery: (query: string) => void;
 };
 
-const CategoryBox = {
-  minWidth: 120,
-  width: 'fit-content',
-  height: 50,
-  color: 'black',
-  'text-transform': 'none',
-  fontSize: 14,
-  marginX: 1,
-  'white-space': 'nowrap'
-};
+const activeCategory = { ...CategoryBox, ...{ color: 'orange' } };
 
-const CityButton = {
-  marginLeft: 1,
-  color: 'black',
-  'text-transform': 'none',
-  fontSize: 16,
-};
+const ControlBlock = ({
+  categories,
+  selectCategories,
+  selectedCategories,
+  changeSearchQuery,
+}: ControlBlockProps) => {
+  let items = [];
+  for (let key of categories) {
+    items.push(
+      <ToggleButton sx={CategoryBox} value={key} aria-label="bold">
+          <FastfoodIcon sx={{ marginRight: 1 }} />
+          {key}
+      </ToggleButton>
+    );
+  }
 
-const ControlBlock = () => {
   return (
     <>
-      <Box sx={{ position: 'relative', height: containerHeight}}>
+      <Box sx={{ position: 'relative', height: containerHeight }}>
         <ControlDiv>
           <AppBar
             position="static"
@@ -79,6 +70,9 @@ const ControlBlock = () => {
                     fontSize: 14,
                     paddingY: 0.5,
                   }}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    changeSearchQuery(event.target.value);
+                  }}
                 />
                 <Button sx={{ position: 'absolute', top: 4, right: 0, color: 'gray', minWidth: 0 }}>
                   <SearchIcon />
@@ -90,36 +84,16 @@ const ControlBlock = () => {
             <LocationOnIcon sx={{ marginRight: 1 }} />
             Санкт-Петербург
           </Button>
-          <Box sx={CategoryBoxContainer}>
-            <Button sx={CategoryBox}>
-              <FastfoodIcon sx={{ marginRight: 1 }} />
-              Фаст фуд
-            </Button>
-            <Button sx={CategoryBox}>
-              <FastfoodIcon sx={{ marginRight: 1 }} />
-              Фаст-фуд
-            </Button>
-            <Button sx={CategoryBox}>
-              <FastfoodIcon sx={{ marginRight: 1 }} />
-              Фаст-фуд
-            </Button>
-            <Button sx={CategoryBox}>
-              <FastfoodIcon sx={{ marginRight: 1 }} />
-              Фаст-фуд
-            </Button>
-            <Button sx={CategoryBox}>
-              <FastfoodIcon sx={{ marginRight: 1 }} />
-              Фаст-фуд
-            </Button>
-            <Button sx={CategoryBox}>
-              <FastfoodIcon sx={{ marginRight: 1 }} />
-              Фаст-фуд
-            </Button>
-            <Button sx={CategoryBox}>
-              <FastfoodIcon sx={{ marginRight: 1 }} />
-              Фаст-фуд
-            </Button>
-          </Box>
+          {/* <Box sx={CategoryBoxContainer}>{items}</Box> */}
+          <ToggleButtonGroup
+            value={selectedCategories}
+            onChange={(event: React.MouseEvent<HTMLElement>, newCategories) => {
+              selectCategories(newCategories);
+            }}
+            sx={CategoryBoxContainer}
+          >
+            {items}
+          </ToggleButtonGroup>
         </ControlDiv>
         <StyledImage src={banner} />
       </Box>
@@ -127,4 +101,9 @@ const ControlBlock = () => {
   );
 };
 
-export default ControlBlock;
+export default inject(({ restaurantsStore }: Stores) => ({
+  categories: restaurantsStore.categories,
+  selectCategories: restaurantsStore.selectCategories,
+  selectedCategories: restaurantsStore.selectedCategories,
+  changeSearchQuery: restaurantsStore.changeSearchQuery,
+}))(ControlBlock);

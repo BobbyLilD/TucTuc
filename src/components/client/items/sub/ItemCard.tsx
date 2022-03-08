@@ -4,12 +4,12 @@ import { Box } from '@mui/system';
 import React from 'react';
 import FoodDefault from '../../../../commons/food-example.jpeg';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import { Item, Restaurant, Stores } from '../../../../types';
+import { Item, Stores } from '../../../../types';
 import { inject } from 'mobx-react';
 
 const StyledImage = styled.img`
   width: 100%;
-  height: 200px;
+  height: 140px;
   object-fit: cover;
   border-radius: inherit;
 `;
@@ -48,14 +48,21 @@ const Badge = {
 };
 
 type ItemCardProps = {
-  itemKey: string;
+  item: Item;
   restaurantID: string;
-  restaurants: Map<string, Restaurant>;
   addToCart: (id: string, name: string, price: number, restaurantID: string) => void;
+  accessToken: string;
+  changeAuthState: () => void;
 };
 
-const ItemCard = ({ itemKey, restaurantID, restaurants, addToCart }: ItemCardProps) => {
-  const item = restaurants.get(restaurantID).items.get(itemKey);
+const ItemCard = ({ item, restaurantID, addToCart, accessToken, changeAuthState }: ItemCardProps) => {
+  const checkAndAdd = (id: string, name: string, price: number, restaurantID: string) => {
+      if(accessToken != undefined){
+          addToCart(id,name,price,restaurantID);
+      } else {
+         changeAuthState();
+      }
+  }
 
   return (
     <Card sx={{ minWidth: 0, width: 'fit-content', position: 'relative' }}>
@@ -63,14 +70,14 @@ const ItemCard = ({ itemKey, restaurantID, restaurants, addToCart }: ItemCardPro
       <StyledImage src={FoodDefault} />
       <CardContent sx={ContentContainer}>
         <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-          <Typography fontSize={12}>{item.category}</Typography>
+          <Typography fontSize={11}>{item.category}</Typography>
           <MenuBookOutlinedIcon sx={{ marginLeft: 0.5, fontSize: 20 }} />
         </Box>
         <Typography variant="h6" marginTop={1}>
           {' '}
           {item.name}
         </Typography>
-        <Typography fontSize={14} color={'gray'} width="85%">
+        <Typography fontSize={12} color={'gray'} width="85%">
           {item.description}
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 1 }}>
@@ -79,7 +86,7 @@ const ItemCard = ({ itemKey, restaurantID, restaurants, addToCart }: ItemCardPro
           </Typography>
           <Button
             sx={CartButton}
-            onClick={() => addToCart(itemKey, item.name, item.price, restaurantID)}
+            onClick={() => checkAndAdd(item.id, item.name, item.price, restaurantID)}
           >
             В корзину
           </Button>
@@ -89,7 +96,8 @@ const ItemCard = ({ itemKey, restaurantID, restaurants, addToCart }: ItemCardPro
   );
 };
 
-export default inject(({ clientStore, restaurantsStore }: Stores) => ({
+export default inject(({ clientStore, restaurantsStore, userStore }: Stores) => ({
   addToCart: clientStore.addItemToCart,
-  restaurants: restaurantsStore.resultingList,
+  accessToken: userStore.access_token,
+  changeAuthState: userStore.changeClientAuthState
 }))(ItemCard);

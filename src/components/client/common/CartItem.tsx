@@ -5,16 +5,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import {CartItem as cartItem, Stores } from '../../../types';
 import { inject } from 'mobx-react';
-
-const IncDecButton = {
-  p: 0,
-  minWidth: 0,
-  borderRadius: '60px',
-  ':hover': {
-    backgroundColor: 'white',
-  },
-  marginX: 1,
-};
+import { IncDecButton } from '../../common/StyledComponents';
 
 const Icon = {
   color: 'orange',

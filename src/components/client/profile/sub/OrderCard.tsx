@@ -6,7 +6,7 @@ const WhiteBaseButton = {
     bgcolor: 'white',
     color: 'orange',
     ':hover': {
-        color:'white'
+        bgcolor:'transparent'
     },
     border: '1px solid orange',
     marginRight: 2,

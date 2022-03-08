@@ -1,9 +1,11 @@
-import { Box, Button, Grid, Input, Modal } from '@mui/material';
+import { Box, Button, Grid, Input, Modal, TextField } from '@mui/material';
 import { inject } from 'mobx-react';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { StyledImageInput, StyledLabel, StyledButton } from '../../../common/StyledComponents';
 import { Stores } from '../../../../types';
+import { letterRegex } from '../../../../commons/const';
+import {AdminDataInputSX} from '../../../common/StyledComponents';
 
 type CategoryFormProps = {
   categoryAdd: boolean;
@@ -45,7 +47,7 @@ const CategoryForm = ({ categoryAdd, categoryChangeState }: CategoryFormProps) =
       onSubmit={handleSubmit(onSubmit)}
     >
       <Box sx={style}>
-        <Input placeholder="Название категории" {...register('Name')} sx={{ width: '100%' }} />
+        <TextField sx={AdminDataInputSX} placeholder="Название категории" {...register('Name', {required: true, pattern: letterRegex})} fullWidth/>
 
         <StyledLabel>
           <StyledImageInput {...register('SVG_Active')} type="file" />

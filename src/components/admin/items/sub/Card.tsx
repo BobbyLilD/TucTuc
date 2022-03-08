@@ -7,13 +7,15 @@ import { orange } from '@mui/material/colors';
 import styled from '@emotion/styled';
 import defaultImage from '../../../../commons/default.jpg';
 import { StyledButton } from '../../../common/StyledComponents';
+import { Box } from '@mui/system';
 
 const StyledImage = styled.img`
   // border-bottom: 1px solid ${orange[500]};
   width: 100%;
-  height: 164px;
+  height: 136px;
   border-radius: 2px;
   // margin: 0 calc((100% - 164px)/2);
+  object-fit: cover;
 `;
 
 const CardComponent = () => {
@@ -22,7 +24,7 @@ const CardComponent = () => {
     <Card
       sx={{
         minWidth: 296,
-        maxWidth: 296,
+        maxWidth: 360,
         height: 'fit-content',
         // border: `1px solid ${orange[500]}`,
         position: 'relative',
@@ -32,8 +34,8 @@ const CardComponent = () => {
         variant="h6"
         sx={{
           position: 'absolute',
-          top: 0,
-          right: 0,
+          top: 4,
+          right: 4,
           backgroundColor: orange[500],
           borderRadius: '2px',
           paddingX: 1,
@@ -44,15 +46,16 @@ const CardComponent = () => {
         30%
       </Typography>
       <StyledImage src={defaultImage} />
-      <CardContent sx={{paddingTop: 0}}>
+      <CardContent sx={{ paddingTop: 0 }}>
         <Typography variant="h4">Абобус</Typography>
-        <Typography variant="body2" sx={{ height: 128, overflow: 'scroll', marginBottom: 2 }}>
+        <Typography variant="body2" sx={{ height: 92, overflow: 'scroll', color:'gray' }}>
           Нежнейший абобус из ягненка в грибном соусе. Подается с гречишным чаем и смузи из
-          сельдерея в авторском коктейле от шефа-изобретателя легендарного Качо и карри, столь
-          известного в районе Лигурии северной Италии.
+          сельдерея в авторском коктейле от шефа-изобретателя легендарного Качо и карри
         </Typography>
-        <Typography sx={{marginBottom: 1}}>12975 р.</Typography>
-        <Button sx={StyledButton}>Изменить</Button>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:'space-between'}}>
+          <Typography sx={{fontSize: 20, fontWeight: 600 }}>12975 р.</Typography>
+          <Button sx={StyledButton}>Изменить</Button>
+        </Box>
       </CardContent>
     </Card>
     // </Badge>

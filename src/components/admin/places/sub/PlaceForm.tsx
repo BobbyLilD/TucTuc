@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Input, Paper, Toolbar, Typography } from '@mui/material';
+import { Box, Button, Grid, Input, Paper, TextField, Toolbar, Typography } from '@mui/material';
 import { inject } from 'mobx-react';
 import React from 'react';
 import { Stores } from '../../../../types';
@@ -6,7 +6,13 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import ItemCard from './ItemCard';
 import TemporaryDrawer from './PlaceFormDrawer';
 import ImagePreview from '../../../common/ImagePreview';
-import {StyledButton, StyledButtonFlex, StyledImageInput, StyledLabel} from '../../../common/StyledComponents';
+import {
+  AdminDataInputSX,
+  StyledButtonFlex,
+  StyledImageInput,
+  StyledLabel,
+} from '../../../common/StyledComponents';
+import { emailRegex, letterRegex, phoneRegex } from '../../../../commons/const';
 
 type CityFormProps = {
   changePlaceState: () => void;
@@ -22,9 +28,6 @@ interface IFormInput {
   Email: string;
   Items: Array<string>;
 }
-
-
-
 
 const PlaceForm = ({
   changePlaceState,
@@ -49,19 +52,23 @@ const PlaceForm = ({
           height: `calc(100vh - 64px)`,
         }}
       >
-        <Paper elevation={2} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 2, marginTop: 4 }}>
+        <Paper
+          elevation={2}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 2,
+            marginTop: 4,
+          }}
+        >
           {/* <Grid
             container
             spacing={1}
             sx={{ bgcolor: 'background.default', paddingBottom: 4}}
           > */}
           <Box
-            width={192}
-            height={188}
-            display={'flex'}
-            justifyContent={'center'}
-            alignItems={'center'}
-            marginX={4}
+            sx={{alignItems: 'stretch', width: 192, height: 188, display: 'flex', justifyContent: 'center', marginX: 4, p: 2}}
           >
             {photoSet ? (
               <ImagePreview />
@@ -72,35 +79,73 @@ const PlaceForm = ({
               </StyledLabel>
             )}
           </Box>
-          <Grid container columnSpacing={2} rowSpacing={2} sx={{marginRight: 2}}>
+          <Grid container columnSpacing={2} rowSpacing={2} sx={{ marginRight: 2 }}>
             <Grid item xs={12}>
-              <Typography variant='h5'>Добавление/изменение заведения</Typography>
+              <Typography variant="h5">Добавление/изменение заведения</Typography>
             </Grid>
             <Grid item xs={5}>
-              <Input placeholder="Название" {...register('Name')} sx={{ width: '100%' }} />
+              <TextField
+                variant="outlined"
+                fullWidth
+                sx={AdminDataInputSX}
+                placeholder="Название"
+                {...register('Name', {required: true, pattern: letterRegex})}
+              />
             </Grid>
             <Grid item xs={4}>
-              <Input placeholder="Телефон" {...register('Phone')} sx={{ width: '100%' }} />
+              <TextField
+                variant="outlined"
+                fullWidth
+                sx={AdminDataInputSX}
+                placeholder="Телефон"
+                {...register('Phone', {required: true, pattern: phoneRegex})}
+              />
             </Grid>
             <Grid item xs={5}>
-              <Input placeholder="Email" {...register('Email')} sx={{ width: '100%' }} />
+              <TextField
+                variant="outlined"
+                fullWidth
+                sx={AdminDataInputSX}
+                placeholder="Email"
+                {...register('Email', {required: true, pattern: emailRegex})}
+              />
             </Grid>
             <Grid item xs={3} sx={{ display: 'flex' }}>
               <Button type="submit" sx={StyledButtonFlex} onClick={changeItemState}>
                 Добавить товар
               </Button>
             </Grid>
-            <Grid item xs={2} sx={{display: 'flex'}}>
-              <Button type="submit" sx={StyledButtonFlex}>Сохранить</Button>
+            <Grid item xs={2} sx={{ display: 'flex' }}>
+              <Button type="submit" sx={StyledButtonFlex}>
+                Сохранить
+              </Button>
             </Grid>
-            <Grid item xs={2} sx={{display: 'flex'}}>
-              <Button onClick={changePlaceState} sx={StyledButtonFlex}>Выйти</Button>
+            <Grid item xs={2} sx={{ display: 'flex' }}>
+              <Button onClick={changePlaceState} sx={StyledButtonFlex}>
+                Выйти
+              </Button>
             </Grid>
           </Grid>
           {/* </Grid> */}
         </Paper>
-        <Paper elevation={2} sx={{display:'flex', flexDirection:'row', justifyContent:'start', width: '100%', marginBottom: 2}}>
-          <Box display={'flex'} flexDirection={'row'} justifyContent={'start'} width={'80vw'} overflow={'scroll'} padding={2}>
+        <Paper
+          elevation={2}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'start',
+            width: '100%',
+            marginBottom: 2,
+          }}
+        >
+          <Box
+            display={'flex'}
+            flexDirection={'row'}
+            justifyContent={'start'}
+            width={'80vw'}
+            overflow={'scroll'}
+            padding={2}
+          >
             <ItemCard />
             <ItemCard />
             <ItemCard />

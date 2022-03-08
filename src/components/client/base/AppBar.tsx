@@ -18,6 +18,7 @@ type AppBarProps = {
   cartLength: number;
   changeCartState: () => void;
   changeAuthState: () => void;
+  name: string;
 };
 
 const StyledLogo = styled.img`
@@ -40,11 +41,17 @@ const CartBadge = {
 const NavButton = {
   color: grey[500],
   'text-transform': 'none',
+  ':hover': {
+    backgroundColor: 'transparent'
+  }
 };
 
 const UserButton = {
   color: orange[600],
   'text-transform': 'none',
+  ':hover': {
+    backgroundColor: 'transparent'
+  }
 };
 
 const AppBarClient = ({
@@ -52,7 +59,16 @@ const AppBarClient = ({
   changeAuthState,
   cartLength,
   accessToken,
+  name,
 }: AppBarProps) => {
+  const checkAndOpenCart = () => {
+    if(accessToken != undefined) {
+      changeCartState()
+    } else {
+      changeAuthState()
+    }
+  }
+
   return (
     <AppBar
       position="fixed"
@@ -73,10 +89,16 @@ const AppBarClient = ({
           <Button sx={NavButton}>Акции</Button>
         </Box>
         <Box sx={{ position: 'relative' }}>
+          {accessToken == undefined && 
           <Button sx={UserButton} onClick={changeAuthState}>
             Войти
-          </Button>
-          <Button sx={UserButton} onClick={changeCartState}>
+          </Button>}
+          {accessToken != undefined &&
+          <StyledNavLink to={{pathname: '/profile'}}>
+            <Button sx={UserButton}>{name}</Button>
+          </StyledNavLink>
+          }
+          <Button sx={UserButton} onClick={checkAndOpenCart}>
             Корзина
             <ShoppingCartIcon sx={{ color: 'orange', marginLeft: 0.5, fontSize: 28 }} />
           </Button>
@@ -92,4 +114,5 @@ export default inject(({ userStore, clientStore }: Stores) => ({
   cartLength: clientStore.cart.size,
   changeCartState: clientStore.changeShowCart,
   changeAuthState: userStore.changeClientAuthState,
+  name: userStore.name
 }))(AppBarClient);

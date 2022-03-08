@@ -1,33 +1,37 @@
 import { Grid } from '@mui/material';
-import React from 'react';
+import { inject } from 'mobx-react';
+import React, { useEffect } from 'react';
+import { Admin, Stores } from '../../../../types';
 import CardComponent from './Card';
 
-const CardGrid = () => {
+type CardGridProps = {
+  getAdminsList: () => void;
+  adminsList: Admin[];
+};
+
+const CardGrid = ({ adminsList, getAdminsList }: CardGridProps) => {
+  useEffect(() => {
+    getAdminsList();
+  }, []);
+
+  let items = [];
+
+  for (let i = 0; i < adminsList.length; i++) {
+    items.push(
+      <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+        <CardComponent itemKey={i} />
+      </Grid>,
+    );
+  }
+
   return (
-      <Grid container spacing={2}>
-        <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center'}}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center'}}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center'}}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center'}}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center'}}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center'}}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center'}}>
-          <CardComponent />
-        </Grid>
-      </Grid>
+    <Grid container spacing={2}>
+      {items}
+    </Grid>
   );
 };
 
-export default CardGrid;
+export default inject(({ adminPanelStore }: Stores) => ({
+  adminsList: adminPanelStore.adminsList,
+  getAdminsList: adminPanelStore.getAdmins,
+}))(CardGrid);

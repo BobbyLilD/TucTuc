@@ -11,9 +11,16 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  TextField,
 } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { StyledButton } from '../../../common/StyledComponents';
+import {
+  AdminDataInputSX,
+  StyledButton,
+  ListSelectSX,
+  DescriptionSX,
+} from '../../../common/StyledComponents';
+import { letterRegex, numbRegex } from '../../../../commons/const';
 
 enum Category {
   Soup = 'Soup',
@@ -22,8 +29,8 @@ enum Category {
 }
 
 enum Place {
-    McDonalds = 'McDonalds',
-    BurgerKing = 'Burger King',
+  McDonalds = 'McDonalds',
+  BurgerKing = 'Burger King',
 }
 
 interface IFromInput {
@@ -49,7 +56,7 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
 
   const handlePlaceChange = (event: SelectChangeEvent) => {
     setPlace(event.target.value as string);
-  }
+  };
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setCategory(event.target.value as string);
@@ -61,16 +68,21 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
         container
         rowSpacing={3}
         columns={2}
-        sx={{ width: '280px', paddingX: '20px', marginTop: '20px' }}
+        sx={{ width: '500px', paddingX: '20px', marginTop: '20px' }}
       >
         <Grid item xs={2}>
-          <Input placeholder="Название" {...register('Name')} sx={{ width: '100%' }} />
+          <TextField
+            fullWidth
+            sx={AdminDataInputSX}
+            placeholder="Название"
+            {...register('Name', { required: true, pattern: letterRegex })}
+          />
         </Grid>
         <Grid item xs={2}>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={ListSelectSX}>
             <InputLabel id="place-select-label">Заведение</InputLabel>
             <Select
-              {...register('Place')}
+              {...register('Place', {required: true})}
               labelId="place-select-label"
               id="place-select"
               value={place}
@@ -83,10 +95,10 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
           </FormControl>
         </Grid>
         <Grid item xs={2}>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={ListSelectSX}>
             <InputLabel id="category-select-label">Категория</InputLabel>
             <Select
-              {...register('Category')}
+              {...register('Category', {required: true})}
               labelId="category-select-label"
               id="category-select"
               value={category}
@@ -100,21 +112,29 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
           </FormControl>
         </Grid>
         <Grid item xs={2}>
-          <Input
+          <TextField
+            fullWidth
+            sx={DescriptionSX}
             placeholder="Описание"
-            {...register('Description')}
-            sx={{ width: '100%' }}
+            {...register('Description', {required: true})}
             multiline={true}
           />
         </Grid>
         <Grid item xs={2}>
-          <Input placeholder="Цена" {...register('Price')} sx={{ width: '100%' }} />
+          <TextField fullWidth sx={AdminDataInputSX} placeholder="Цена" {...register('Price', {required: true, pattern: numbRegex})} />
         </Grid>
         <Grid item xs={2}>
-          <Input placeholder="Скидка" {...register('Discount')} sx={{ width: '100%' }} />
+          <TextField
+            fullWidth
+            sx={AdminDataInputSX}
+            placeholder="Скидка"
+            {...register('Discount', {pattern: numbRegex})}
+          />
         </Grid>
         <Grid item xs={2}>
-          <Button type="submit" sx={StyledButton}>Добавить</Button>
+          <Button type="submit" sx={StyledButton}>
+            Добавить
+          </Button>
         </Grid>
       </Grid>
     </Drawer>

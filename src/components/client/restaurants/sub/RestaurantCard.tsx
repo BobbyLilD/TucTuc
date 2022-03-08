@@ -6,8 +6,6 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import { Restaurant } from '../../../../types';
 
-const totalStars = 4;
-
 const CardContainer = {
   minWidth: 0,
   width: '260px',

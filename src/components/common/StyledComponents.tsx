@@ -16,7 +16,9 @@ export const StyledImageInput = styled.input`
 
 export const StyledLabel = styled.label`
   border: 1px solid ${orange[500]};
-  padding: 8px 16px;
+  text-align: center;
+  padding-top: 45%;
+  width: inherit;
   border-radius: 12px;
   cursor: pointer;
   font-size: 8pt;
@@ -29,6 +31,9 @@ export const StyledButton = {
   'border-radius': '12px',
   color: 'black',
   'text-transform': 'uppercase',
+  ':hover': {
+    backgroundColor: 'rgb(210 153 25 / 4%)'
+  }
 };
 
 export const StyledButtonFlex = {
@@ -58,27 +63,11 @@ export const StyledInputBase = StyledMui(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    //transition: theme.transitions.create('width'),
     width: '85%',
-    // [theme.breakpoints.up('sm')]: {
-    //   width: '12ch',
-    //   '&:focus': {
-    //     width: '20ch',
-    //   },
-    // },
+
   },
 }));
-
-export const IncDecButton = {
-  minWidth: 48,
-  paddingY: 0,
-  border: `1px solid ${orange[500]}`,
-  borderRadius: '4px',
-  fontSize: '18pt',
-  color: 'black',
-};
 
 export const AdminContentSubContainer = {
   marginTop: 2,
@@ -126,3 +115,55 @@ export const WhiteBaseButton = {
 export const StyledNavLink = styled(NavLink)`
 text-decoration: none;
 color: black;`;
+
+export const DataInputSX = {
+  '.MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      borderColor: 'orange',
+    },
+  },
+};
+
+export const AdminDataInputSX = {
+  backgroundColor: 'rgb(240,240,240)',
+  '.MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      borderColor: 'orange',
+    },
+  },
+  '.MuiOutlinedInput-input': {
+    paddingY: 1.25
+  }
+};
+
+export const ListSelectSX = {
+  backgroundColor: 'rgb(240,240,240)',
+  '.MuiInputLabel-root': {
+    '&.Mui-focused': {
+      color:'orange'
+    }
+  },
+  '.MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset':{
+      borderColor: 'orange'
+    }
+  }
+}
+
+export const DescriptionSX = {...AdminDataInputSX,...{'.MuiOutlinedInput-input': {paddingY: 0}}}
+
+
+export const IncDecButton = {
+  p: 0,
+  minWidth: 0,
+  borderRadius: '60px',
+  ':hover': {
+      color: 'transparent'
+  },
+  marginX: 1,
+};
+
+export const Icon = {
+  color: 'orange',
+  fontSize: 16,
+};

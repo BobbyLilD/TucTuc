@@ -2,8 +2,9 @@ import { inject } from 'mobx-react';
 import React from 'react';
 import { Stores } from '../../../../types';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Button, Grid, Input, Paper, Typography } from '@mui/material';
-import { StyledButton } from '../../../common/StyledComponents';
+import { Button, Grid, Input, Paper, TextField, Typography } from '@mui/material';
+import { StyledButton, AdminDataInputSX } from '../../../common/StyledComponents';
+import { emailRegex, phoneRegex } from '../../../../commons/const';
 
 interface IFormInput {
   Email: string;
@@ -23,20 +24,35 @@ const ClientFrom = ({ changeClientState }: ClientFormProps) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Paper elevation={2} sx={{marginX: 6, marginTop: 6, p: 2}}>
+        <Paper elevation={2} sx={{ marginX: 6, marginTop: 6, p: 2 }}>
           <Grid container rowSpacing={2} columnSpacing={2}>
-              <Grid item xs={12}>
-                  <Typography variant='h5'>Редактирование клиента</Typography>
-              </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h5">Редактирование клиента</Typography>
+            </Grid>
             <Grid item container xs={12} columnSpacing={2}>
               <Grid item xs={3}>
-                <Input placeholder="Телефон" {...register('Phone')} fullWidth />
+                <TextField
+                  sx={AdminDataInputSX}
+                  placeholder="Телефон"
+                  {...register('Phone', { required: true, pattern: phoneRegex })}
+                  fullWidth
+                />
               </Grid>
               <Grid item xs={3}>
-                <Input placeholder="Email" {...register('Email')} fullWidth />
+                <TextField
+                  sx={AdminDataInputSX}
+                  placeholder="Email"
+                  {...register('Email', { required: true, pattern: emailRegex })}
+                  fullWidth
+                />
               </Grid>
               <Grid item xs={3}>
-                <Input placeholder="Имя" {...register('Name')} fullWidth />
+                <TextField
+                  sx={AdminDataInputSX}
+                  placeholder="Имя"
+                  {...register('Name', { required: true, pattern: emailRegex })}
+                  fullWidth
+                />
               </Grid>
             </Grid>
             <Grid item xs={2}>

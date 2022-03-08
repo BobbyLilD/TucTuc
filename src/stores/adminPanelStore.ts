@@ -1,19 +1,54 @@
 import { action, makeObservable, observable } from 'mobx';
+import { Admin, Category, City, Client, Item, Order, Place } from '../types';
 
 class AdminPanelStore {
   cityAdd: boolean;
+  placeAdd: boolean;
+  itemAddToPlace: boolean;
+  photoSet: boolean;
+  adminAdd: boolean;
+  categoryAdd: boolean;
+  orderAdd: boolean;
+  clientEdit: boolean;
+
+  citiesList: City[] | undefined;
+  itemsList: Item[] | undefined;
+  categoriesList: Category[] | undefined;
+  clientsList: Client[] | undefined;
+  ordersList: Order[] | undefined;
+  placesList: Place[] | undefined;
+  adminsList: Admin[] | undefined;
+
+  getCities = () => {
+    const newCity : City = {id:'snsnlsd', name: 'Санкт-Петербург', places: 20}
+    let newList = [newCity, newCity,newCity, newCity];
+    this.citiesList = new Array(...newList);
+  };
+
+  getAdmins = () => {
+    const newAdmin: Admin = {id: 'dfkbdfkj', name: 'Иван', surname: "Петров", phone: '+79169263520', email:'petrov@gmail.com'}
+    let newList = [newAdmin, newAdmin, newAdmin];
+    this.adminsList = new Array(...newList);
+  };
+
+  getCategories = () => {
+    const newCategory: Category = {id: 'vskllsd', name:'Японская', iconLocation: 'abc', items: 420}
+    let newList: Category[] = [newCategory, newCategory, newCategory, newCategory]
+    this.categoriesList = new Array(...newList)
+  }
+
+  getItems = () => {
+    const newItem: Item = {id:'sbdjsdbg', name: 'Удон с курицей', description: 'dbgdfgdfjdfg', price: 124034, category: 'Японская', discount: 30}
+  }
+
   changeCityAdd = () => {
     this.cityAdd = !this.cityAdd;
   };
 
-  adminAdd: boolean;
   changeAdminAdd = () => {
     this.adminAdd = !this.adminAdd;
   };
 
-  placeAdd: boolean;
-  itemAddToPlace: boolean;
-  photoSet: boolean;
   changePlaceAdd = () => {
     this.placeAdd = !this.placeAdd;
   };
@@ -24,22 +59,20 @@ class AdminPanelStore {
     this.photoSet = !this.photoSet;
   };
 
-  categoryAdd: boolean;
   changeCategoryAdd = () => {
     this.categoryAdd = !this.categoryAdd;
   };
 
-  orderAdd: boolean;
   changeOrderAdd = () => {
     this.orderAdd = !this.orderAdd;
-  }
+  };
 
-  clientEdit: boolean;
   changeClientAdd = () => {
-    this.clientEdit =!this.clientEdit;
-  }
+    this.clientEdit = !this.clientEdit;
+  };
 
   constructor() {
+    this.adminsList = new Array;
     this.cityAdd = false;
     this.adminAdd = false;
     this.placeAdd = false;
@@ -72,7 +105,13 @@ class AdminPanelStore {
       changeOrderAdd: action,
 
       clientEdit: observable,
-      changeClientAdd:  action,
+      changeClientAdd: action,
+
+      citiesList: observable,
+      getCities: action,
+
+      adminsList: observable,
+      getAdmins: action,
     });
   }
 }

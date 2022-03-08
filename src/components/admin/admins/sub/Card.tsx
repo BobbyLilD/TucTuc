@@ -6,33 +6,43 @@ import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import { StyledButton } from '../../../common/StyledComponents';
 import { inject } from 'mobx-react';
-import { Stores } from '../../../../types';
+import { Admin, Stores } from '../../../../types';
 
 type CardComponentProps = {
+  itemKey: number;
   changeAdminState: () => void;
-}
+  adminsList: Admin[];
+};
 
-const CardComponent = ({changeAdminState}: CardComponentProps) => {
+const CardComponent = ({ itemKey, changeAdminState, adminsList }: CardComponentProps) => {
+
   return (
-    <Card sx={{ minWidth: 0, width: 296, height: 256 }}>
-      <CardContent sx={{display:'flex', flexDirection: 'column', justifyContent: 'space-evenly', height: '100%'}}>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Василий
+    <Card sx={{ minWidth: 296, width: 364, height: 256 }}>
+      <CardContent
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-evenly',
+          height: '100%',
+        }}
+      >
+        <Typography sx={{ fontSize: 16 }} color="text.secondary" gutterBottom>
+          {adminsList[itemKey].name}
         </Typography>
-        <Typography variant="h5" component="div">
-          Иванов
+        <Typography variant="h5" fontWeight={600}>
+          {adminsList[itemKey].surname}
         </Typography>
-        <Typography variant='h6'>
-            vasiliy.i@gmail.com
-        </Typography>
-        <Typography variant='h6'>
-            89169157645
-        </Typography>
-        <Button sx={StyledButton} onClick={changeAdminState}>Изменить</Button>
+        <Typography variant="h6">Email: {adminsList[itemKey].email}</Typography>
+        <Typography variant="h6">Телефон: {adminsList[itemKey].phone}</Typography>
+        <Button sx={StyledButton} onClick={changeAdminState}>
+          Изменить
+        </Button>
       </CardContent>
     </Card>
   );
-}
+};
 
-
-export default inject(({adminPanelStore}: Stores) => ({changeAdminState: adminPanelStore.changeAdminAdd}))(CardComponent);
+export default inject(({ adminPanelStore }: Stores) => ({
+  changeAdminState: adminPanelStore.changeAdminAdd,
+  adminsList: adminPanelStore.adminsList,
+}))(CardComponent);
