@@ -1,12 +1,13 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Item, Restaurant } from '../types';
+import { Category, Item, Restaurant } from '../types';
 
 class RestaurantsStore {
   restaurantsList: Map<string,Restaurant>;
-  resultingList: Map<string,Restaurant>;
-  categories: string[];
+  categories: Category[];
+  itemsList: Item[] | undefined;
   selectedCategories: string[] | undefined;
   searchQuery: string | undefined;
+  selectedRestaurant: Restaurant| undefined;
 
   changeSearchQuery = (query: string) => {
     this.searchQuery = query;
@@ -15,18 +16,19 @@ class RestaurantsStore {
   }
 
   getCategories = () => {
+    this.categories = new Array();
 
-    this.categories.push('Японская');
-    this.categories.push('Итальянская');
-    this.categories.push('Фаст-фуд');
-    this.categories.push('Русская');
-    this.categories.push('Испанская');
-    this.categories.push('Французская');
-    this.categories.push('Вьетнамская')
+    this.categories.push({id:'jdfd',name:'Японская', iconLocation: 'dnfkdf', items: undefined});
+    this.categories.push({id:'jdffd',name:'Итальянская', iconLocation: 'dnfkdf', items: undefined});
+    this.categories.push({id:'jdcfd',name:'Французская', iconLocation: 'dnfkdf', items: undefined});
+    this.categories.push({id:'jdbfd',name:'Китайская', iconLocation: 'dnfkdf', items: undefined});
+    this.categories.push({id:'jdfqd',name:'Русская', iconLocation: 'dnfkdf', items: undefined});
+    this.categories.push({id:'jdtfd',name:'Украинская', iconLocation: 'dnfkdf', items: undefined});
+    this.categories.push({id:'jdyfd',name:'Испанская', iconLocation: 'dnfkdf', items: undefined});
 
   }
 
-  getRestaurantsList = () => {
+  getItems = () => {
     const newItem: Item = {
       id: 'dfknsdfnks',
       name: 'Удон с курицей',
@@ -35,22 +37,39 @@ class RestaurantsStore {
       description: `Вкусное и яркое блюдо азиатской кухни порадует всех! Имея дома в шкафчике удон, 
         всегда можно быстро приготовить ужин для всей семьи`,
       category: 'Японская',
+      imageSource: 'ndfngdfngd'
     };
 
     const items = [newItem, newItem, newItem, newItem];
+    this.itemsList = new Array(...items);
+  }
 
+  getRestaurantByID = (id: string) => {
+    this.selectedRestaurant = undefined;
     const newRest: Restaurant = {
+      id: 'lddffgd',
       name: 'Sushi Wok',
-      items: items,
       rating: 4.2,
       categories: ['Японская', 'Итальянская', 'Японская', 'Итальянская'],
       delivery: 800,
+      items: ['0','1','2','3']
+    };
+    this.selectedRestaurant = newRest;
+  }
+
+  getRestaurantsList = () => {
+    this.restaurantsList = new Map();
+    const newRest: Restaurant = {
+      name: 'Sushi Wok',
+      rating: 4.2,
+      categories: ['Японская', 'Итальянская', 'Японская', 'Итальянская'],
+      delivery: 800,
+      items: ['0','1','2','3']
     };
     for (let i = 0; i < 7; i++) {
       this.restaurantsList.set(i.toString(),newRest);
-
     }
-    this.resultingList = new Map(this.restaurantsList);
+    console.log('done')
   };
 
   selectCategories = (categories: string[]) => {
@@ -61,49 +80,53 @@ class RestaurantsStore {
 
 
   filterRestaurants = () => {
-    this.resultingList = new Map();
-    if (this.selectedCategories != undefined && this.selectedCategories.length > 0) {
-      this.restaurantsList.forEach((value, key) => {
-        let inter = this.selectedCategories!.filter(x => value.categories.includes(x));
-        if(inter.length > 0){
-            this.resultingList.set(key, value);
-        }
-      })
-    } else {
-      this.resultingList = new Map(this.restaurantsList);
-    }
+    // this.resultingList = new Map();
+    // if (this.selectedCategories != undefined && this.selectedCategories.length > 0) {
+    //   this.restaurantsList.forEach((value, key) => {
+    //     let inter = this.selectedCategories!.filter(x => value.categories.includes(x));
+    //     if(inter.length > 0){
+    //         this.resultingList.set(key, value);
+    //     }
+    //   })
+    // } else {
+    //   this.resultingList = new Map(this.restaurantsList);
+    // }
 
-    if (this.searchQuery != undefined && this.searchQuery!='') {
-      this.resultingList.forEach((value, key) => {
-          if(!value.name.toLocaleLowerCase().includes(this.searchQuery!.toLowerCase())){
-            this.resultingList.delete(key);
-          }
-      })
-    }
-    console.log(this.resultingList.size)
+    // if (this.searchQuery != undefined && this.searchQuery!='') {
+    //   this.resultingList.forEach((value, key) => {
+    //       if(!value.name.toLocaleLowerCase().includes(this.searchQuery!.toLowerCase())){
+    //         this.resultingList.delete(key);
+    //       }
+    //   })
+    // }
+    // console.log(this.resultingList.size)
   };
 
   constructor() {
+    this.itemsList = new Array();
     this.restaurantsList = new Map();
-    this.resultingList = new Map();
     this.categories = [];
-    this.getRestaurantsList();
-    this.getCategories();
     this.searchQuery = '';
     this.selectedCategories = new Array();
 
     makeObservable(this, {
       restaurantsList: observable,
+      selectedRestaurant: observable,
+      getRestaurantsList: action,
+      getRestaurantByID: action,
 
       categories: observable,
       selectCategories: action,
       selectedCategories: observable,
+      getCategories: action,
 
-      resultingList: observable,
       filterRestaurants: action,
 
       searchQuery: observable,
-      changeSearchQuery: action
+      changeSearchQuery: action,
+
+      itemsList: observable,
+      getItems: action,
     });
   }
 }

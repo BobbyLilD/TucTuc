@@ -1,16 +1,14 @@
 import {
   AppBar,
   Button,
-  Paper,
   ToggleButton,
   ToggleButtonGroup,
   Toolbar,
-  Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useEffect } from 'react';
 import banner from '../../../../commons/banner.jpeg';
-import { Search, StyledInputBase, StyledNavLink } from '../../../common/StyledComponents';
+import { Search, StyledInputBase } from '../../../common/StyledComponents';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SearchIcon from '@mui/icons-material/Search';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
@@ -23,29 +21,33 @@ import {
   StyledImage,
 } from './StyledComponents';
 import { inject } from 'mobx-react';
-import { Stores } from '../../../../types';
+import { Category, Stores } from '../../../../types';
 
 type ControlBlockProps = {
-  categories: string[];
+  categories: Category[];
   selectedCategories: string[];
   selectCategories: (categories: string[]) => void;
   changeSearchQuery: (query: string) => void;
+  getCategories: () => void;
 };
-
-const activeCategory = { ...CategoryBox, ...{ color: 'orange' } };
 
 const ControlBlock = ({
   categories,
   selectCategories,
   selectedCategories,
   changeSearchQuery,
+  getCategories
 }: ControlBlockProps) => {
+  useEffect(() => {
+    getCategories();
+  },[])
+
   let items = [];
   for (let key of categories) {
     items.push(
-      <ToggleButton sx={CategoryBox} value={key} aria-label="bold">
+      <ToggleButton sx={CategoryBox} value={key.id} aria-label="bold">
           <FastfoodIcon sx={{ marginRight: 1 }} />
-          {key}
+          {key.name}
       </ToggleButton>
     );
   }
@@ -90,6 +92,7 @@ const ControlBlock = ({
             onChange={(event: React.MouseEvent<HTMLElement>, newCategories) => {
               selectCategories(newCategories);
             }}
+             
             sx={CategoryBoxContainer}
           >
             {items}
@@ -106,4 +109,5 @@ export default inject(({ restaurantsStore }: Stores) => ({
   selectCategories: restaurantsStore.selectCategories,
   selectedCategories: restaurantsStore.selectedCategories,
   changeSearchQuery: restaurantsStore.changeSearchQuery,
+  getCategories: restaurantsStore.getCategories,
 }))(ControlBlock);

@@ -20,26 +20,81 @@ class AdminPanelStore {
   adminsList: Admin[] | undefined;
 
   getCities = () => {
-    const newCity : City = {id:'snsnlsd', name: 'Санкт-Петербург', places: 20}
-    let newList = [newCity, newCity,newCity, newCity];
+    const newCity: City = { id: 'snsnlsd', name: 'Санкт-Петербург', places: 20 };
+    let newList = [newCity, newCity, newCity, newCity];
     this.citiesList = new Array(...newList);
   };
 
   getAdmins = () => {
-    const newAdmin: Admin = {id: 'dfkbdfkj', name: 'Иван', surname: "Петров", phone: '+79169263520', email:'petrov@gmail.com'}
+    const newAdmin: Admin = {
+      id: 'dfkbdfkj',
+      name: 'Иван',
+      surname: 'Петров',
+      phone: '+79169263520',
+      email: 'petrov@gmail.com',
+    };
     let newList = [newAdmin, newAdmin, newAdmin];
     this.adminsList = new Array(...newList);
   };
 
   getCategories = () => {
-    const newCategory: Category = {id: 'vskllsd', name:'Японская', iconLocation: 'abc', items: 420}
-    let newList: Category[] = [newCategory, newCategory, newCategory, newCategory]
-    this.categoriesList = new Array(...newList)
-  }
+    const newCategory: Category = {
+      id: 'vskllsd',
+      name: 'Японская',
+      iconLocation: 'abc',
+      items: 420,
+    };
+    let newList: Category[] = [newCategory, newCategory, newCategory, newCategory];
+    this.categoriesList = new Array(...newList);
+  };
 
   getItems = () => {
-    const newItem: Item = {id:'sbdjsdbg', name: 'Удон с курицей', description: 'dbgdfgdfjdfg', price: 124034, category: 'Японская', discount: 30}
-  }
+    const newItem: Item = {
+      id: 'sbdjsdbg',
+      name: 'Удон с курицей',
+      description: 'dbgdfgdfjdfg',
+      price: 124034,
+      category: 'Японская',
+      discount: 30,
+      imageSource: 'kndlfngd',
+    };
+    let newList: Item[] = [newItem, newItem, newItem, newItem];
+    this.itemsList = new Array(...newList);
+  };
+
+  getClients = () => {
+    const newItem: Client = {
+      id: 'fkndndlf',
+      name: 'Иван',
+      phone: '791676473634',
+      email: 'ivanov@gmail.com',
+    };
+
+    let newList: Client[] = [newItem, newItem, newItem, newItem];
+    this.clientsList = new Array(...newList);
+  };
+
+  getOrders = () => {
+    const newItem: Order = {
+      id: 'ddnndfnld',
+      name: undefined,
+      surname: undefined,
+      phone: undefined,
+      address: undefined,
+      flat: undefined,
+      floor: undefined,
+      entranceCode: undefined,
+      comment: undefined,
+      promocode: undefined,
+      paymentMethod: undefined,
+      items: undefined,
+      servings: undefined,
+      deliveryPrice: undefined,
+      date: undefined,
+    };
+    let newList: Order[] = [newItem, newItem, newItem, newItem];
+    this.ordersList = new Array(...newList);
+  };
 
   changeCityAdd = () => {
     this.cityAdd = !this.cityAdd;
@@ -72,7 +127,7 @@ class AdminPanelStore {
   };
 
   constructor() {
-    this.adminsList = new Array;
+    this.adminsList = new Array();
     this.cityAdd = false;
     this.adminAdd = false;
     this.placeAdd = false;

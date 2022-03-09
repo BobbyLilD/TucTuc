@@ -44,7 +44,7 @@ const RestaurantCard = ({info}:RestaurantCardProps) => {
         </Typography>
         <Box sx={{display: 'flex', color: 'black', alignItems: 'center', marginBottom: 1}}>
           <MenuBookOutlinedIcon />
-          <Typography variant="subtitle2" sx={{marginLeft: 1, marginTop: 0.5}}>
+          <Typography variant="subtitle2" sx={{marginLeft: 1, marginTop: 0.5, fontSize: 12}}>
             {info.categories.join(', ')}
           </Typography>
         </Box>

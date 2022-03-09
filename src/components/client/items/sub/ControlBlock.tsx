@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { AppBar, Button, Paper, Toolbar, Typography } from '@mui/material';
 import { Box, flexbox } from '@mui/system';
-import React from 'react';
+import React, { useEffect } from 'react';
 import banner from '../../../../commons/banner.jpeg';
 import { Search, StyledInputBase } from '../../../common/StyledComponents';
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,12 +9,11 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import { Restaurant, Stores } from '../../../../types';
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { inject } from 'mobx-react';
 
 const containerHeight = '300px';
 const paddingPercentage = 10;
-const totalStars = 4;
 
 const ControlDiv = styled.div`
   position: absolute;
@@ -37,19 +36,25 @@ const StyledImage = styled.img`
 `;
 
 type ControlBlockProps = {
-  restaurants: Map<string,Restaurant>;
-}
+  selectedRestaurant: Restaurant;
+  getRestaurant: (id: string) => void;
+};
 
-const ControlBlock = ({restaurants}: ControlBlockProps) => {
+const ControlBlock = ({ selectedRestaurant, getRestaurant }: ControlBlockProps) => {
+  useEffect(() => {
+    getRestaurant(id);
+  }, []);
+
   const items = [];
   const { id } = useParams();
-  const currentRestaurant: Restaurant = restaurants.get(id);
-
-  for (let i = 0; i < parseFloat(currentRestaurant.rating.toFixed(0)); i++) {
-    items.push(<StarIcon sx={{ color: 'orange' }} />);
-  }
-  for (let i = 0; i < 5 - parseFloat(currentRestaurant.rating.toFixed(0)); i++) {
-    items.push(<StarIcon sx={{ color: 'gray' }} />);
+  console.log('id is ' + id);
+  if (selectedRestaurant != undefined) {
+    for (let i = 0; i < parseFloat(selectedRestaurant.rating.toFixed(0)); i++) {
+      items.push(<StarIcon sx={{ color: 'orange' }} />);
+    }
+    for (let i = 0; i < 5 - parseFloat(selectedRestaurant.rating.toFixed(0)); i++) {
+      items.push(<StarIcon sx={{ color: 'gray' }} />);
+    }
   }
 
   return (
@@ -80,39 +85,45 @@ const ControlBlock = ({restaurants}: ControlBlockProps) => {
             </Toolbar>
           </AppBar>
 
-          <Typography
-            variant="h4"
-            fontWeight={600}
-            color="white"
-            sx={{ marginY: 2}}
-          >
-            {currentRestaurant.name}
+          <Typography variant="h4" fontWeight={600} color="white" sx={{ marginY: 2 }}>
+            {selectedRestaurant != undefined && selectedRestaurant.name}
           </Typography>
         </ControlDiv>
         <StyledImage src={banner} />
       </Box>
-      <Box sx={{ paddingX: `${paddingPercentage}%`, marginTop: 3}}>
+      <Box sx={{ paddingX: `${paddingPercentage}%`, marginTop: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           <Box sx={{ display: 'flex' }}>
             {items}
-            <Typography variant="subtitle1" sx={{marginLeft: 1}}>{currentRestaurant.rating}</Typography>
+            <Typography variant="subtitle1" sx={{ marginLeft: 1 }}>
+              {selectedRestaurant != undefined && selectedRestaurant.rating}
+            </Typography>
           </Box>
-          <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'end'}}>
-              <Typography variant='subtitle2'>15 отзывов</Typography>
-              <Typography variant='subtitle2' color='red'>Посмотреть отзывы</Typography> 
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}>
+            <Typography variant="subtitle2">15 отзывов</Typography>
+            <Typography variant="subtitle2" color="red">
+              Посмотреть отзывы
+            </Typography>
           </Box>
         </Box>
-        <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <MenuBookOutlinedIcon/>
-            <Typography variant='body2' sx={{width: 350, marginLeft: 2}}>{currentRestaurant.categories.join(', ')}</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <MenuBookOutlinedIcon />
+          <Typography variant="body2" sx={{ width: 350, marginLeft: 2 }}>
+            {selectedRestaurant != undefined && selectedRestaurant.categories.join(', ')}
+          </Typography>
         </Box>
-        <Box sx={{display: 'flex', marginTop: 2, alignItems: 'end'}}>
-            <LocalShippingOutlinedIcon sx={{fontSize: 28}}/>
-            <Typography variant='body2' sx={{width: 350, marginLeft: 2, marginBottom: 0.5}}>Доставка от {currentRestaurant.delivery} руб.</Typography>
+        <Box sx={{ display: 'flex', marginTop: 2, alignItems: 'end' }}>
+          <LocalShippingOutlinedIcon sx={{ fontSize: 28 }} />
+          <Typography variant="body2" sx={{ width: 350, marginLeft: 2, marginBottom: 0.5 }}>
+            Доставка от {selectedRestaurant != undefined && selectedRestaurant.delivery} руб.
+          </Typography>
         </Box>
       </Box>
     </>
   );
 };
 
-export default inject(({restaurantsStore}: Stores) => ({restaurants: restaurantsStore.resultingList}))(ControlBlock);
+export default inject(({ restaurantsStore }: Stores) => ({
+  selectedRestaurant: restaurantsStore.selectedRestaurant,
+  getRestaurant: restaurantsStore.getRestaurantByID,
+}))(ControlBlock);

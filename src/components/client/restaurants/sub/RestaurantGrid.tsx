@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { NavLink } from 'react-router-dom';
-import React from 'react';
+import React, { useEffect } from 'react';
 import RestaurantCard from './RestaurantCard';
 import { StyledNavLink } from '../../../common/StyledComponents';
 import { Restaurant, Stores } from '../../../../types';
@@ -11,9 +11,14 @@ const paddingPercentage = 22;
 
 type RestaurantGridProps = {
   restaurants: Map<string, Restaurant>;
+  getRestaurants: () => void;
 };
 
-const RestaurantGrid = ({ restaurants }: RestaurantGridProps) => {
+const RestaurantGrid = ({ restaurants, getRestaurants }: RestaurantGridProps) => {
+    useEffect(() => {
+        getRestaurants();
+    }, [])
+
   const restItems = [];
   for (let key of restaurants.keys()) {
     restItems.push(
@@ -36,5 +41,6 @@ const RestaurantGrid = ({ restaurants }: RestaurantGridProps) => {
 };
 
 export default inject(({ restaurantsStore }: Stores) => ({
-  restaurants: restaurantsStore.resultingList,
+  restaurants: restaurantsStore.restaurantsList,
+  getRestaurants: restaurantsStore.getRestaurantsList
 }))(RestaurantGrid);

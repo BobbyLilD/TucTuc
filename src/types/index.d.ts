@@ -43,8 +43,9 @@ export type Color = {
 };
 
 export type Restaurant = {
+  id?: string;
   name: string;
-  items: Item[];
+  items: string[] | undefined;
   rating: number;
   categories: string[];
   delivery: number;
@@ -56,6 +57,7 @@ export type Item = {
   description: string;
   price: number;
   category: string;
+  imageSource: string;
   discount: number | undefined;
 }
 
@@ -67,6 +69,7 @@ export type CartItem = {
 }
 
 export type Order = {
+  id: string|undefined;
   name: string | undefined;
   surname: string | undefined;
   phone: string | undefined;
@@ -93,7 +96,7 @@ export type Category = {
   id: string;
   name: string;
   iconLocation: string;
-  items: number;
+  items: number | undefined;
 }
 
 export type Client = {

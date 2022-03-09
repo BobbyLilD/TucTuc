@@ -1,20 +1,25 @@
 import { Box, Grid } from '@mui/material';
 import { inject } from 'mobx-react';
-import React from 'react';
-import { Item, Restaurant, Stores } from '../../../../types';
+import React, { useEffect } from 'react';
+import { Item, Stores } from '../../../../types';
 import ItemCard from './ItemCard';
 import { useParams } from 'react-router-dom';
 
 type ItemGridProps = {
-  restaurants: Map<string, Restaurant>;
+  items: Item[];
+  getItems: () => void;
 };
 
-const ItemGrid = ({ restaurants }: ItemGridProps) => {
+const ItemGrid = ({ items, getItems }: ItemGridProps) => {
   let { id } = useParams();
   console.log(id);
 
+  useEffect(() => {
+    getItems()
+  }, [])
+
   let cards = [];
-  for (let value of restaurants.get(id).items) {
+  for (let value of items) {
     cards.push(
       <Grid item xs={4}>
         <ItemCard item={value} restaurantID={id}/>
@@ -32,5 +37,6 @@ const ItemGrid = ({ restaurants }: ItemGridProps) => {
 };
 
 export default inject(({ restaurantsStore }: Stores) => ({
-  restaurants: restaurantsStore.resultingList,
+  items: restaurantsStore.itemsList,
+  getItems: restaurantsStore.getItems
 }))(ItemGrid);

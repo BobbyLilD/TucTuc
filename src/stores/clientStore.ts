@@ -58,6 +58,7 @@ class ClientStore {
 
     constructor() {
         this.newOrder = {
+            id: undefined,
             name: undefined,
             surname: undefined,
             phone: undefined,
