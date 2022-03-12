@@ -53,6 +53,7 @@ export type Restaurant = {
 
 export type Item = {
   id: string;
+  placeID: string;
   name: string;
   description: string;
   price: number;
@@ -80,16 +81,20 @@ export type Order = {
   promocode: string | undefined;
   paymentMethod: string | undefined;
   comment: string | undefined;
-  items: string[] | undefined;
-  servings: string | undefined;
-  deliveryPrice: string | undefined;
-  date: Date | undefined;
+  items: Map<Item, number>;
+  servings: number | undefined;
+  deliveryPrice: number | undefined;
+  orderDate: Date | undefined;
+  deliveryDate?: Date;
+  orderSum: number;
+  placeName: string | undefined;
+  delivered?: boolean;
 }
 
 export type City = {
-  id: string;
+  id?: string;
   name: string;
-  places: number;
+  places?: number;
 }
 
 export type Category = {
@@ -120,4 +125,12 @@ export type Place = {
   phone: string;
   email: string;
   photoLocation: string;
+}
+
+export type userData = {
+  id?: string;
+  name: string;
+  surname?: string;
+  email: string;
+  phone: string;
 }

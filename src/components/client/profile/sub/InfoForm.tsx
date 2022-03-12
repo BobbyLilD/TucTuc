@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from '@mui/material';
 import { inject } from 'mobx-react';
 import React from 'react';
-import { Stores } from '../../../../types';
+import { Stores, userData } from '../../../../types';
 import { BackBtn, OrangeBaseButton } from '../../../common/StyledComponents';
 
 const DataInputSX = {
@@ -19,13 +19,10 @@ const SaveBtn = { ...OrangeBaseButton, ...{ marginTop: 1 } };
 
 type InfoFormProps = {
   changeShowForm: () => void;
-  name: string;
-  surname: string;
-  phone: string;
-  email: string;
+  userData: userData;
 };
 
-const InfoForm = ({ changeShowForm, name, surname, phone, email }: InfoFormProps) => {
+const InfoForm = ({ changeShowForm, userData }: InfoFormProps) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
       <Button sx={BackBtn} onClick={changeShowForm}>
@@ -35,19 +32,19 @@ const InfoForm = ({ changeShowForm, name, surname, phone, email }: InfoFormProps
         variant="outlined"
         placeholder="Имя, Фамилия"
         sx={DataInputSX}
-        value={`${name} ${surname}`}
+        value={userData != undefined && `${userData.name} ${userData.surname}`}
       />
       <TextField
         variant="outlined"
         placeholder="Номер моб. телефона"
         sx={DataInputSX}
-        value={phone}
+        value={userData != undefined && userData.phone}
       />
       <TextField
         variant="outlined"
         placeholder="E-mail"
         sx={DataInputSX}
-        value={email}
+        value={userData != undefined && userData.email}
       />
       <Button sx={SaveBtn}>Сохранить</Button>
     </Box>
@@ -56,8 +53,5 @@ const InfoForm = ({ changeShowForm, name, surname, phone, email }: InfoFormProps
 
 export default inject(({ clientStore, userStore }: Stores) => ({
   changeShowForm: clientStore.changeShowInfoForm,
-  name: userStore.name,
-  surname: userStore.surname,
-  phone: userStore.phoneNum,
-  email: userStore.email,
+  userData: userStore.userData
 }))(InfoForm);

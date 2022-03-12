@@ -9,8 +9,94 @@ class ClientStore {
     servings: number;
     orderSum: number;
     deliveryPrice: number;
-    newOrder: Order;
-    orderList: Map<string, Order>;
+    newOrder: Order | undefined;
+    orderList: Order[] | undefined;
+    selectedCity: string;
+
+    changeSelectedCity = (id: string) => {
+        this.selectedCity = id;
+    }
+
+    getOrderList = () => {
+        const newItem: Item = {
+            id: 'dfknsdfnks',
+            placeID: '21312',
+            name: 'Удон с курицей',
+            price: 450,
+            discount: 30,
+            description: `Вкусное и яркое блюдо азиатской кухни порадует всех! Имея дома в шкафчике удон, 
+              всегда можно быстро приготовить ужин для всей семьи`,
+            category: 'Японская',
+            imageSource: 'ndfngdfngd'
+          };
+        let itemsList = new Map();
+        itemsList.set(newItem, 3);
+        this.orderList = new Array();
+        let newOrder: Order = {
+            id: '9867685675765',
+            name: 'Todd',
+            surname: 'Howard',
+            phone: '072384723982394',
+            address: 'Moscow',
+            flat: '50',
+            floor: 9,
+            entranceCode: '50',
+            promocode: undefined,
+            paymentMethod: undefined,
+            comment: undefined,
+            items: itemsList,
+            servings: 4,
+            deliveryPrice: 20,
+            orderDate: new Date('2017-02-03'),
+            deliveryDate: undefined,
+            orderSum: 53453,
+            placeName: 'McBoba',
+            delivered: true
+        }
+        let newList = [newOrder, newOrder, newOrder, newOrder];
+        this.orderList = [...newList];
+
+    }
+
+    getOrderListPreview = () => {
+        const newItem: Item = {
+            id: 'dfknsdfnks',
+            placeID: '21312',
+            name: 'Удон с курицей',
+            price: 450,
+            discount: 30,
+            description: `Вкусное и яркое блюдо азиатской кухни порадует всех! Имея дома в шкафчике удон, 
+              всегда можно быстро приготовить ужин для всей семьи`,
+            category: 'Японская',
+            imageSource: 'ndfngdfngd'
+          };
+        let itemsList = new Map();
+        itemsList.set(newItem, 3);
+        this.orderList = new Array();
+        let newOrder: Order = {
+            id: '9867685675765',
+            name: 'Todd',
+            surname: 'Howard',
+            phone: '072384723982394',
+            address: 'Moscow',
+            flat: '50',
+            floor: 9,
+            entranceCode: '50',
+            promocode: undefined,
+            paymentMethod: undefined,
+            comment: undefined,
+            items: itemsList,
+            servings: 4,
+            deliveryPrice: 20,
+            orderDate: new Date('2017-02-03'),
+            deliveryDate: undefined,
+            orderSum: 53453,
+            placeName: 'McBoba',
+            delivered: true
+        }
+        let newList = [newOrder, newOrder];
+        this.orderList = [...newList];
+    }
 
     changeShowCart = () =>{
         this.showCart = !this.showCart;
@@ -56,7 +142,7 @@ class ClientStore {
         this.servings--;
     }
 
-    constructor() {
+    initNewOrder = () => {
         this.newOrder = {
             id: undefined,
             name: undefined,
@@ -69,12 +155,18 @@ class ClientStore {
             promocode: undefined,
             paymentMethod: undefined,
             comment: undefined,
-            items: undefined,
+            items: new Map(),
             servings: undefined,
             deliveryPrice: undefined,
-            date: undefined,
+            orderDate: undefined,
+            orderSum: 0,
+            placeName: undefined,
+            delivered: false
         };
-        this.orderList = new Map();
+    }
+
+    constructor() {
+        this.selectedCity = 'None';
         this.deliveryPrice = 500;
         this.orderSum = 0 + this.deliveryPrice;
         this.servings = 1;
@@ -88,6 +180,9 @@ class ClientStore {
 
             showOrderList: observable,
             changeShowOrderList: action,
+            orderList: observable,
+            getOrderList: action,
+            getOrderListPreview: action,
 
             showInfoForm: observable,
             changeShowInfoForm: action,
@@ -102,6 +197,8 @@ class ClientStore {
 
             orderSum: observable,
 
+            selectedCity: observable,
+            changeSelectedCity: action,
         })
     }
 }

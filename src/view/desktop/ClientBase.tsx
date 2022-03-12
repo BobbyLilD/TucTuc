@@ -1,5 +1,5 @@
 import { Box, CssBaseline } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBarClient from '../../components/client/base/AppBar';
 import { BaseFiller } from '../../components/common/StyledComponents';
 import RestaurantsComponent from '../../components/client/restaurants';
@@ -9,8 +9,18 @@ import AuthModal from '../../components/client/base/AuthModal';
 import OrderComponent from '../../components/client/order';
 import ProfileComponent from '../../components/client/profile';
 import {Route, Switch} from 'react-router-dom';
+import { inject } from 'mobx-react';
+import { Stores } from '../../types';
 
-const ClientBase = () => {
+type ClientBaseProps = {
+    checkAccessToken: () => void;
+}
+
+const ClientBase = ({checkAccessToken}: ClientBaseProps) => {
+    useEffect(() => {
+        checkAccessToken();
+    }, [])
+
   return (
     <BaseFiller>
       <CssBaseline />
@@ -29,4 +39,4 @@ const ClientBase = () => {
   );
 };
 
-export default ClientBase;
+export default inject(({userStore}:Stores)=>({checkAccessToken: userStore.checkAccessToken}))(ClientBase);

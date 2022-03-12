@@ -1,6 +1,8 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import { inject } from "mobx-react";
+import React, { useEffect } from "react";
+import { Order, Stores } from "../../../../types";
 
 const WhiteBaseButton = {
     bgcolor: 'white',
@@ -15,21 +17,34 @@ const WhiteBaseButton = {
     fontWeight: 600
 }
 
-const OrderCard = () => {
+type OrderCardProps = {
+    index: number;
+    orderList: Order[];
+}
+
+const OrderCard = ({index,orderList}:OrderCardProps) => {
+    const curOrder: Order = orderList[index];
+    let orderItems: JSX.Element[] = [];
+    for(let i of curOrder.items.keys()){
+        orderItems.push(
+            <Typography variant="subtitle2" sx={{color:"gray"}}>{i.name} {curOrder.items.get(i)}шт.</Typography>
+        )
+    }
+
+    let dateString = ('0' + curOrder.orderDate.getDate()).slice(-2) + '.' + ('0' + (curOrder.orderDate.getMonth()+1)).slice(-2) + '.'+ curOrder.orderDate.getFullYear();
+
     return(<Box sx={{width: '100%', marginY: 2,paddingBottom: 2, borderBottom: '1px solid lightgrey'}}>
-        <Typography variant='h6' fontSize={18}>Заказ от 24.02.19.</Typography>
+        <Typography variant='h6' fontSize={18}>Заказ от {dateString}</Typography>
+        {!curOrder.delivered && 
         <Box display={'flex'}>
         <Typography variant="h6" sx={{marginRight: 1, fontSize: 18}}>Будет доставлен в </Typography>
-        <Typography variant="h6" fontWeight={600} color='orange' fontSize={18} sx={{marginBottom: 1}}>17:25</Typography>
-        </Box>
-        <Typography variant="subtitle1" fontWeight={600}>Sushi Wok</Typography>
-        <Typography variant="subtitle2" sx={{color:"gray"}}>Сушими с лосося 3шт.</Typography>
-        <Typography variant="subtitle2" sx={{color:"gray"}}>Удон с курицей 2шт.</Typography>
-        <Typography variant="subtitle2" sx={{color:"gray"}}>Сушими с лосося 3шт.</Typography>
-        <Typography variant="subtitle2" sx={{color:"gray"}}>Удон с курицей 2шт.</Typography>
-        <Typography variant="subtitle1" fontWeight={600} sx={{marginBottom: 1, marginTop: 1}}>1543.00 руб.</Typography>
+        <Typography variant="h6" fontWeight={600} color='orange' fontSize={18} sx={{marginBottom: 1}}>{curOrder.deliveryDate.getTime}</Typography>
+        </Box>}
+        <Typography variant="subtitle1" fontWeight={600}>{curOrder.placeName}</Typography>
+        {orderItems}
+        <Typography variant="subtitle1" fontWeight={600} sx={{marginBottom: 1, marginTop: 1}}>{curOrder.orderSum.toFixed(2)} руб.</Typography>
         <Button sx={WhiteBaseButton}>Повторить</Button>
     </Box>)
 }
 
-export default OrderCard;
+export default inject(({clientStore}: Stores)=>({orderList: clientStore.orderList}))(OrderCard);

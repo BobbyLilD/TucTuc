@@ -63,5 +63,12 @@ export const CityButton = {
   ':hover': {
     backgroundColor: 'transparent'
   }
-  
 };
+
+export const CitySelect = {
+  '.MuiInput-root': {
+    '.MuiSelect-nativeInput':{
+      border: 'none'
+    }
+  }
+}

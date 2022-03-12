@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { grey, orange } from '@mui/material/colors';
 import { inject } from 'mobx-react';
-import { Stores } from '../../../types';
+import { Stores, userData } from '../../../types';
 import { Button } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import logo from '../../../commons/logo.png';
@@ -18,7 +18,7 @@ type AppBarProps = {
   cartLength: number;
   changeCartState: () => void;
   changeAuthState: () => void;
-  name: string;
+  userData: userData;
 };
 
 const StyledLogo = styled.img`
@@ -59,7 +59,7 @@ const AppBarClient = ({
   changeAuthState,
   cartLength,
   accessToken,
-  name,
+  userData,
 }: AppBarProps) => {
   const checkAndOpenCart = () => {
     if(accessToken != undefined) {
@@ -95,7 +95,7 @@ const AppBarClient = ({
           </Button>}
           {accessToken != undefined &&
           <StyledNavLink to={{pathname: '/profile'}}>
-            <Button sx={UserButton}>{name}</Button>
+            <Button sx={UserButton}>{userData != undefined && userData.name}</Button>
           </StyledNavLink>
           }
           <Button sx={UserButton} onClick={checkAndOpenCart}>
@@ -114,5 +114,5 @@ export default inject(({ userStore, clientStore }: Stores) => ({
   cartLength: clientStore.cart.size,
   changeCartState: clientStore.changeShowCart,
   changeAuthState: userStore.changeClientAuthState,
-  name: userStore.name
+  userData: userStore.userData
 }))(AppBarClient);

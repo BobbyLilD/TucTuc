@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Category, Item, Restaurant } from '../types';
+import { Category, City, Item, Restaurant } from '../types';
 
 class RestaurantsStore {
   restaurantsList: Map<string,Restaurant>;
@@ -8,6 +8,14 @@ class RestaurantsStore {
   selectedCategories: string[] | undefined;
   searchQuery: string | undefined;
   selectedRestaurant: Restaurant| undefined;
+  cities: Map<string, City> | undefined;
+
+  getCities = () => {
+    this.cities = new Map();
+    this.cities.set('lnfnlssdf', {name: 'Москва'})
+    this.cities.set('jhgjkkf', {name: 'Санкт-Петербург'})
+    this.cities.set('jffhdhdh', {name: 'Омск'})
+  }
 
   changeSearchQuery = (query: string) => {
     this.searchQuery = query;
@@ -31,6 +39,7 @@ class RestaurantsStore {
   getItems = () => {
     const newItem: Item = {
       id: 'dfknsdfnks',
+      placeID: '21312',
       name: 'Удон с курицей',
       price: 450,
       discount: 30,
@@ -127,6 +136,9 @@ class RestaurantsStore {
 
       itemsList: observable,
       getItems: action,
+
+      cities: observable,
+      getCities: action
     });
   }
 }

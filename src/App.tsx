@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Home from './view/desktop/Home';
 import { css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
 import { light } from './commons/colors';

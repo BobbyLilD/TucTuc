@@ -1,6 +1,10 @@
 import {
   AppBar,
   Button,
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   ToggleButton,
   ToggleButtonGroup,
   Toolbar,
@@ -13,15 +17,16 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SearchIcon from '@mui/icons-material/Search';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import {
-  CityButton,
   ControlDiv,
   containerHeight,
   CategoryBox,
   CategoryBoxContainer,
   StyledImage,
+  CitySelect,
 } from './StyledComponents';
 import { inject } from 'mobx-react';
-import { Category, Stores } from '../../../../types';
+import { Category, City, Stores } from '../../../../types';
+
 
 type ControlBlockProps = {
   categories: Category[];
@@ -29,6 +34,10 @@ type ControlBlockProps = {
   selectCategories: (categories: string[]) => void;
   changeSearchQuery: (query: string) => void;
   getCategories: () => void;
+  selectedCity: string;
+  changeSelectedCity: (id: string) => void;
+  citiesList: Map<string, City>;
+  getCitiesList: () => void;
 };
 
 const ControlBlock = ({
@@ -36,20 +45,32 @@ const ControlBlock = ({
   selectCategories,
   selectedCategories,
   changeSearchQuery,
-  getCategories
+  getCategories,
+  selectedCity,
+  changeSelectedCity,
+  citiesList,
+  getCitiesList,
 }: ControlBlockProps) => {
   useEffect(() => {
     getCategories();
-  },[])
+    getCitiesList();
+  }, []);
 
-  let items = [];
+  let items: JSX.Element[] = [];
   for (let key of categories) {
     items.push(
       <ToggleButton sx={CategoryBox} value={key.id} aria-label="bold">
-          <FastfoodIcon sx={{ marginRight: 1 }} />
-          {key.name}
-      </ToggleButton>
+        <FastfoodIcon sx={{ marginRight: 1 }} />
+        {key.name}
+      </ToggleButton>,
     );
+  }
+
+  let cities: JSX.Element[] = [];
+  if (citiesList != undefined) {
+    for (let key of citiesList.keys()) {
+      cities.push(<MenuItem value={key}>{citiesList.get(key).name}</MenuItem>);
+    }
   }
 
   return (
@@ -82,17 +103,29 @@ const ControlBlock = ({
               </Search>
             </Toolbar>
           </AppBar>
-          <Button sx={CityButton}>
+          {/* <Button sx={CityButton}>
             <LocationOnIcon sx={{ marginRight: 1 }} />
             Санкт-Петербург
-          </Button>
-          {/* <Box sx={CategoryBoxContainer}>{items}</Box> */}
+          </Button> */}
+
+          <FormControl variant='standard' sx={{display: 'flex', flexDirection:"row"}}>
+            <LocationOnIcon sx={{ marginRight: 1 }} />
+            <Select
+              value={selectedCity}
+              onChange={(event: SelectChangeEvent) => {
+                changeSelectedCity(event.target.value);
+              }}
+              sx={CitySelect}
+            >
+              <MenuItem value={'None'}>Выбрать город</MenuItem>
+              {cities}
+            </Select>
+          </FormControl>
           <ToggleButtonGroup
             value={selectedCategories}
             onChange={(event: React.MouseEvent<HTMLElement>, newCategories) => {
               selectCategories(newCategories);
             }}
-             
             sx={CategoryBoxContainer}
           >
             {items}
@@ -104,10 +137,14 @@ const ControlBlock = ({
   );
 };
 
-export default inject(({ restaurantsStore }: Stores) => ({
+export default inject(({ restaurantsStore, clientStore }: Stores) => ({
   categories: restaurantsStore.categories,
   selectCategories: restaurantsStore.selectCategories,
   selectedCategories: restaurantsStore.selectedCategories,
   changeSearchQuery: restaurantsStore.changeSearchQuery,
   getCategories: restaurantsStore.getCategories,
+  citiesList: restaurantsStore.cities,
+  getCitiesList: restaurantsStore.getCities,
+  selectedCity: clientStore.selectedCity,
+  changeSelectedCity: clientStore.changeSelectedCity,
 }))(ControlBlock);

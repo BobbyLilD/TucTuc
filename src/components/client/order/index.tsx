@@ -15,6 +15,7 @@ import Footer from '../base/Footer';
 import { useForm } from 'react-hook-form';
 import { phoneRegex } from '../../../commons/const';
 import { DataInputSX } from '../../common/StyledComponents';
+import {useHistory} from 'react-router-dom';
 
 const orderContainer = {
   width: 500,
@@ -84,10 +85,10 @@ type OrderComponentProps = {
   name: string;
   surname: string;
   phone: string;
-  changeFormState: () => void;
 };
 
-const OrderComponent = ({ changeFormState, name, surname, phone }: OrderComponentProps) => {
+const OrderComponent = ({ name, surname, phone }: OrderComponentProps) => {
+  const history = useHistory();
   const { register, handleSubmit } = useForm<IFormInput>();
   const onSubmit = (data) => console.log(data);
 
@@ -95,7 +96,7 @@ const OrderComponent = ({ changeFormState, name, surname, phone }: OrderComponen
     <>
       <Box sx={orderContainer}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Button sx={BackBtn} onClick={changeFormState}>
+          <Button sx={BackBtn} onClick={history.goBack}>
             {'< '}назад
           </Button>
           <Typography variant="h5" fontWeight={600} sx={{ marginBottom: 4 }}>
