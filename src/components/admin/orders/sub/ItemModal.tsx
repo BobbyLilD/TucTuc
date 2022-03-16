@@ -34,6 +34,7 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   paddingY: 2,
+  paddingX: 2
 };
 
 const SelectorSX = {...ListSelectSX, ...{flexGrow: 1, marginLeft: 1}}

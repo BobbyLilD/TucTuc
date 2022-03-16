@@ -1,6 +1,6 @@
 import { inject } from 'mobx-react';
 import React from 'react';
-import { Stores } from '../../../../types';
+import { Client, Stores } from '../../../../types';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button, Grid, Input, Paper, TextField, Typography } from '@mui/material';
 import { StyledButton, AdminDataInputSX } from '../../../common/StyledComponents';
@@ -13,13 +13,25 @@ interface IFormInput {
 }
 
 type ClientFormProps = {
-  clientEdit: boolean;
   changeClientState: () => void;
+  selectedItem: number;
+  clientsList: Client[];
+  changeSelectedItem: (id: number) => void;
 };
 
-const ClientFrom = ({ changeClientState }: ClientFormProps) => {
+const ClientFrom = ({
+  changeClientState,
+  selectedItem,
+  clientsList,
+  changeSelectedItem,
+}: ClientFormProps) => {
   const { register, handleSubmit } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+
+  let curItem: Client = { id: undefined, name: undefined, phone: undefined, email: undefined };
+  if (selectedItem != undefined) {
+    curItem = clientsList[selectedItem];
+  }
 
   return (
     <>
@@ -36,6 +48,7 @@ const ClientFrom = ({ changeClientState }: ClientFormProps) => {
                   placeholder="Телефон"
                   {...register('Phone', { required: true, pattern: phoneRegex })}
                   fullWidth
+                  defaultValue={curItem.phone}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -44,6 +57,7 @@ const ClientFrom = ({ changeClientState }: ClientFormProps) => {
                   placeholder="Email"
                   {...register('Email', { required: true, pattern: emailRegex })}
                   fullWidth
+                  defaultValue={curItem.email}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -52,6 +66,7 @@ const ClientFrom = ({ changeClientState }: ClientFormProps) => {
                   placeholder="Имя"
                   {...register('Name', { required: true, pattern: emailRegex })}
                   fullWidth
+                  defaultValue={curItem.name}
                 />
               </Grid>
             </Grid>
@@ -65,7 +80,13 @@ const ClientFrom = ({ changeClientState }: ClientFormProps) => {
             </Grid>
             <Grid item xs={7}></Grid>
             <Grid item xs={1}>
-              <Button sx={StyledButton} onClick={changeClientState}>
+              <Button
+                sx={StyledButton}
+                onClick={() => {
+                  changeClientState();
+                  changeSelectedItem(undefined);
+                }}
+              >
                 Выйти
               </Button>
             </Grid>
@@ -77,6 +98,8 @@ const ClientFrom = ({ changeClientState }: ClientFormProps) => {
 };
 
 export default inject(({ adminPanelStore }: Stores) => ({
-  clientEdit: adminPanelStore.clientEdit,
   changeClientState: adminPanelStore.changeClientAdd,
+  selectedItem: adminPanelStore.selectdItem,
+  clientsList: adminPanelStore.clientsList,
+  changeSelectedItem: adminPanelStore.changeSelectedItem,
 }))(ClientFrom);

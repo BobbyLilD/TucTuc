@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { styled as StyledMui } from '@mui/material/styles';
 import { alpha, InputBase } from '@mui/material';
 import orange from '@mui/material/colors/orange';
-import {NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export const Button = styled.button``;
 
@@ -30,18 +30,17 @@ export const StyledButton = {
   border: `1px solid ${orange[500]}`,
   'border-radius': '12px',
   color: 'black',
-  'text-transform': 'uppercase',
+  textTransform: 'uppercase',
   ':hover': {
-    backgroundColor: 'rgb(210 153 25 / 4%)'
-  }
+    backgroundColor: 'rgb(210 153 25 / 4%)',
+  },
 };
 
 export const StyledButtonFlex = {
-  border: `1px solid ${orange[500]}`,
-  'border-radius': '12px',
-  color: 'black',
-  'text-transform': 'uppercase',
-  flexGrow: 1
+  ...StyledButton,
+  ...{
+    flexGrow: 1,
+  },
 };
 
 export const Search = StyledMui('div')(({ theme }) => ({
@@ -65,28 +64,27 @@ export const StyledInputBase = StyledMui(InputBase)(({ theme }) => ({
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     width: '85%',
-
   },
 }));
 
 export const AdminContentSubContainer = {
   marginTop: 2,
-  overflow : 'scroll', 
-  height: 'calc(100vh - 174px)' 
-}
+  overflow: 'scroll',
+  height: 'calc(100vh - 174px)',
+};
 
 export const ItemInAdminGrid = {
   display: 'flex',
-  justifyContent: 'center'
-}
+  justifyContent: 'center',
+};
 
 export const BackBtn = {
   marginTop: 3,
   color: 'orange',
-  ":hover" : {
-      bgcolor: 'transparent'
-  }
-}
+  ':hover': {
+    bgcolor: 'transparent',
+  },
+};
 
 export const OrangeBaseButton = {
   bgcolor: 'orange',
@@ -103,7 +101,7 @@ export const WhiteBaseButton = {
   bgcolor: 'white',
   color: 'orange',
   ':hover': {
-    color: 'white',
+    bgcolor: 'white',
   },
   border: '1px solid orange',
   marginRight: 2,
@@ -113,8 +111,9 @@ export const WhiteBaseButton = {
 };
 
 export const StyledNavLink = styled(NavLink)`
-text-decoration: none;
-color: black;`;
+  text-decoration: none;
+  color: black;
+`;
 
 export const DataInputSX = {
   '.MuiOutlinedInput-root': {
@@ -132,33 +131,35 @@ export const AdminDataInputSX = {
     },
   },
   '.MuiOutlinedInput-input': {
-    paddingY: 1.25
-  }
+    paddingY: 1.25,
+  },
 };
 
 export const ListSelectSX = {
   backgroundColor: 'rgb(240,240,240)',
   '.MuiInputLabel-root': {
     '&.Mui-focused': {
-      color:'orange'
-    }
+      color: 'orange',
+    },
   },
   '.MuiOutlinedInput-root': {
-    '&.Mui-focused fieldset':{
-      borderColor: 'orange'
-    }
-  }
-}
+    '&.Mui-focused fieldset': {
+      borderColor: 'orange',
+    },
+  },
+};
 
-export const DescriptionSX = {...AdminDataInputSX,...{'.MuiOutlinedInput-input': {paddingY: 0}}}
-
+export const DescriptionSX = {
+  ...AdminDataInputSX,
+  ...{ '.MuiOutlinedInput-input': { paddingY: 0 } },
+};
 
 export const IncDecButton = {
   p: 0,
   minWidth: 0,
   borderRadius: '60px',
   ':hover': {
-      color: 'transparent'
+    color: 'transparent',
   },
   marginX: 1,
 };

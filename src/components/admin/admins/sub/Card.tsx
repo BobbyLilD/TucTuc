@@ -12,10 +12,15 @@ type CardComponentProps = {
   itemKey: number;
   changeAdminState: () => void;
   adminsList: Admin[];
+  changeSelectedItem: (index: number) => void;
 };
 
-const CardComponent = ({ itemKey, changeAdminState, adminsList }: CardComponentProps) => {
-
+const CardComponent = ({
+  itemKey,
+  changeAdminState,
+  adminsList,
+  changeSelectedItem,
+}: CardComponentProps) => {
   return (
     <Card sx={{ minWidth: 296, width: 364, height: 256 }}>
       <CardContent
@@ -34,7 +39,13 @@ const CardComponent = ({ itemKey, changeAdminState, adminsList }: CardComponentP
         </Typography>
         <Typography variant="h6">Email: {adminsList[itemKey].email}</Typography>
         <Typography variant="h6">Телефон: {adminsList[itemKey].phone}</Typography>
-        <Button sx={StyledButton} onClick={changeAdminState}>
+        <Button
+          sx={StyledButton}
+          onClick={() => {
+            changeAdminState();
+            changeSelectedItem(itemKey);
+          }}
+        >
           Изменить
         </Button>
       </CardContent>
@@ -45,4 +56,5 @@ const CardComponent = ({ itemKey, changeAdminState, adminsList }: CardComponentP
 export default inject(({ adminPanelStore }: Stores) => ({
   changeAdminState: adminPanelStore.changeAdminAdd,
   adminsList: adminPanelStore.adminsList,
+  changeSelectedItem: adminPanelStore.changeSelectedItem,
 }))(CardComponent);

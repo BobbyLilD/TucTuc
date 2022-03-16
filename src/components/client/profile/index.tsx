@@ -86,7 +86,7 @@ const ProfileComponent = ({
                   Личные данные
                 </Typography>
                 <Typography variant="subtitle2" sx={{ marginBottom: 1, color: 'gray' }}>
-                  Имя: {userData != undefined && `${userData.name} ${userData.surname}`}
+                  Имя: {userData != undefined && `${userData.name}`}
                 </Typography>
                 <Typography variant="subtitle2" sx={{ marginBottom: 1, color: 'gray' }}>
                   Номер телефона: {userData != undefined && userData.phone}

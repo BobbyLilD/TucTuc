@@ -23,6 +23,8 @@ const Icon = {
   fontSize: 22,
 };
 
+const deleteBtn = {...StyledButton, ...{fontSize: 12}}
+
 const ItemModalCard = () => {
   const [count, setCount] = React.useState(0);
 
@@ -89,7 +91,7 @@ const ItemModalCard = () => {
                 <RemoveCircleIcon sx={Icon} />
               </Button>
             </Box>
-            <Button sx={StyledButton}>Удалить</Button>
+            <Button sx={deleteBtn}>Удалить</Button>
         </Grid>
       </Grid>
     </Card>

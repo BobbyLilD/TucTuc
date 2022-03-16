@@ -3,14 +3,18 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
-import { orange } from '@mui/material/colors';
 import { StyledButton } from '../../../common/StyledComponents';
+import { Order, Stores } from '../../../../types';
+import { inject } from 'mobx-react';
+
+type CardComponentProps = {
+  ordersList: Order[];
+  changeOrderState: () => void;
+  index: number;
+}
 
 
-
-
-
-const CardComponent = () => {
+const CardComponent = ({ordersList,index, changeOrderState}:CardComponentProps) => {
   return (
     // <Badge badgeContent={'30%'} sx={{fontSize: 20, , bgcolor: orange[500]}}>
     <Card
@@ -23,22 +27,23 @@ const CardComponent = () => {
       }}
     >
       <CardContent sx={{paddingTop: 2}}>
-        <Typography variant="h5" fontWeight={600}>ID: 3904738403</Typography>
+        <Typography variant="h5" fontWeight={600}>ID: {ordersList[index].id}</Typography>
         <Typography variant='h6' paddingTop={1}>
           Москва
         </Typography>
         <Typography variant='h6' paddingTop={1}>
-          McDonald's
+          {ordersList[index].placeName}
         </Typography>
         <Typography variant='subtitle1' paddingTop={1}>
-          Кол-во товаров: 6
+          Кол-во товаров: {ordersList[index].items.size}
         </Typography>
         <Typography variant='subtitle1' paddingTop={1}>
-          Кол-во персон: 3
+          Кол-во персон: {ordersList[index].servings}
         </Typography>
         <Typography variant='subtitle1' paddingY={1}>
-          7839 + 311 = 3834р.
+          {ordersList[index].orderSum - ordersList[index].deliveryPrice} + {ordersList[index].deliveryPrice} = {ordersList[index].orderSum}р.
         </Typography>
+        <Button sx={{...StyledButton, ...{marginRight: 1}}} onClick={changeOrderState}>Изменить</Button>
         <Button sx={StyledButton}>Отменить</Button>
       </CardContent>
     </Card>
@@ -46,4 +51,5 @@ const CardComponent = () => {
   );
 };
 
-export default CardComponent;
+export default inject(({adminPanelStore}: Stores) => ({ordersList: adminPanelStore.ordersList,
+changeOrderState: adminPanelStore.changeOrderAdd}))(CardComponent);

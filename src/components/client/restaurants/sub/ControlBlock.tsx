@@ -108,8 +108,8 @@ const ControlBlock = ({
             Санкт-Петербург
           </Button> */}
 
-          <FormControl variant='standard' sx={{display: 'flex', flexDirection:"row"}}>
-            <LocationOnIcon sx={{ marginRight: 1 }} />
+          <FormControl variant='standard' sx={{display: 'flex', flexDirection:"row", marginBottom: 1}}>
+            <LocationOnIcon sx={{ marginRight: 1, marginTop: 0.5, marginLeft: 0.5 }} />
             <Select
               value={selectedCity}
               onChange={(event: SelectChangeEvent) => {

@@ -1,6 +1,7 @@
 import { action, makeObservable, observable } from 'mobx';
 import { userData } from '../types';
 
+
 class UserStore {
   access_token: string | undefined | null;
   userData: userData | undefined;
@@ -17,13 +18,13 @@ class UserStore {
   getUserInfo = () => {
     this.userData = {
       name: 'Todd',
-      surname: 'Howard',
-      phone: '+7(916)746-85-22',
+      phone: '+7 (916) 746-85-22',
       email: 'bethesda@gmail.com',
     };
   };
 
   setPhoneNum = (phone: string) => {
+    console.log(phone);
     this.phoneValid = !this.phoneValid;
   };
 

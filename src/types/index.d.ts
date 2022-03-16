@@ -46,9 +46,19 @@ export type Restaurant = {
   id?: string;
   name: string;
   items: string[] | undefined;
-  rating: number;
+  rating: number | undefined;
   categories: string[];
-  delivery: number;
+  delivery: number| undefined;
+  imageLocation?: string;
+}
+
+export type RestaurantAdmin={
+  id?: string;
+  name: string | undefined;
+  phone: string | undefined;
+  email: string| undefined;
+  items: string[] | Item[] | undefined;
+  imageSource: FormData | undefined;
 }
 
 export type Item = {
@@ -70,7 +80,7 @@ export type CartItem = {
 }
 
 export type Order = {
-  id: string|undefined;
+  id?: string|undefined;
   name: string | undefined;
   surname: string | undefined;
   phone: string | undefined;
@@ -89,6 +99,7 @@ export type Order = {
   orderSum: number;
   placeName: string | undefined;
   delivered?: boolean;
+  city: string;
 }
 
 export type City = {

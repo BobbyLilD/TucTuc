@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 export const containerHeight = '260px';
 export const paddingPercentage = 22;
@@ -30,7 +30,7 @@ export const CategoryBoxContainer = {
   height: 'fit-content',
   justifyContent: 'start',
   marginBottom: 0.5,
-  backgroundColor: 'white'
+  backgroundColor: 'white',
 };
 
 export const CategoryBox = {
@@ -44,15 +44,15 @@ export const CategoryBox = {
   marginX: 1,
   'white-space': 'nowrap',
   ':hover': {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   '&.Mui-selected': {
     color: 'orange',
     backgroundColor: 'transparent',
     ':hover': {
-      backgroundColor: 'transparent'
-    }
-  }
+      backgroundColor: 'transparent',
+    },
+  },
 };
 
 export const CityButton = {
@@ -61,14 +61,40 @@ export const CityButton = {
   'text-transform': 'none',
   fontSize: 16,
   ':hover': {
-    backgroundColor: 'transparent'
-  }
+    backgroundColor: 'transparent',
+  },
 };
 
 export const CitySelect = {
-  '.MuiInput-root': {
-    '.MuiSelect-nativeInput':{
-      border: 'none'
-    }
-  }
-}
+  '&.MuiInputBase-root': {
+    ':before': {
+      borderBottom: 'none',
+    },
+    ':after': {
+      borderBottom: 'none',
+    },
+    ':hover': {
+      ':before': {
+        borderBottom: 'none',
+      },
+    },
+    '&.Mui-focused input': {
+      backgroundColor: 'transparent',
+    },
+  },
+  '& .MuiSelect-iconStandard': {
+    display: 'none',
+  },
+  '& .MuiSelect-standard': {
+    ':focus': {
+      backgroundColor: 'transparent',
+    },
+  },
+  '& .MuiPaper-root': {
+    '& .MuiMenuItem-root': {
+      '&.Mui-selected': {
+        backgroundColor: 'transparent',
+      },
+    },
+  },
+};

@@ -8,6 +8,8 @@ import styled from '@emotion/styled';
 import defaultImage from '../../../../commons/default.jpg';
 import { StyledButton } from '../../../common/StyledComponents';
 import { Box } from '@mui/system';
+import { Item, Stores } from '../../../../types';
+import { inject } from 'mobx-react';
 
 const StyledImage = styled.img`
   // border-bottom: 1px solid ${orange[500]};
@@ -18,7 +20,12 @@ const StyledImage = styled.img`
   object-fit: cover;
 `;
 
-const CardComponent = () => {
+type CardComponentProps = {
+  itemsList: Item[];
+  index: number;
+}
+
+const CardComponent = ({itemsList, index}:CardComponentProps) => {
   return (
     // <Badge badgeContent={'30%'} sx={{fontSize: 20, , bgcolor: orange[500]}}>
     <Card
@@ -30,7 +37,7 @@ const CardComponent = () => {
         position: 'relative',
       }}
     >
-      <Typography
+      {itemsList[index].discount != 0 && <Typography
         variant="h6"
         sx={{
           position: 'absolute',
@@ -44,16 +51,15 @@ const CardComponent = () => {
         }}
       >
         30%
-      </Typography>
+      </Typography>}
       <StyledImage src={defaultImage} />
       <CardContent sx={{ paddingTop: 0 }}>
-        <Typography variant="h4">Абобус</Typography>
+        <Typography variant="h5" fontWeight={600}>{itemsList[index].name}</Typography>
         <Typography variant="body2" sx={{ height: 92, overflow: 'scroll', color:'gray' }}>
-          Нежнейший абобус из ягненка в грибном соусе. Подается с гречишным чаем и смузи из
-          сельдерея в авторском коктейле от шефа-изобретателя легендарного Качо и карри
+          {itemsList[index].description}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:'space-between'}}>
-          <Typography sx={{fontSize: 20, fontWeight: 600 }}>12975 р.</Typography>
+          <Typography sx={{fontSize: 20, fontWeight: 600 }}>{itemsList[index].price} р.</Typography>
           <Button sx={StyledButton}>Изменить</Button>
         </Box>
       </CardContent>
@@ -62,4 +68,4 @@ const CardComponent = () => {
   );
 };
 
-export default CardComponent;
+export default inject(({adminPanelStore}: Stores) => ({itemsList: adminPanelStore.itemsList}))(CardComponent);

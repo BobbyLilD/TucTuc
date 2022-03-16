@@ -2,14 +2,16 @@ import { Button, Input, Modal, TextField, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { Box } from '@mui/system';
 import { inject } from 'mobx-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { Stores } from '../../../types';
+import {AsYouType, parsePhoneNumber} from 'libphonenumber-js';
+import { numbRegex, phoneRegex } from '../../../commons/const';
 
 type AuthModalProps = {
   shown: boolean;
   changeAuthState: () => void;
   phoneVerified: boolean;
-  changePhoneState: () => void;
+  changePhoneState: (phone: string) => void;
   changeAccessToken: (token: string) => void;
 };
 
@@ -51,10 +53,14 @@ const ButtonStyle = {
 };
 
 const AuthModal = ({ shown, changeAuthState, phoneVerified, changePhoneState, changeAccessToken }: AuthModalProps) => {
+  const [phone, setPhone] = useState('');
+  let typer = new AsYouType('RU');
+
   return (
     <Modal
       open={shown}
-      onClose={changeAuthState}
+      onClose={()=>{changeAuthState();
+      setPhone('');}}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -67,11 +73,18 @@ const AuthModal = ({ shown, changeAuthState, phoneVerified, changePhoneState, ch
               placeholder="Номер моб. телефона"
               type="text"
               sx={InputStyle}
+              value={phone}
+              onChange={(event) => {
+                setPhone(typer.input(event.target.value))
+                // setPhone(event.target.value)
+              }}
+              inputProps={{maxLength: 17, pattern: phoneRegex}}
             />
             <Button
               sx={ButtonStyle}
               onClick={() => {
-                changePhoneState();
+                let parsed = parsePhoneNumber(phone, 'RU')
+                changePhoneState(parsed.getURI().substring(4));
               }}
             >
               Далее
@@ -85,7 +98,7 @@ const AuthModal = ({ shown, changeAuthState, phoneVerified, changePhoneState, ch
               sx={ButtonStyle}
               onClick={() => {
                 changeAccessToken('acb');
-                changePhoneState();
+                changePhoneState(undefined);
                 changeAuthState();
               }}
             >

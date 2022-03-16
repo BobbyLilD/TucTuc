@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Input, Paper, TextField, Toolbar, Typography } from '@mui/material';
 import { inject } from 'mobx-react';
-import React from 'react';
-import { Stores } from '../../../../types';
+import React, { useEffect } from 'react';
+import { Item, Restaurant, RestaurantAdmin, Stores } from '../../../../types';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ItemCard from './ItemCard';
 import TemporaryDrawer from './PlaceFormDrawer';
@@ -19,6 +19,10 @@ type CityFormProps = {
   changeItemState: () => void;
   photoSet: boolean;
   changePhotoState: () => void;
+  selectedItem: number;
+  placesList: RestaurantAdmin[];
+  itemsList: Item[];
+  getItemsByPlaceID: (id: string) => void;
 };
 
 interface IFormInput {
@@ -34,9 +38,34 @@ const PlaceForm = ({
   changeItemState,
   photoSet,
   changePhotoState,
+  selectedItem,
+  placesList,
+  itemsList,
+  getItemsByPlaceID,
 }: CityFormProps) => {
   const { register, handleSubmit } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+
+  let newItem: RestaurantAdmin = {
+    name: undefined,
+    phone: undefined,
+    email: undefined,
+    imageSource: undefined,
+    items: new Array(),
+  };
+  let cards: JSX.Element[] = [];
+  useEffect(() => {
+    if (selectedItem != undefined) {
+      newItem = placesList[selectedItem];
+      getItemsByPlaceID(newItem.id);
+    }
+
+    if (itemsList != undefined) {
+      for (let i = 0; i < itemsList.length; i++) {
+        cards.push(<ItemCard index={i} />);
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -62,13 +91,16 @@ const PlaceForm = ({
             marginTop: 4,
           }}
         >
-          {/* <Grid
-            container
-            spacing={1}
-            sx={{ bgcolor: 'background.default', paddingBottom: 4}}
-          > */}
           <Box
-            sx={{alignItems: 'stretch', width: 192, height: 188, display: 'flex', justifyContent: 'center', marginX: 4, p: 2}}
+            sx={{
+              alignItems: 'stretch',
+              width: 192,
+              height: 188,
+              display: 'flex',
+              justifyContent: 'center',
+              marginX: 4,
+              p: 2,
+            }}
           >
             {photoSet ? (
               <ImagePreview />
@@ -89,7 +121,8 @@ const PlaceForm = ({
                 fullWidth
                 sx={AdminDataInputSX}
                 placeholder="Название"
-                {...register('Name', {required: true, pattern: letterRegex})}
+                defaultValue={newItem.name}
+                {...register('Name', { required: true, pattern: letterRegex })}
               />
             </Grid>
             <Grid item xs={4}>
@@ -98,7 +131,8 @@ const PlaceForm = ({
                 fullWidth
                 sx={AdminDataInputSX}
                 placeholder="Телефон"
-                {...register('Phone', {required: true, pattern: phoneRegex})}
+                defaultValue={newItem.phone}
+                {...register('Phone', { required: true, pattern: phoneRegex })}
               />
             </Grid>
             <Grid item xs={5}>
@@ -107,7 +141,8 @@ const PlaceForm = ({
                 fullWidth
                 sx={AdminDataInputSX}
                 placeholder="Email"
-                {...register('Email', {required: true, pattern: emailRegex})}
+                defaultValue={newItem.email}
+                {...register('Email', { required: true, pattern: emailRegex })}
               />
             </Grid>
             <Grid item xs={3} sx={{ display: 'flex' }}>
@@ -146,13 +181,7 @@ const PlaceForm = ({
             overflow={'scroll'}
             padding={2}
           >
-            <ItemCard />
-            <ItemCard />
-            <ItemCard />
-            <ItemCard />
-            <ItemCard />
-            <ItemCard />
-            <ItemCard />
+            {cards}
           </Box>
         </Paper>
       </Box>
@@ -165,4 +194,8 @@ export default inject(({ adminPanelStore }: Stores) => ({
   changeItemState: adminPanelStore.changeItemAdd,
   photoSet: adminPanelStore.photoSet,
   changePhotoState: adminPanelStore.changePhotoSet,
+  selectedItem: adminPanelStore.selectdItem,
+  itemsList: adminPanelStore.itemsList,
+  placesList: adminPanelStore.placesList,
+  getItemsByPlaceID: adminPanelStore.getItemsByPlaceID,
 }))(PlaceForm);

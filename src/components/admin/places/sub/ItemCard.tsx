@@ -7,6 +7,8 @@ import { orange } from '@mui/material/colors';
 import styled from '@emotion/styled';
 import defaultImage from '../../../../commons/default.jpg';
 import { StyledButton } from '../../../common/StyledComponents';
+import { Item, Stores } from '../../../../types';
+import { inject } from 'mobx-react';
 
 const StyledImage = styled.img`
   // border-bottom: 1px solid ${orange[500]};
@@ -16,7 +18,14 @@ const StyledImage = styled.img`
   // margin: 0 calc((100% - 164px)/2);
 `;
 
-const ItemCard = () => {
+type ItemCardProps = {
+  itemsList: Item[];
+  index: number;
+}
+
+const ItemCard = ({itemsList, index}: ItemCardProps) => {
+  let curCard: Item = itemsList[index];
+
   return (
     // <Badge badgeContent={'30%'} sx={{fontSize: 20, , bgcolor: orange[500]}}>
     <Card
@@ -29,7 +38,7 @@ const ItemCard = () => {
         position: 'relative',
       }}
     >
-      <Typography
+      {curCard.discount != undefined && <Typography
         variant="h6"
         sx={{
           position: 'absolute',
@@ -42,17 +51,15 @@ const ItemCard = () => {
           color: 'white',
         }}
       >
-        30%
-      </Typography>
+        {curCard.discount}%
+      </Typography>}
       <StyledImage src={defaultImage} />
       <CardContent sx={{paddingTop: 0}}>
-        <Typography variant="h4">Абобус</Typography>
+        <Typography variant="h4">{curCard.name}</Typography>
         <Typography variant="body2" sx={{ height: 128, overflow: 'scroll', marginBottom: 2 }}>
-          Нежнейший абобус из ягненка в грибном соусе. Подается с гречишным чаем и смузи из
-          сельдерея в авторском коктейле от шефа-изобретателя легендарного Качо и карри, столь
-          известного в районе Лигурии северной Италии.
+          {curCard.description}
         </Typography>
-        <Typography sx={{marginBottom: 1}}>12975 р.</Typography>
+        <Typography sx={{marginBottom: 1}}>{curCard.price} р.</Typography>
         <Button sx={StyledButton}>Изменить</Button>
       </CardContent>
     </Card>
@@ -60,4 +67,4 @@ const ItemCard = () => {
   );
 };
 
-export default ItemCard;
+export default inject(({adminPanelStore}: Stores) => ({itemsList: adminPanelStore.itemsList}))(ItemCard);

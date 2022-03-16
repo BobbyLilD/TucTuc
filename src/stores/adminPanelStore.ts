@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Admin, Category, City, Client, Item, Order, Place } from '../types';
+import { Admin, Category, City, Client, Item, Order, Place, Restaurant } from '../types';
 
 class AdminPanelStore {
   cityAdd: boolean;
@@ -18,8 +18,49 @@ class AdminPanelStore {
   ordersList: Order[] | undefined;
   placesList: Place[] | undefined;
   adminsList: Admin[] | undefined;
+  selectdItem: number | undefined;
+
+  newPLace: Restaurant | undefined;
+  newOrder: Order | undefined;
+
+  initOrder = () => {
+    this.newOrder = {
+      name: undefined;
+      
+    }
+  }
+
+  initPlace = () => {
+    this.newPLace = {
+      name: '',
+      items: new Array(),
+      categories: new Array(),
+      delivery: undefined,
+      rating: undefined,
+    }
+  }
+
+  changeSelectedItem = (index: number) => {
+    this.selectdItem = index;
+  }
+
+  getItemsByPlaceID = (id: string) => {
+    const newItem: Item = {
+      id: 'sbdjsdbg',
+      name: 'Удон с курицей',
+      description: 'dbgdfgdfjdfg',
+      price: 124034,
+      category: 'Японская',
+      discount: 30,
+      imageSource: 'kndlfngd',
+      placeID: 'kndklfng'
+    };
+    let newList: Item[] = [newItem, newItem, newItem, newItem];
+    this.itemsList = new Array(...newList);    
+  }
 
   getCities = () => {
+    this.citiesList = new Array();
     const newCity: City = { id: 'snsnlsd', name: 'Санкт-Петербург', places: 20 };
     let newList = [newCity, newCity, newCity, newCity];
     this.citiesList = new Array(...newList);
@@ -57,6 +98,7 @@ class AdminPanelStore {
       category: 'Японская',
       discount: 30,
       imageSource: 'kndlfngd',
+      placeID: 'kndklfng'
     };
     let newList: Item[] = [newItem, newItem, newItem, newItem];
     this.itemsList = new Array(...newList);
@@ -75,22 +117,28 @@ class AdminPanelStore {
   };
 
   getOrders = () => {
+    this.ordersList = new Array();
     const newItem: Order = {
       id: 'ddnndfnld',
-      name: undefined,
-      surname: undefined,
-      phone: undefined,
-      address: undefined,
-      flat: undefined,
-      floor: undefined,
-      entranceCode: undefined,
+      name: 'Egor',
+      surname: 'Surname',
+      phone: '+79162963580',
+      address: 'Moscow',
+      flat: '42',
+      floor: 9,
+      entranceCode: '42',
       comment: undefined,
       promocode: undefined,
       paymentMethod: undefined,
-      items: undefined,
-      servings: undefined,
-      deliveryPrice: undefined,
-      date: undefined,
+      items: new Map(),
+      servings: 22,
+      deliveryPrice: 656,
+      delivered: undefined,
+      deliveryDate: undefined,
+      orderDate: undefined,
+      orderSum: 1200,
+      placeName: 'McBoba',
+      city: 'Moscow'
     };
     let newList: Order[] = [newItem, newItem, newItem, newItem];
     this.ordersList = new Array(...newList);
@@ -167,6 +215,19 @@ class AdminPanelStore {
 
       adminsList: observable,
       getAdmins: action,
+
+      itemsList: observable,
+      getItems: action,
+      getItemsByPlaceID: action,
+
+      ordersList: observable,
+      getOrders: action,
+
+      clientsList: observable,
+      getClients: action,
+
+      selectdItem: observable,
+      changeSelectedItem: action,
     });
   }
 }
