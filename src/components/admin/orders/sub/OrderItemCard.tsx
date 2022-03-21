@@ -9,6 +9,8 @@ import defaultImage from '../../../../commons/default.jpg';
 import { IncDecButton, StyledButton } from '../../../common/StyledComponents';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { Item, OrderAdmin, Stores } from '../../../../types';
+import { inject, observer } from 'mobx-react';
 
 const StyledImage = styled.img`
   // border-bottom: 1px solid ${orange[500]};
@@ -23,12 +25,20 @@ const Icon = {
   fontSize: 22,
 };
 
+type OrderItemCardProps = {
+  id: string;
+  itemsInOrder: Map<string, Item>;
+  newOrder: OrderAdmin;
+  addItemToOrder: (id: string) => void;
+  removeItemFromOrder: (id: string) => void;
+  deleteItemFromOrder: (id: string) => void;
+}
 
-const OrderItemCard = () => {
-  const [count, setCount] = React.useState(0);
+
+const OrderItemCard = observer(({id, itemsInOrder, newOrder, addItemToOrder, removeItemFromOrder, deleteItemFromOrder}:OrderItemCardProps) => {
+  let curItem: Item = itemsInOrder.get(id);
 
   return (
-    // <Badge badgeContent={'30%'} sx={{fontSize: 20, , bgcolor: orange[500]}}>
     <Card
       sx={{
         minWidth: 296,
@@ -52,13 +62,13 @@ const OrderItemCard = () => {
           color: 'white',
         }}
       >
-        30%
+        {curItem.discount}%
       </Typography>
       <StyledImage src={defaultImage} />
       <CardContent sx={{ paddingTop: 0, marginTop: 1 }}>
-        <Typography variant="h4">Абобус</Typography>
+        <Typography variant="h4">{curItem.name}</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography>12975 р.</Typography>
+          <Typography>{curItem.price} р.</Typography>
           <Box
             sx={{
               display: 'flex',
@@ -71,15 +81,15 @@ const OrderItemCard = () => {
             <Button
               sx={IncDecButton}
               onClick={() => {
-                setCount(count + 1);
+                addItemToOrder(curItem.id)
               }}
             >
               <AddCircleIcon sx={Icon} />
             </Button>
-            <Typography variant="h6">{count}</Typography>
+            <Typography variant="h6">{newOrder.items.get(curItem.id)}</Typography>
             <Button
               onClick={() => {
-                setCount(count - 1);
+                removeItemFromOrder(curItem.id)
               }}
               sx={IncDecButton}
             >
@@ -87,11 +97,19 @@ const OrderItemCard = () => {
             </Button>
           </Box>
         </Box>
-        <Button sx={StyledButton}>Удалить</Button>
+        <Button sx={StyledButton} onClick={() => {
+          deleteItemFromOrder(curItem.id)
+        }}>Удалить</Button>
       </CardContent>
     </Card>
     // </Badge>
   );
-};
+})
 
-export default OrderItemCard;
+export default inject(({adminPanelStore}: Stores) => ({
+  itemsInOrder: adminPanelStore.itemsInOrder,
+  newOrder: adminPanelStore.newOrder,
+  addItemToOrder: adminPanelStore.addItemToOrder,
+  removeItemFromOrder: adminPanelStore.removeItemFromOrder,
+  deleteItemFromOrder: adminPanelStore.deleteItemFromOrder,
+}))(OrderItemCard);

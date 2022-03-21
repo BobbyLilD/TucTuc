@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import { inject } from 'mobx-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CardGrid from './sub/CardGrid';
 import { Stores } from '../../../types';
 import SearchBlock from '../../common/SearchBlock';
@@ -11,9 +11,16 @@ import {AdminContentSubContainer} from '../../common/StyledComponents';
 type OrdersProps = {
   orderAdd: boolean;
   changeOrderState: () => void;
+  getCities: () => void;
+  getPlaces: () => void;
 };
 
-const ordersComponent = ({ orderAdd, changeOrderState }: OrdersProps) => {
+const ordersComponent = ({ orderAdd, changeOrderState, getCities, getPlaces }: OrdersProps) => {
+  useEffect(() => {
+    getCities();
+    console.log('getting places');
+    getPlaces();
+  }, [])
   return (
     <Box>
       {orderAdd ? (
@@ -22,7 +29,6 @@ const ordersComponent = ({ orderAdd, changeOrderState }: OrdersProps) => {
         </>
       ) : (
         <>
-          {' '}
           <SearchBlock changeAddState={changeOrderState} />
           <Box sx={AdminContentSubContainer}>
             <CardGrid />
@@ -36,4 +42,6 @@ const ordersComponent = ({ orderAdd, changeOrderState }: OrdersProps) => {
 export default inject(({ adminPanelStore }: Stores) => ({
   orderAdd: adminPanelStore.orderAdd,
   changeOrderState: adminPanelStore.changeOrderAdd,
+  getCities: adminPanelStore.getCities,
+  getPlaces: adminPanelStore.getPlaces
 }))(ordersComponent);

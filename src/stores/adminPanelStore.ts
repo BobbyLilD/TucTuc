@@ -1,5 +1,14 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Admin, Category, City, Client, Item, Order, Place, Restaurant } from '../types';
+import {
+  Admin,
+  Category,
+  City,
+  Client,
+  Item,
+  Order,
+  OrderAdmin,
+  RestaurantAdmin,
+} from '../types';
 
 class AdminPanelStore {
   cityAdd: boolean;
@@ -15,34 +24,117 @@ class AdminPanelStore {
   itemsList: Item[] | undefined;
   categoriesList: Category[] | undefined;
   clientsList: Client[] | undefined;
-  ordersList: Order[] | undefined;
-  placesList: Place[] | undefined;
+  ordersList: OrderAdmin[] | undefined;
+  placesList: RestaurantAdmin[] | undefined;
   adminsList: Admin[] | undefined;
   selectdItem: number | undefined;
 
-  newPLace: Restaurant | undefined;
-  newOrder: Order | undefined;
+  newPlace: RestaurantAdmin | undefined;
+  newOrder: OrderAdmin | undefined;
+  itemsInOrder: Map<string, Item> | undefined;
+
+  selectOrderCity = (id:string) => {
+    this.newOrder!.cityID = id;
+  }
+
+  selectOrderPlace = (id:string) => {
+    this.newOrder!.placeID = id;
+  }
+
+  getRestaurantByID = (id: string) => {
+    let newPlace: RestaurantAdmin = {
+      id: '0',
+      name: 'mcBoba',
+      phone: '4957647564886',
+      email: 'mcboba@gmail.com',
+      items: undefined,
+      imageSource: undefined
+    }
+    this.placesList = new Array(...[newPlace]);
+  }
+
+  addItemToOrder = (id: string, item?: Item) => {
+    if (this.newOrder?.items.get(id) == undefined) {
+      this.newOrder?.items.set(id, 1);
+      this.itemsInOrder?.set(id,item!);
+    } else {
+      this.newOrder.items.set(id, this.newOrder.items.get(id)! + 1);
+    }
+    console.log('map size is ' + this.itemsInOrder?.size)
+    console.log('item quantity' + this.newOrder?.items.get(id))
+  };
+
+  removeItemFromOrder = (id: string) => {
+    if (this.newOrder?.items.get(id) != undefined) {
+      if (this.newOrder.items.get(id) == 0) {
+        this.newOrder.items.delete(id);
+      } else {
+        this.newOrder.items.set(id, this.newOrder.items.get(id)! - 1);
+      }
+    }
+  };
+
+  deleteItemFromOrder = (id: string) => {
+    if(this.newOrder?.items.get(id) != undefined){
+      this.newOrder.items.delete(id);
+      this.itemsInOrder?.delete(id);
+    }
+  }
+
+  getPlaces = () => {
+    let newPlace: RestaurantAdmin = {
+      id: '0',
+      name: 'mcBoba',
+      phone: '4957647564886',
+      email: 'mcboba@gmail.com',
+      items: undefined,
+      imageSource: undefined
+    }
+    let newArray: RestaurantAdmin[] = [newPlace, newPlace, newPlace];
+    this.placesList = new Array(...newArray);
+  };
+
+  getItemsByIDs = (IDs: string[]) => {
+    const newItem: Item = {
+      id: 'sbdjsdbg',
+      name: 'Удон с курицей',
+      description: 'dbgdfgdfjdfg',
+      price: 124034,
+      category: 'Японская',
+      discount: 30,
+      imageSource: 'kndlfngd',
+      placeID: 'kndklfng',
+    };
+    let newList: Map<string,Item> = new Map();
+    newList.set(newItem.id!, newItem);
+    this.itemsInOrder = new Map(newList);
+  };
 
   initOrder = () => {
     this.newOrder = {
-      name: undefined;
-      
-    }
-  }
+      id: undefined,
+      phone: undefined,
+      email: undefined,
+      items: new Map(),
+      servings: undefined,
+      cityID: '',
+      placeID: '',
+    };
+    this.itemsInOrder = new Map();
+  };
 
   initPlace = () => {
-    this.newPLace = {
-      name: '',
-      items: new Array(),
-      categories: new Array(),
-      delivery: undefined,
-      rating: undefined,
-    }
-  }
+    // this.newPlace = {
+    //   name: '',
+    //   items: new Array(),
+    //   delivery: undefined,
+    //   rating: undefined,
+    // };
+  };
 
   changeSelectedItem = (index: number) => {
     this.selectdItem = index;
-  }
+  };
 
   getItemsByPlaceID = (id: string) => {
     const newItem: Item = {
@@ -53,15 +145,15 @@ class AdminPanelStore {
       category: 'Японская',
       discount: 30,
       imageSource: 'kndlfngd',
-      placeID: 'kndklfng'
+      placeID: 'kndklfng',
     };
     let newList: Item[] = [newItem, newItem, newItem, newItem];
-    this.itemsList = new Array(...newList);    
-  }
+    this.itemsList = new Array(...newList);
+  };
 
   getCities = () => {
     this.citiesList = new Array();
-    const newCity: City = { id: 'snsnlsd', name: 'Санкт-Петербург', places: 20 };
+    const newCity: City = { id: '0', name: 'Санкт-Петербург', places: 20 };
     let newList = [newCity, newCity, newCity, newCity];
     this.citiesList = new Array(...newList);
   };
@@ -98,7 +190,7 @@ class AdminPanelStore {
       category: 'Японская',
       discount: 30,
       imageSource: 'kndlfngd',
-      placeID: 'kndklfng'
+      placeID: 'kndklfng',
     };
     let newList: Item[] = [newItem, newItem, newItem, newItem];
     this.itemsList = new Array(...newList);
@@ -117,30 +209,19 @@ class AdminPanelStore {
   };
 
   getOrders = () => {
-    this.ordersList = new Array();
-    const newItem: Order = {
+    const newItem: OrderAdmin = {
       id: 'ddnndfnld',
-      name: 'Egor',
-      surname: 'Surname',
       phone: '+79162963580',
-      address: 'Moscow',
-      flat: '42',
-      floor: 9,
-      entranceCode: '42',
-      comment: undefined,
-      promocode: undefined,
-      paymentMethod: undefined,
       items: new Map(),
       servings: 22,
       deliveryPrice: 656,
-      delivered: undefined,
-      deliveryDate: undefined,
-      orderDate: undefined,
+      orderDate: new Date('2017-04-03'),
       orderSum: 1200,
-      placeName: 'McBoba',
-      city: 'Moscow'
+      email: 'mcboba@gmail.com',
+      placeID: '0',
+      cityID: '0',
     };
-    let newList: Order[] = [newItem, newItem, newItem, newItem];
+    let newList: OrderAdmin[] = [newItem, newItem, newItem, newItem];
     this.ordersList = new Array(...newList);
   };
 
@@ -186,6 +267,7 @@ class AdminPanelStore {
     this.clientEdit = false;
 
     makeObservable(this, {
+      //FORM MARKERS
       cityAdd: observable,
       changeCityAdd: action,
 
@@ -210,6 +292,7 @@ class AdminPanelStore {
       clientEdit: observable,
       changeClientAdd: action,
 
+      //LIST INIT
       citiesList: observable,
       getCities: action,
 
@@ -228,6 +311,21 @@ class AdminPanelStore {
 
       selectdItem: observable,
       changeSelectedItem: action,
+
+      newOrder: observable,
+      itemsInOrder: observable,
+      addItemToOrder: action,
+      removeItemFromOrder: action,
+      initOrder: action,
+      getItemsByIDs: action,
+      deleteItemFromOrder: action,
+      selectOrderCity: action,
+      selectOrderPlace: action,
+
+      placesList: observable,
+      newPlace: observable,
+      getPlaces: action,
+      initPlace: action
     });
   }
 }

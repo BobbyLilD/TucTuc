@@ -3,7 +3,6 @@ import {
   Button,
   FormControl,
   Grid,
-  Input,
   InputLabel,
   MenuItem,
   Paper,
@@ -13,13 +12,12 @@ import {
   Typography,
 } from '@mui/material';
 import { inject } from 'mobx-react';
-import React from 'react';
-import { Stores } from '../../../../types';
+import React, { useEffect } from 'react';
+import { City, Item, OrderAdmin, RestaurantAdmin, Stores } from '../../../../types';
 import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form';
 import { AdminDataInputSX, StyledButton, ListSelectSX } from '../../../common/StyledComponents';
 import ItemModal from './ItemModal';
-import ItemModalCard from './ItemModalCard';
 import OrderItemCard from './OrderItemCard';
 import { emailRegex, numbRegex, phoneRegex } from '../../../../commons/const';
 
@@ -33,25 +31,86 @@ interface IFromInput {
 }
 
 type OrderFormProps = {
-  orderAdd: boolean;
   changeOrderState: () => void;
-  itemAdd: boolean;
   changeItemState: () => void;
+  newOrder: OrderAdmin;
+  itemsList: Item[];
+  initOrder: () => void;
+  selectedItem: number;
+  ordersList: OrderAdmin[];
+  getItemsByIDList: (IDs: string[]) => void;
+  citiesList: City[];
+  placesList: RestaurantAdmin[];
+  itemsInOrder: Map<string,Item>;
+  selectOrderCity: (id: string) => void;
+  selectOrderPlace: (id: string) => void;
 };
 
-const OrderForm = ({ orderAdd, changeOrderState, itemAdd, changeItemState }: OrderFormProps) => {
+const OrderForm = ({
+  changeOrderState,
+  changeItemState,
+  newOrder,
+  initOrder,
+  selectedItem,
+  ordersList,
+  getItemsByIDList,
+  citiesList,
+  placesList,
+  itemsInOrder,
+  selectOrderCity,
+  selectOrderPlace
+}: OrderFormProps) => {
   const { register, handleSubmit } = useForm<IFromInput>();
   const onSubmit: SubmitHandler<IFromInput> = (data) => console.log(data);
 
   const [place, setPlace] = React.useState('');
   const handlePlaceChange = (event: SelectChangeEvent) => {
     setPlace(event.target.value as string);
+    selectOrderPlace(event.target.value);
   };
 
   const [city, setCity] = React.useState('');
   const handleCityChange = (event: SelectChangeEvent) => {
     setCity(event.target.value as string);
+    selectOrderCity(event.target.value);
   };
+
+  useEffect(() => {
+    initOrder();
+  }, []);
+
+  //BUILD CARD LIST
+  let cards: JSX.Element[] = [];
+  if (selectedItem != undefined) {
+    newOrder = ordersList[selectedItem];
+    let IDs: string[] = [];
+    for (let i of newOrder.items.keys()) {
+      IDs.push(i);
+    }
+    getItemsByIDList(IDs);
+  }
+
+  if (itemsInOrder != undefined) {
+    for (let key of itemsInOrder.keys()) {
+      cards.push(<OrderItemCard id={key} />);
+    }
+  }
+
+  //BUILD CITY LIST
+  let cityMenuItems: JSX.Element[] = [];
+  for(let i = 0; i < citiesList.length; i++){
+    cityMenuItems.push(
+      <MenuItem value={citiesList[i].id}>{citiesList[i].name}</MenuItem>
+    )
+  }
+
+  //BUILD PLACE LIST
+  let placeMenuItems: JSX.Element[] = [];
+  for(let i = 0; i < placesList.length; i++){
+    placeMenuItems.push(
+      <MenuItem value={placesList[i].id}>{placesList[i].name}</MenuItem>
+    )
+  }
 
   return (
     <>
@@ -83,9 +142,9 @@ const OrderForm = ({ orderAdd, changeOrderState, itemAdd, changeItemState }: Ord
                   label="Город"
                   onChange={handleCityChange}
                   sx={{}}
+                  defaultValue=''
                 >
-                  <MenuItem value={'Moscow'}>Москва</MenuItem>
-                  <MenuItem value={'St.Petersburg'}>Санкт-Петербург</MenuItem>
+                  {cityMenuItems}
                 </Select>
               </FormControl>
             </Grid>
@@ -99,13 +158,13 @@ const OrderForm = ({ orderAdd, changeOrderState, itemAdd, changeItemState }: Ord
                   value={place}
                   label="Заведение"
                   onChange={handlePlaceChange}
+                  defaultValue=''
                 >
-                  <MenuItem value={'McDonalds'}>McDonalds</MenuItem>
-                  <MenuItem value={'BurgerKing'}>Burger King</MenuItem>
+                  {placeMenuItems}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid xs={6}></Grid>
+            <Grid item xs={6}></Grid>
             <Grid item xs={3}>
               <TextField
                 sx={AdminDataInputSX}
@@ -165,14 +224,7 @@ const OrderForm = ({ orderAdd, changeOrderState, itemAdd, changeItemState }: Ord
             overflow={'scroll'}
             padding={2}
           >
-            <OrderItemCard />
-            <OrderItemCard />
-            <OrderItemCard />
-            <OrderItemCard />
-            <OrderItemCard />
-            <OrderItemCard />
-            <OrderItemCard />
-            <OrderItemCard />
+            {cards}
           </Box>
         </Paper>
       </Box>
@@ -185,4 +237,13 @@ export default inject(({ adminPanelStore }: Stores) => ({
   changeOrderState: adminPanelStore.changeOrderAdd,
   itemAdd: adminPanelStore.itemAddToPlace,
   changeItemState: adminPanelStore.changeItemAdd,
+  initOrder: adminPanelStore.initOrder,
+  selectedItem: adminPanelStore.selectdItem,
+  ordersList: adminPanelStore.ordersList,
+  getItemsByIDList: adminPanelStore.getItemsByIDs,
+  placesList: adminPanelStore.placesList,
+  citiesList: adminPanelStore.citiesList,
+  itemsInOrder: adminPanelStore.itemsInOrder,
+  selectOrderCity: adminPanelStore.selectOrderCity,
+  selectOrderPlace: adminPanelStore.selectOrderPlace
 }))(OrderForm);

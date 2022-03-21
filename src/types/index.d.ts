@@ -62,7 +62,7 @@ export type RestaurantAdmin={
 }
 
 export type Item = {
-  id: string;
+  id?: string;
   placeID: string;
   name: string;
   description: string;
@@ -84,10 +84,7 @@ export type Order = {
   name: string | undefined;
   surname: string | undefined;
   phone: string | undefined;
-  address: string | undefined;
-  flat: string | undefined;
-  floor: number | undefined;
-  entranceCode: string | undefined;
+  address: UserAddress | undefined;
   promocode: string | undefined;
   paymentMethod: string | undefined;
   comment: string | undefined;
@@ -99,7 +96,27 @@ export type Order = {
   orderSum: number;
   placeName: string | undefined;
   delivered?: boolean;
-  city: string;
+  city: string | undefined;
+}
+
+export type UserAddress = {
+  address: string | undefined;
+  flat: string | undefined;
+  floor: number | undefined;
+  entranceCode: string | undefined;
+}
+
+export type OrderAdmin = {
+  id?: string|undefined;
+  phone: string | undefined;
+  email: string | undefined;
+  servings: number | undefined;
+  items: Map<string, number>;
+  deliveryPrice?: number;
+  orderSum?: number;
+  orderDate?: Date;
+  placeID: string | undefined;
+  cityID: string | undefined;
 }
 
 export type City = {
@@ -128,14 +145,6 @@ export type Admin = {
   surname: string;
   email: string;
   phone: string;
-}
-
-export type Place = {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  photoLocation: string;
 }
 
 export type userData = {

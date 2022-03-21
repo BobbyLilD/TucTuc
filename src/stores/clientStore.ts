@@ -51,7 +51,8 @@ class ClientStore {
             deliveryDate: undefined,
             orderSum: 53453,
             placeName: 'McBoba',
-            delivered: true
+            delivered: true,
+            city: 'Moscow'
         }
         let newList = [newOrder, newOrder, newOrder, newOrder];
         this.orderList = [...newList];
@@ -92,7 +93,8 @@ class ClientStore {
             deliveryDate: undefined,
             orderSum: 53453,
             placeName: 'McBoba',
-            delivered: true
+            delivered: true,
+            city: undefined
         }
         let newList = [newOrder, newOrder];
         this.orderList = [...newList];
@@ -161,7 +163,8 @@ class ClientStore {
             orderDate: undefined,
             orderSum: 0,
             placeName: undefined,
-            delivered: false
+            delivered: false,
+            city: undefined
         };
     }
 

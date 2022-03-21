@@ -1,12 +1,12 @@
 import { Grid } from '@mui/material';
 import { inject } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { Order, Stores } from '../../../../types';
+import { OrderAdmin, Stores } from '../../../../types';
 import { ItemInAdminGrid } from '../../../common/StyledComponents';
 import CardComponent from './Card';
 
 type CardGridProps = {
-  orderList: Order[];
+  orderList: OrderAdmin[];
   getOrders: () => void;
 };
 
