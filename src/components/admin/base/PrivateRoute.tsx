@@ -3,16 +3,15 @@ import React, { Component } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import { Stores } from '../../../types';
 
-const PrivateRoute = ({ component: Component, accessToken: accessToken, ...rest }) => {
+const PrivateRoute = ({ component: Component, loggedIn: loggedIn, ...rest }) => {
 
     //console.log("access token is " + accessToken);
   // Add your own authentication on the below line.
-  console.log('token is ' + accessToken);
   return (
     <Route
       {...rest}
       render={props =>
-        accessToken != undefined ? (
+        loggedIn ? (
           <Component {...props} />
         ) : (
           <Redirect to={{ pathname: '/admin/auth', state: { from: props.location } }} />

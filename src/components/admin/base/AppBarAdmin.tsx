@@ -82,7 +82,7 @@ const AppBarAdmin = ({ name, surname, deleteAccessToken }: AppBarProps) => {
 };
 
 export default inject(({ userStore }: Stores) => ({
-  name: userStore.name,
-  surname: userStore.surname,
+  name: userStore.userData.name,
+  surname: userStore.userData.surname,
   deleteAccessToken: userStore.deleteAccessToken,
 }))(AppBarAdmin);

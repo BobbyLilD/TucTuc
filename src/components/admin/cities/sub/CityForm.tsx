@@ -26,7 +26,7 @@ const CityForm = ({ cityAddChangeState }: CityFormProps) => {
             <Typography variant="h5">Добавление города</Typography>
           </Grid>
           <Grid item xs={6}>
-            <TextField sx={AdminDataInputSX} placeholder="Название города" {...register('cityName', {required: true, patter: letterRegex})} fullWidth/>
+            <TextField sx={AdminDataInputSX} placeholder="Название города" {...register('cityName', {required: true, pattern: letterRegex})} fullWidth/>
           </Grid>
           <Grid item xs={6}></Grid>
           <Grid item xs={2}>

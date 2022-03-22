@@ -1,18 +1,21 @@
-import { Button, Input, Modal, TextField, Typography } from '@mui/material';
+import { Button, FormControl, Input, Modal, TextField, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { Box } from '@mui/system';
 import { inject } from 'mobx-react';
 import React, { useState } from 'react';
 import { Stores } from '../../../types';
-import {AsYouType, parsePhoneNumber} from 'libphonenumber-js';
 import { numbRegex, phoneRegex } from '../../../commons/const';
+import { DataInputSX, WhiteBaseButton } from '../../common/StyledComponents';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import styled from '@emotion/styled';
 
 type AuthModalProps = {
   shown: boolean;
   changeAuthState: () => void;
   phoneVerified: boolean;
-  changePhoneState: (phone: string) => void;
-  changeAccessToken: (token: string) => void;
+  setPhoneNum: (phone: string) => void;
+  getAccessToken: () => void;
+  changeUserRegistrationState: () => void;
 };
 
 const modalContainer = {
@@ -21,90 +24,115 @@ const modalContainer = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: '400px',
-  height: '300px',
+  height: '200px',
   bgcolor: 'white',
   border: '2px solid #000',
   boxShadow: 24,
   paddingX: 4,
   paddingY: 2,
   display: 'flex',
-  'flex-direction': 'column',
-  'justify-content': 'space-evenly',
+  flexDirection: 'column',
   borderRadius: '12px',
 };
 
-const InputStyle = {
-  backgroundColor: grey.A200,
-  '& .MuiOutlinedInput-root': {
-    '&.Mui-focused fieldset': {
-      borderColor: 'orange',
-    },
-  },
-};
+const AuthForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+  flex: 1;
+`;
 
-const ButtonStyle = {
-  borderRadius: '12px',
-  backgroundColor: 'orange',
-  color: 'white',
-  fontWeight: 600,
-  ':hover': {
-    bgcolor: 'orange',
-  },
-};
+interface IFromPhoneInput {
+  Phone: string;
+}
 
-const AuthModal = ({ shown, changeAuthState, phoneVerified, changePhoneState, changeAccessToken }: AuthModalProps) => {
-  const [phone, setPhone] = useState('');
-  let typer = new AsYouType('RU');
+interface IFormCodeInput {
+  Code: string;
+}
+
+const AuthModal = ({
+  shown,
+  changeAuthState,
+  phoneVerified,
+  setPhoneNum,
+  getAccessToken,
+  changeUserRegistrationState,
+}: AuthModalProps) => {
+  const phoneFormReturn = useForm<IFromPhoneInput>();
+  const onPhoneSubmit: SubmitHandler<IFromPhoneInput> = (data) => {
+    console.log(data);
+    setPhoneNum(data.Phone);
+  };
+
+  const codeFormReturn = useForm<IFormCodeInput>();
+  const onCodeSubmit: SubmitHandler<IFormCodeInput> = (data) => {
+    console.log(data);
+    getAccessToken();
+    changeAuthState();
+  };
 
   return (
     <Modal
       open={shown}
-      onClose={()=>{changeAuthState();
-      setPhone('');}}
+      onClose={() => {
+        changeAuthState();
+      }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={modalContainer}>
         <Typography variant="h5">Войти в личный кабинет</Typography>
         {!phoneVerified && (
-          <>
+          <AuthForm onSubmit={phoneFormReturn.handleSubmit(onPhoneSubmit)}>
             <TextField
               variant="outlined"
               placeholder="Номер моб. телефона"
               type="text"
-              sx={InputStyle}
-              value={phone}
-              onChange={(event) => {
-                setPhone(typer.input(event.target.value))
-                // setPhone(event.target.value)
-              }}
-              inputProps={{maxLength: 17, pattern: phoneRegex}}
+              fullWidth
+              sx={DataInputSX}
+              {...phoneFormReturn.register('Phone', {
+                maxLength: 12,
+                minLength: 11,
+                pattern: phoneRegex,
+                required: true,
+              })}
             />
-            <Button
-              sx={ButtonStyle}
-              onClick={() => {
-                let parsed = parsePhoneNumber(phone, 'RU')
-                changePhoneState(parsed.getURI().substring(4));
-              }}
-            >
-              Далее
-            </Button>
-          </>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Button sx={WhiteBaseButton} type="submit">
+                Далее
+              </Button>
+              <Button
+                sx={{...WhiteBaseButton, ...{marginRight: 0}}}
+                onClick={() => {
+                  changeAuthState();
+                  changeUserRegistrationState();
+                }}
+              >
+                Регистрация
+              </Button>
+            </Box>
+          </AuthForm>
         )}
         {phoneVerified && (
-          <>
-            <TextField variant="outlined" placeholder="Код из СМС" type="text" sx={InputStyle} />
-            <Button
-              sx={ButtonStyle}
-              onClick={() => {
-                changeAccessToken('acb');
-                changePhoneState(undefined);
-                changeAuthState();
-              }}
-            >
+          <AuthForm onSubmit={codeFormReturn.handleSubmit(onCodeSubmit)}>
+            <TextField
+              variant="outlined"
+              placeholder="Код из СМС"
+              type="text"
+              fullWidth
+              sx={DataInputSX}
+              {...codeFormReturn.register('Code', {
+                maxLength: 6,
+                minLength: 6,
+                pattern: numbRegex,
+                required: true,
+              })}
+            />
+            <Button sx={WhiteBaseButton} type="submit">
               Далее
             </Button>
-          </>
+          </AuthForm>
         )}
       </Box>
     </Modal>
@@ -115,6 +143,7 @@ export default inject(({ userStore }: Stores) => ({
   shown: userStore.showClientAuth,
   changeAuthState: userStore.changeClientAuthState,
   phoneVerified: userStore.phoneValid,
-  changePhoneState: userStore.setPhoneNum,
-  changeAccessToken: userStore.changeAccessToken,
+  setPhoneNum: userStore.setPhoneNum,
+  getAccessToken: userStore.getAccessToken,
+  changeUserRegistrationState: userStore.changeClientRegistrationState,
 }))(AuthModal);

@@ -16,7 +16,7 @@ const AdminBase = (props) => {
           <Toolbar />
           <Switch>
           {Object.keys(AdminComponents).map((key) => (
-              <Route path={AdminComponents[key][0]} component={AdminComponents[key][1]} accessToken={props.accessToken}/>
+              <Route path={AdminComponents[key][0]} component={AdminComponents[key][1]} loggedIn={props.loggedIn}/>
           ))}
           </Switch>
         </Box>

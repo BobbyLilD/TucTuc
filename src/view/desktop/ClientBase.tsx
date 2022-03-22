@@ -11,6 +11,7 @@ import ProfileComponent from '../../components/client/profile';
 import {Route, Switch} from 'react-router-dom';
 import { inject } from 'mobx-react';
 import { Stores } from '../../types';
+import RegistrationModal from '../../components/client/base/RegistrationModal';
 
 type ClientBaseProps = {
     checkAccessToken: () => void;
@@ -26,6 +27,7 @@ const ClientBase = ({checkAccessToken}: ClientBaseProps) => {
       <CssBaseline />
       <AppBarClient />
       <AuthModal />
+      <RegistrationModal />
       <Box sx={{ overflow: 'scroll', height: 'calc(100vh - 80px)', marginTop: '80px' }}>
         <CartDrawer />
         <Switch>

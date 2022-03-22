@@ -23,4 +23,4 @@ export const AdminComponents = {
 export const emailRegex: RegExp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
 export const phoneRegex: RegExp = /((\+7)|8)?(\-|\s)?(\d){3}(\-|\s)?(((\d){7})|((\d){3})(\-|\s)?((\d){2})(\-|\s)?((\d){2}))/;
 export const numbRegex: RegExp = /(\d)/g;
-export const letterRegex: RegExp= /(\w)/g;
+export const letterRegex: RegExp= /([a-z,а-я])/g;

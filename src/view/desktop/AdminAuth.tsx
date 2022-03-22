@@ -7,14 +7,15 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Button, Input, Paper, TextField } from '@mui/material';
 import { StyledButton, AdminDataInputSX } from '../../components/common/StyledComponents';
+import { numbRegex, phoneRegex } from '../../commons/const';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 type AdminAuthProps = {
-  phoneNum: string;
   messageCode: string;
   phoneValid: boolean;
-  setAccessToken: (token: string) => void;
+  getAccessToken: () => void;
   setMessageCode: () => void;
-  setPhoneNum: () => void;
+  setPhoneNum: (phone: string) => void;
 };
 
 const Base = styled.div`
@@ -26,46 +27,73 @@ const Base = styled.div`
   align-items: center;
 `;
 
-const InputSX = {...AdminDataInputSX, ...{marginBottom: 2}}
+const InputSX = { ...AdminDataInputSX, ...{ marginBottom: 2 } };
 
+interface IFromPhoneInput {
+  Phone: string;
+}
 
-const AdminAuth = ({
-  phoneNum,
-  phoneValid,
-  messageCode,
-  setAccessToken,
-  setPhoneNum,
-}: AdminAuthProps): JSX.Element => {
-  const [phone, setPhone] = useState<string>(phoneNum);
+interface IFormCodeInput {
+  Code: string;
+}
+
+const AdminAuth = ({ phoneValid, getAccessToken, setPhoneNum }: AdminAuthProps): JSX.Element => {
   const history = useHistory();
+  const phoneFormReturn = useForm<IFromPhoneInput>();
+  const onPhoneSubmit: SubmitHandler<IFromPhoneInput> = (data) => {
+    console.log(data);
+    setPhoneNum(data.Phone);
+  };
+
+  const codeFormReturn = useForm<IFormCodeInput>();
+  const onCodeSubmit: SubmitHandler<IFormCodeInput> = (data) => {
+    console.log(data);
+    getAccessToken();
+    history.push('/admin/');
+  };
 
   return (
     <Base>
       <Paper
         elevation={2}
-        sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'end', width: '400px' }}
+        sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '400px' }}
       >
-        <TextField placeholder="Телефон" fullWidth sx={InputSX} readOnly={phoneValid} />
         {!phoneValid && (
-          <>
-            <Button sx={StyledButton} onClick={setPhoneNum}>
+          <form onSubmit={phoneFormReturn.handleSubmit(onPhoneSubmit)}>
+            <TextField
+              placeholder="Телефон"
+              fullWidth
+              sx={InputSX}
+              readOnly={phoneValid}
+              {...phoneFormReturn.register('Phone', {
+                maxLength: 12,
+                minLength: 11,
+                pattern: phoneRegex,
+                required: true
+              })}
+            />
+            <Button sx={StyledButton} type="submit">
               Продолжить
             </Button>
-          </>
+          </form>
         )}
         {phoneValid && (
-          <>
-            <TextField placeholder="Код из СМС" fullWidth sx={InputSX} />
-            <Button
-              sx={StyledButton}
-              onClick={() => {
-                setAccessToken('abc');
-                history.push('/admin/');
-              }}
-            >
+          <form onSubmit={codeFormReturn.handleSubmit(onCodeSubmit)}>
+            <TextField
+              placeholder="Код из СМС"
+              fullWidth
+              sx={InputSX}
+              {...codeFormReturn.register('Code', {
+                maxLength: 6,
+                minLength: 6,
+                pattern: numbRegex,
+                required: true
+              })}
+            />
+            <Button sx={StyledButton} type="submit" >
               Продолжить
             </Button>
-          </>
+          </form>
         )}
       </Paper>
     </Base>
@@ -73,10 +101,9 @@ const AdminAuth = ({
 };
 
 export default inject(({ userStore }: Stores) => ({
-  phoneNum: userStore.phoneNum,
   setPhoneNum: userStore.setPhoneNum,
   messageCode: userStore.messageCode,
   phoneValid: userStore.phoneValid,
   setMessageCode: userStore.setMessageCode,
-  setAccessToken: userStore.changeAccessToken,
+  getAccessToken: userStore.getAccessToken,
 }))(AdminAuth);

@@ -14,7 +14,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { StyledNavLink } from '../../common/StyledComponents';
 
 type AppBarProps = {
-  accessToken: string;
+  loggedIn: boolean;
   cartLength: number;
   changeCartState: () => void;
   changeAuthState: () => void;
@@ -58,11 +58,11 @@ const AppBarClient = ({
   changeCartState,
   changeAuthState,
   cartLength,
-  accessToken,
+  loggedIn,
   userData,
 }: AppBarProps) => {
   const checkAndOpenCart = () => {
-    if(accessToken != undefined) {
+    if(loggedIn) {
       changeCartState()
     } else {
       changeAuthState()
@@ -89,11 +89,11 @@ const AppBarClient = ({
           <Button sx={NavButton}>Акции</Button>
         </Box>
         <Box sx={{ position: 'relative' }}>
-          {accessToken == undefined && 
+          {!loggedIn && 
           <Button sx={UserButton} onClick={changeAuthState}>
             Войти
           </Button>}
-          {accessToken != undefined &&
+          {loggedIn &&
           <StyledNavLink to={{pathname: '/profile'}}>
             <Button sx={UserButton}>{userData != undefined && userData.name}</Button>
           </StyledNavLink>
@@ -110,7 +110,7 @@ const AppBarClient = ({
 };
 
 export default inject(({ userStore, clientStore }: Stores) => ({
-  accessToken: userStore.access_token,
+  loggedIn: userStore.logged_in,
   cartLength: clientStore.cart.size,
   changeCartState: clientStore.changeShowCart,
   changeAuthState: userStore.changeClientAuthState,

@@ -8,20 +8,19 @@ import { inject } from "mobx-react";
 import { Stores } from "../../types";
 
 type AdminPanelProps = {
-    accessToken: string
+    loggedIn: boolean;
 }
 
-const AdminPanel = ({accessToken} : AdminPanelProps) => {
+const AdminPanel = ({loggedIn} : AdminPanelProps) => {
 
-    console.log("token is " + accessToken);
     return(
         <BaseFiller>
             <Switch>
                 <Route path={`/admin/auth`} component={AdminAuth}/>
-                <PrivateRoute path={`/admin`} component={AdminBase} accessToken={accessToken}/>
+                <PrivateRoute path={`/admin`} component={AdminBase} loggedIn={loggedIn}/>
             </Switch>
         </BaseFiller>
     )
 }
 
-export default inject(({userStore}: Stores) => ({accessToken: userStore.access_token}))(AdminPanel);
+export default inject(({userStore}: Stores) => ({loggedIn: userStore.logged_in}))(AdminPanel);

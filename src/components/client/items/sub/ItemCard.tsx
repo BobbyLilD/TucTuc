@@ -51,13 +51,13 @@ type ItemCardProps = {
   item: Item;
   restaurantID: string;
   addToCart: (id: string, name: string, price: number, restaurantID: string) => void;
-  accessToken: string;
+  loggenIn: boolean;
   changeAuthState: () => void;
 };
 
-const ItemCard = ({ item, restaurantID, addToCart, accessToken, changeAuthState }: ItemCardProps) => {
+const ItemCard = ({ item, restaurantID, addToCart, loggenIn, changeAuthState }: ItemCardProps) => {
   const checkAndAdd = (id: string, name: string, price: number, restaurantID: string) => {
-      if(accessToken != undefined){
+      if(loggenIn){
           addToCart(id,name,price,restaurantID);
       } else {
          changeAuthState();
@@ -96,8 +96,8 @@ const ItemCard = ({ item, restaurantID, addToCart, accessToken, changeAuthState 
   );
 };
 
-export default inject(({ clientStore, restaurantsStore, userStore }: Stores) => ({
+export default inject(({ clientStore, userStore }: Stores) => ({
   addToCart: clientStore.addItemToCart,
-  accessToken: userStore.access_token,
+  loggenIn: userStore.logged_in,
   changeAuthState: userStore.changeClientAuthState
 }))(ItemCard);

@@ -4,15 +4,28 @@ import { userData } from '../types';
 
 class UserStore {
   access_token: string | undefined | null;
+  logged_in: boolean;
   userData: userData | undefined;
 
   showClientAuth: boolean;
+  showClientRegistration: boolean;
 
   phoneValid: boolean;
   messageCode: string | undefined;
 
+  registerUser = (data: userData) => {
+    this.getAccessToken();
+  }
+
+  changeClientRegistrationState = () => {
+    this.showClientRegistration = !this.showClientRegistration
+  }
+
   checkAccessToken = () => {
-    this.getUserInfo();
+    if(localStorage.getItem('accessToken') != undefined){
+      this.logged_in = true;
+      this.getUserInfo();
+    }
   };
 
   getUserInfo = () => {
@@ -36,32 +49,30 @@ class UserStore {
     this.showClientAuth = !this.showClientAuth;
   };
 
-  changeAccessToken = (token: string) => {
-    this.access_token = token;
-    console.log('token set!');
-    localStorage.setItem('accessToken', token);
-    console.log(this.access_token);
-  };
+  getAccessToken = () => {
+    this.phoneValid = !this.phoneValid;
+    this.logged_in = !this.logged_in;
+    localStorage.setItem('accessToken', 'access');
+    this.getUserInfo();
+  }
 
   deleteAccessToken = () => {
     localStorage.removeItem('accessToken');
-    this.access_token = undefined;
+    this.logged_in = false;
   };
 
   constructor() {
+    this.showClientRegistration = false;
+    this.logged_in = false;
     this.phoneValid = false;
     this.showClientAuth = false;
-    if (localStorage.getItem('accessToken') != null) {
-      console.log('token found');
-      this.access_token = localStorage.getItem('accessToken');
-      console.log(this.access_token);
-    }
+    this.checkAccessToken();
 
     makeObservable(this, {
-      access_token: observable,
-      changeAccessToken: action,
+      logged_in: observable,
       deleteAccessToken: action,
       checkAccessToken: action,
+      getAccessToken: action,
 
       userData: observable,
       setPhoneNum: action,
@@ -73,6 +84,10 @@ class UserStore {
 
       showClientAuth: observable,
       changeClientAuthState: action,
+
+      showClientRegistration: observable,
+      changeClientRegistrationState: action,
+      registerUser: action
     });
   }
 }
