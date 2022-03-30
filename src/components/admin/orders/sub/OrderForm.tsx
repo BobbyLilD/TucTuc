@@ -238,7 +238,7 @@ export default inject(({ adminPanelStore }: Stores) => ({
   itemAdd: adminPanelStore.itemAddToPlace,
   changeItemState: adminPanelStore.changeItemAdd,
   initOrder: adminPanelStore.initOrder,
-  selectedItem: adminPanelStore.selectdItem,
+  selectedItem: adminPanelStore.selectedItem,
   ordersList: adminPanelStore.ordersList,
   getItemsByIDList: adminPanelStore.getItemsByIDs,
   placesList: adminPanelStore.placesList,

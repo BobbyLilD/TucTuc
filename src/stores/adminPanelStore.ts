@@ -1,14 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import {
-  Admin,
-  Category,
-  City,
-  Client,
-  Item,
-  Order,
-  OrderAdmin,
-  RestaurantAdmin,
-} from '../types';
+import { Admin, Category, City, Client, Item, OrderAdmin, RestaurantAdmin } from '../types';
 
 class AdminPanelStore {
   cityAdd: boolean;
@@ -27,41 +18,32 @@ class AdminPanelStore {
   ordersList: OrderAdmin[] | undefined;
   placesList: RestaurantAdmin[] | undefined;
   adminsList: Admin[] | undefined;
-  selectdItem: number | undefined;
+
+  selectedItem: number | undefined;
+  selectedFoodItem: number | undefined;
 
   newPlace: RestaurantAdmin | undefined;
   newOrder: OrderAdmin | undefined;
   itemsInOrder: Map<string, Item> | undefined;
+  itemsInPlace: Map<string, Item> | undefined;
 
-  selectOrderCity = (id:string) => {
+  selectOrderCity = (id: string) => {
     this.newOrder!.cityID = id;
-  }
+  };
 
-  selectOrderPlace = (id:string) => {
+  selectOrderPlace = (id: string) => {
     this.newOrder!.placeID = id;
-  }
-
-  getRestaurantByID = (id: string) => {
-    let newPlace: RestaurantAdmin = {
-      id: '0',
-      name: 'mcBoba',
-      phone: '4957647564886',
-      email: 'mcboba@gmail.com',
-      items: undefined,
-      imageSource: undefined
-    }
-    this.placesList = new Array(...[newPlace]);
-  }
+  };
 
   addItemToOrder = (id: string, item?: Item) => {
     if (this.newOrder?.items.get(id) == undefined) {
       this.newOrder?.items.set(id, 1);
-      this.itemsInOrder?.set(id,item!);
+      this.itemsInOrder?.set(id, item!);
     } else {
       this.newOrder.items.set(id, this.newOrder.items.get(id)! + 1);
     }
-    console.log('map size is ' + this.itemsInOrder?.size)
-    console.log('item quantity' + this.newOrder?.items.get(id))
+    console.log('map size is ' + this.itemsInOrder?.size);
+    console.log('item quantity' + this.newOrder?.items.get(id));
   };
 
   removeItemFromOrder = (id: string) => {
@@ -75,11 +57,56 @@ class AdminPanelStore {
   };
 
   deleteItemFromOrder = (id: string) => {
-    if(this.newOrder?.items.get(id) != undefined){
+    if (this.newOrder?.items.get(id) != undefined) {
       this.newOrder.items.delete(id);
       this.itemsInOrder?.delete(id);
     }
+  };
+
+  changeSelectedItem = (index: number) => {
+    this.selectedItem = index;
+  };
+
+  changeSelectedFoodItem = (index: number) => {
+    this.selectedFoodItem = index;
   }
+
+  //INITTERS
+  initPlace = () => {
+    this.newPlace = {
+      name: '',
+      phone: '',
+      email: '',
+      items: new Array(),
+      imageSource: undefined,
+    };
+  };
+
+  initOrder = () => {
+    this.newOrder = {
+      phone: undefined,
+      email: undefined,
+      items: new Map(),
+      servings: undefined,
+      cityID: '',
+      placeID: '',
+    };
+    this.itemsInOrder = new Map();
+  };
+
+  //GETTERS
+
+  getRestaurantByID = (id: string) => {
+    let newPlace: RestaurantAdmin = {
+      id: '0',
+      name: 'mcBoba',
+      phone: '4957647564886',
+      email: 'mcboba@gmail.com',
+      items: undefined,
+      imageSource: undefined,
+    };
+    this.placesList = new Array(...[newPlace]);
+  };
 
   getPlaces = () => {
     let newPlace: RestaurantAdmin = {
@@ -87,10 +114,10 @@ class AdminPanelStore {
       name: 'mcBoba',
       phone: '4957647564886',
       email: 'mcboba@gmail.com',
-      items: undefined,
-      imageSource: undefined
-    }
-    let newArray: RestaurantAdmin[] = [newPlace, newPlace, newPlace];
+      items: new Array(),
+      imageSource: undefined,
+    };
+    let newArray: RestaurantAdmin[] = [newPlace, newPlace, newPlace, newPlace, newPlace];
     this.placesList = new Array(...newArray);
   };
 
@@ -105,35 +132,9 @@ class AdminPanelStore {
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
-    let newList: Map<string,Item> = new Map();
+    let newList: Map<string, Item> = new Map();
     newList.set(newItem.id!, newItem);
     this.itemsInOrder = new Map(newList);
-  };
-
-  initOrder = () => {
-    this.newOrder = {
-      id: undefined,
-      phone: undefined,
-      email: undefined,
-      items: new Map(),
-      servings: undefined,
-      cityID: '',
-      placeID: '',
-    };
-    this.itemsInOrder = new Map();
-  };
-
-  initPlace = () => {
-    // this.newPlace = {
-    //   name: '',
-    //   items: new Array(),
-    //   delivery: undefined,
-    //   rating: undefined,
-    // };
-  };
-
-  changeSelectedItem = (index: number) => {
-    this.selectdItem = index;
   };
 
   getItemsByPlaceID = (id: string) => {
@@ -225,6 +226,8 @@ class AdminPanelStore {
     this.ordersList = new Array(...newList);
   };
 
+  //FORM MARKERS
+
   changeCityAdd = () => {
     this.cityAdd = !this.cityAdd;
   };
@@ -302,6 +305,7 @@ class AdminPanelStore {
       itemsList: observable,
       getItems: action,
       getItemsByPlaceID: action,
+      getItemsByIDs: action,
 
       ordersList: observable,
       getOrders: action,
@@ -309,23 +313,29 @@ class AdminPanelStore {
       clientsList: observable,
       getClients: action,
 
-      selectdItem: observable,
+      placesList: observable,
+      getPlaces: action,
+
+      selectedItem: observable,
       changeSelectedItem: action,
 
+      //FORMS
       newOrder: observable,
       itemsInOrder: observable,
       addItemToOrder: action,
       removeItemFromOrder: action,
       initOrder: action,
-      getItemsByIDs: action,
       deleteItemFromOrder: action,
       selectOrderCity: action,
       selectOrderPlace: action,
 
-      placesList: observable,
       newPlace: observable,
-      getPlaces: action,
-      initPlace: action
+      initPlace: action,
+      itemsInPlace: observable,
+
+      selectedFoodItem: observable,
+      changeSelectedFoodItem: action,
+
     });
   }
 }

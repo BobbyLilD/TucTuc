@@ -23,9 +23,11 @@ const StyledImage = styled.img`
 type CardComponentProps = {
   itemsList: Item[];
   index: number;
+  changeFormState: () => void;
+  changeSelectedItem: (index: number) => void;
 }
 
-const CardComponent = ({itemsList, index}:CardComponentProps) => {
+const CardComponent = ({itemsList, index, changeFormState, changeSelectedItem}:CardComponentProps) => {
   return (
     // <Badge badgeContent={'30%'} sx={{fontSize: 20, , bgcolor: orange[500]}}>
     <Card
@@ -60,7 +62,7 @@ const CardComponent = ({itemsList, index}:CardComponentProps) => {
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:'space-between'}}>
           <Typography sx={{fontSize: 20, fontWeight: 600 }}>{itemsList[index].price} р.</Typography>
-          <Button sx={StyledButton}>Изменить</Button>
+          <Button sx={StyledButton} onClick={()=> {changeSelectedItem(index); changeFormState();}}>Изменить</Button>
         </Box>
       </CardContent>
     </Card>
@@ -68,4 +70,8 @@ const CardComponent = ({itemsList, index}:CardComponentProps) => {
   );
 };
 
-export default inject(({adminPanelStore}: Stores) => ({itemsList: adminPanelStore.itemsList}))(CardComponent);
+export default inject(({adminPanelStore}: Stores) => ({
+  itemsList: adminPanelStore.itemsList,
+  changeFormState: adminPanelStore.changeItemAdd,
+  changeSelectedItem: adminPanelStore.changeSelectedItem
+}))(CardComponent);

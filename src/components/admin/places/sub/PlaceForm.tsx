@@ -54,18 +54,16 @@ const PlaceForm = ({
     items: new Array(),
   };
   let cards: JSX.Element[] = [];
-  useEffect(() => {
-    if (selectedItem != undefined) {
-      newItem = placesList[selectedItem];
-      getItemsByPlaceID(newItem.id);
-    }
+  if (selectedItem != undefined) {
+    newItem = placesList[selectedItem];
+    getItemsByPlaceID(newItem.id);
+  }
 
-    if (itemsList != undefined) {
-      for (let i = 0; i < itemsList.length; i++) {
-        cards.push(<ItemCard index={i} />);
-      }
+  if (itemsList != undefined) {
+    for (let i = 0; i < itemsList.length; i++) {
+      cards.push(<ItemCard index={i} />);
     }
-  }, []);
+  }
 
   return (
     <>
@@ -194,7 +192,7 @@ export default inject(({ adminPanelStore }: Stores) => ({
   changeItemState: adminPanelStore.changeItemAdd,
   photoSet: adminPanelStore.photoSet,
   changePhotoState: adminPanelStore.changePhotoSet,
-  selectedItem: adminPanelStore.selectdItem,
+  selectedItem: adminPanelStore.selectedItem,
   itemsList: adminPanelStore.itemsList,
   placesList: adminPanelStore.placesList,
   getItemsByPlaceID: adminPanelStore.getItemsByPlaceID,

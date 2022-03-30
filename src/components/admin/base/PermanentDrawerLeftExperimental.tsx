@@ -33,8 +33,8 @@ export default function PermanentDrawerLeft() {
       <Divider />
       <List>
         {Object.keys(AdminComponents).map((key) => (
-          <StyledNavLink to={AdminComponents[key][0]} >
-            <ListItem button key={key}>
+          <StyledNavLink key={key} to={AdminComponents[key][0]} >
+            <ListItem button >
               <ListItemText primary={key} />
             </ListItem>
           </StyledNavLink>

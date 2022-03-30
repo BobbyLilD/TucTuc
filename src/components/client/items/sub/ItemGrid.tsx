@@ -22,7 +22,7 @@ const ItemGrid = ({ items, getItems }: ItemGridProps) => {
   for (let value of items) {
     cards.push(
       <Grid item xs={4}>
-        <ItemCard item={value} restaurantID={id}/>
+        <ItemCard key={value.id} item={value} restaurantID={id}/>
       </Grid>,
     );
   }

@@ -95,6 +95,6 @@ const CityForm = ({ adminAddChangeState, adminsList, selectedItem, changeSelecte
 export default inject(({ adminPanelStore }: Stores) => ({
   adminAddChangeState: adminPanelStore.changeAdminAdd,
   adminsList: adminPanelStore.adminsList,
-  selectedItem: adminPanelStore.selectdItem,
+  selectedItem: adminPanelStore.selectedItem,
   changeSelectedItem: adminPanelStore.changeSelectedItem
 }))(CityForm);

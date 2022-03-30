@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Drawer from '@mui/material/Drawer';
 import { inject } from 'mobx-react';
-import { Stores } from '../../../../types';
+import { Category, Item, RestaurantAdmin, Stores } from '../../../../types';
 import {
   Button,
   FormControl,
   Grid,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -22,21 +21,10 @@ import {
 } from '../../../common/StyledComponents';
 import { letterRegex, numbRegex } from '../../../../commons/const';
 
-enum Category {
-  Soup = 'Soup',
-  Salad = 'Salad',
-  MainCourse = 'Main Course',
-}
-
-enum Place {
-  McDonalds = 'McDonalds',
-  BurgerKing = 'Burger King',
-}
-
 interface IFromInput {
   Name: string;
-  Place: Place;
-  Category: Category;
+  Place: string;
+  Category: string;
   Description: string;
   Price: number;
   Discount: number;
@@ -45,25 +33,76 @@ interface IFromInput {
 type DrawerProps = {
   shown: boolean;
   changeState: () => void;
+  categoriesList: Category[];
+  placesList: RestaurantAdmin[];
+  getCategories: () => void;
+  getPlaces: () => void;
+  selectedItem: number;
+  itemsList: Item[];
+  changeSelectedItem: (id: string) => void;
 };
 
-const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
+const TemporaryDrawer = ({
+  shown,
+  changeState,
+  categoriesList,
+  getCategories,
+  placesList,
+  getPlaces,
+  selectedItem,
+  itemsList,
+  changeSelectedItem
+}: DrawerProps) => {
+  React.useEffect(() => {
+    getPlaces();
+    getCategories();
+  }, []);
+
   const { register, handleSubmit } = useForm<IFromInput>();
   const onSubmit: SubmitHandler<IFromInput> = (data) => console.log(data);
 
-  const [category, setCategory] = React.useState('');
-  const [place, setPlace] = React.useState('');
-
-  const handlePlaceChange = (event: SelectChangeEvent) => {
-    setPlace(event.target.value as string);
+  let newFoodItem: Item = {
+    placeID: '',
+    name: '',
+    description: '',
+    price: undefined,
+    discount: undefined,
+    category: '',
+    imageSource: '',
   };
 
+  if (selectedItem != undefined) {
+    newFoodItem = itemsList[selectedItem];
+  }
+
+  let categoriesMenuItems: JSX.Element[] = [];
+  if (categoriesList != undefined) {
+    for (let i = 0; i < categoriesList.length; i++) {
+      categoriesMenuItems.push(
+        <MenuItem value={categoriesList[i].id}>{categoriesList[i].name}</MenuItem>,
+      );
+    }
+  }
+
+  let placesMenuItems: JSX.Element[] = [];
+  if (placesList != undefined) {
+    for (let i = 0; i < placesList.length; i++) {
+      placesMenuItems.push(<MenuItem value={placesList[i].id}>{placesList[i].name}</MenuItem>);
+    }
+  }
+
+  const [category, setCategory] = React.useState(newFoodItem.category);
   const handleCategoryChange = (event: SelectChangeEvent) => {
-    setCategory(event.target.value as string);
-  };
+    setCategory(event.target.value)
+  }
+
+  const [place, setPlace] = React.useState(newFoodItem.placeID)
+  const handlePlaceChange = (event: SelectChangeEvent) => {
+    setPlace(event.target.value)
+  }
 
   return (
-    <Drawer open={shown} onClose={changeState} anchor="right" onSubmit={handleSubmit(onSubmit)}>
+    <Drawer open={shown} onClose={() => {changeState(); changeSelectedItem(undefined);}} anchor="right" onSubmit={handleSubmit(onSubmit)}>
       <Grid
         container
         rowSpacing={3}
@@ -75,6 +114,7 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
             fullWidth
             sx={AdminDataInputSX}
             placeholder="Название"
+            defaultValue={newFoodItem.name}
             {...register('Name', { required: true, pattern: letterRegex })}
           />
         </Grid>
@@ -82,15 +122,14 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
           <FormControl fullWidth sx={ListSelectSX}>
             <InputLabel id="place-select-label">Заведение</InputLabel>
             <Select
-              {...register('Place', {required: true})}
+              {...register('Place', { required: true })}
               labelId="place-select-label"
               id="place-select"
-              value={place}
+              value={category}
               label="Заведение"
-              onChange={handlePlaceChange}
+              onChange={handleCategoryChange}
             >
-              <MenuItem value={Place.BurgerKing}>{Place.BurgerKing}</MenuItem>
-              <MenuItem value={Place.McDonalds}>{Place.McDonalds}</MenuItem>
+              {placesMenuItems}
             </Select>
           </FormControl>
         </Grid>
@@ -98,16 +137,14 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
           <FormControl fullWidth sx={ListSelectSX}>
             <InputLabel id="category-select-label">Категория</InputLabel>
             <Select
-              {...register('Category', {required: true})}
+              {...register('Category', { required: true })}
               labelId="category-select-label"
               id="category-select"
-              value={category}
+              value={place}
               label="Категория"
-              onChange={handleCategoryChange}
+              onChange={handlePlaceChange}
             >
-              <MenuItem value={Category.Soup}>Soup</MenuItem>
-              <MenuItem value={Category.Salad}>Salad</MenuItem>
-              <MenuItem value={Category.MainCourse}>Breakfast</MenuItem>
+              {categoriesMenuItems}
             </Select>
           </FormControl>
         </Grid>
@@ -116,19 +153,27 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
             fullWidth
             sx={DescriptionSX}
             placeholder="Описание"
-            {...register('Description', {required: true})}
+            defaultValue={newFoodItem.description}
+            {...register('Description', { required: true })}
             multiline={true}
           />
         </Grid>
         <Grid item xs={2}>
-          <TextField fullWidth sx={AdminDataInputSX} placeholder="Цена" {...register('Price', {required: true, pattern: numbRegex})} />
+          <TextField
+            fullWidth
+            sx={AdminDataInputSX}
+            placeholder="Цена"
+            defaultValue={newFoodItem.price}
+            {...register('Price', { required: true, pattern: numbRegex })}
+          />
         </Grid>
         <Grid item xs={2}>
           <TextField
             fullWidth
             sx={AdminDataInputSX}
             placeholder="Скидка"
-            {...register('Discount', {pattern: numbRegex})}
+            defaultValue={newFoodItem.discount}
+            {...register('Discount', { pattern: numbRegex })}
           />
         </Grid>
         <Grid item xs={2}>
@@ -144,4 +189,11 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
 export default inject(({ adminPanelStore }: Stores) => ({
   shown: adminPanelStore.itemAddToPlace,
   changeState: adminPanelStore.changeItemAdd,
+  categoriesList: adminPanelStore.categoriesList,
+  placesList: adminPanelStore.placesList,
+  getCategories: adminPanelStore.getCategories,
+  getPlaces: adminPanelStore.getPlaces,
+  selectedItem: adminPanelStore.selectedItem,
+  itemsList: adminPanelStore.itemsList,
+  changeSelectedItem: adminPanelStore.changeSelectedItem
 }))(TemporaryDrawer);

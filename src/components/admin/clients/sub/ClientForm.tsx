@@ -99,7 +99,7 @@ const ClientFrom = ({
 
 export default inject(({ adminPanelStore }: Stores) => ({
   changeClientState: adminPanelStore.changeClientAdd,
-  selectedItem: adminPanelStore.selectdItem,
+  selectedItem: adminPanelStore.selectedItem,
   clientsList: adminPanelStore.clientsList,
   changeSelectedItem: adminPanelStore.changeSelectedItem,
 }))(ClientFrom);

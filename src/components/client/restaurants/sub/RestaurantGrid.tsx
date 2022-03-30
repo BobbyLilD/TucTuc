@@ -24,7 +24,7 @@ const RestaurantGrid = ({ restaurants, getRestaurants }: RestaurantGridProps) =>
     restItems.push(
       <Grid item xs={12} md={6} lg={4}>
         <StyledNavLink to={{ pathname: `/place/${key}` }}>
-          <RestaurantCard info={restaurants.get(key)} />
+          <RestaurantCard key={restaurants.get(key).id} info={restaurants.get(key)} />
         </StyledNavLink>
       </Grid>
     );

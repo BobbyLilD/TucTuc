@@ -54,7 +54,7 @@ const TemporaryDrawer = ({ shown, changeState }: DrawerProps) => {
         container
         rowSpacing={3}
         columns={2}
-        sx={{ width: '280px', paddingX: '20px', marginTop: '20px' }}
+        sx={{ width: '500px', paddingX: '20px', marginTop: '20px' }}
       >
         <Grid item xs={2}>
           <TextField fullWidth sx={AdminDataInputSX} placeholder="Название" {...register('Name')} />

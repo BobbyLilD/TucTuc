@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { Order, Stores } from '../../../../types';
 import { BackBtn } from '../../../common/StyledComponents';
 import OrderCard from './OrderCard';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 type OrderListProps = {
   changeShow: () => void;
@@ -24,7 +25,7 @@ const OrderList = ({ changeShow, getOrderList, orderList }: OrderListProps) => {
   let cards: JSX.Element[] = [];
   for (let i = 0; i < orderList.length; i++) {
     cards.push(
-      <Grid item xs={4}>
+      <Grid key={orderList[i].id} item xs={4}>
         <Paper elevation={3} sx={PaperBase}>
           <OrderCard index={i} />
         </Paper>
@@ -35,7 +36,8 @@ const OrderList = ({ changeShow, getOrderList, orderList }: OrderListProps) => {
   return (
     <>
       <Button onClick={changeShow} sx={BackBtn}>
-        {`< `} назад
+        <ArrowBackIosIcon/>
+        назад
       </Button>
       <Typography variant="h4" fontWeight={600} sx={{ marginBottom: 2 }}>
         История заказов

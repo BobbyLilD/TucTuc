@@ -13,8 +13,9 @@ import { inject } from 'mobx-react';
 const StyledImage = styled.img`
   // border-bottom: 1px solid ${orange[500]};
   width: 100%;
-  height: 164px;
+  height: 108px;
   border-radius: 2px;
+  object-fit: scale-down;
   // margin: 0 calc((100% - 164px)/2);
 `;
 
@@ -42,21 +43,22 @@ const ItemCard = ({itemsList, index}: ItemCardProps) => {
         variant="h6"
         sx={{
           position: 'absolute',
-          top: 0,
-          right: 0,
+          top: 4,
+          right: 4,
           backgroundColor: orange[500],
           borderRadius: '2px',
           paddingX: 1,
           paddingY: 0.5,
           color: 'white',
+          fontSize: 16
         }}
       >
         {curCard.discount}%
       </Typography>}
       <StyledImage src={defaultImage} />
       <CardContent sx={{paddingTop: 0}}>
-        <Typography variant="h4">{curCard.name}</Typography>
-        <Typography variant="body2" sx={{ height: 128, overflow: 'scroll', marginBottom: 2 }}>
+        <Typography variant="h6">{curCard.name}</Typography>
+        <Typography variant="body2" sx={{ height: 64, overflow: 'scroll', marginBottom: 2 }}>
           {curCard.description}
         </Typography>
         <Typography sx={{marginBottom: 1}}>{curCard.price} р.</Typography>

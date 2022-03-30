@@ -66,7 +66,7 @@ export type Item = {
   placeID: string;
   name: string;
   description: string;
-  price: number;
+  price: number | undefined;
   category: string;
   imageSource: string;
   discount: number | undefined;
@@ -87,7 +87,7 @@ export type Order = {
   address: UserAddress | undefined;
   promocode: string | undefined;
   paymentMethod: string | undefined;
-  comment: string | undefined;
+  comment: comment | undefined;
   items: Map<Item, number>;
   servings: number | undefined;
   deliveryPrice: number | undefined;
@@ -153,4 +153,10 @@ export type userData = {
   surname?: string;
   email: string;
   phone: string;
+}
+
+export type comment = {
+  id: string;
+  text: string;
+  rating: number;
 }

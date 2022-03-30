@@ -9,6 +9,7 @@ import OrderCard from './sub/OrderCard';
 import OrderList from './sub/OrderList';
 import { useHistory } from 'react-router-dom';
 import { OrangeBaseButton, WhiteBaseButton } from '../../common/StyledComponents';
+import CommentForm from './sub/CommentForm';
 
 const containerWidth = 450;
 
@@ -27,6 +28,7 @@ type ProfileComponentProps = {
   changeOrderState: () => void;
   infoFormShow: boolean;
   changeFormState: () => void;
+  commentFormShow: boolean;
   deleteAccessToken: () => void;
   userData: userData;
   getUserInfo: () => void;
@@ -39,6 +41,7 @@ const ProfileComponent = ({
   changeOrderState,
   infoFormShow,
   changeFormState,
+  commentFormShow,
   deleteAccessToken,
   userData,
   getUserInfo,
@@ -60,7 +63,7 @@ const ProfileComponent = ({
   if (orderList != undefined){
     for(let i = 0; i < orderList.length; i++){
       orderCards.push(
-        <OrderCard index={i}/>
+        <OrderCard  index={i}/>
       )
     }
   }
@@ -68,7 +71,7 @@ const ProfileComponent = ({
   return (
     <>
       <Box sx={{ paddingX: '18%' }}>
-        {!orderListShow && !infoFormShow && (
+        {!orderListShow && !infoFormShow && !commentFormShow && (
           <>
             <Typography variant="h4" fontWeight={600} sx={{ marginTop: 6, marginBottom: 2 }}>
               Личный кабинет
@@ -99,7 +102,6 @@ const ProfileComponent = ({
                     Редактировать
                   </Button>
                   <Button sx={OrangeBaseButton} onClick={logout}>
-                    {' '}
                     Выйти
                   </Button>
                 </Box>
@@ -118,6 +120,7 @@ const ProfileComponent = ({
         )}
         {orderListShow && <OrderList />}
         {infoFormShow && <InfoForm />}
+        {commentFormShow && <CommentForm/>}
       </Box>
       <Footer paddingPercentage={18} />
     </>
@@ -129,6 +132,7 @@ export default inject(({ clientStore, userStore }: Stores) => ({
   changeOrderState: clientStore.changeShowOrderList,
   infoFormShow: clientStore.showInfoForm,
   changeFormState: clientStore.changeShowInfoForm,
+  commentFormShow: clientStore.showCommentForm,
   deleteAccessToken: userStore.deleteAccessToken,
   userData: userStore.userData,
   getUserInfo: userStore.getUserInfo,

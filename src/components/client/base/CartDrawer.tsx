@@ -52,7 +52,7 @@ const CartDrawer = ({ shown, changeShowState, cart, addServing, removeServing, s
   let items = [];
   for(let key of cart.keys()){
     items.push(
-      <CartItem itemID={key}/>
+      <CartItem key={key} itemID={key}/>
     )
   }
 

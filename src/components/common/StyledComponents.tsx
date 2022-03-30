@@ -123,6 +123,16 @@ export const DataInputSX = {
   },
 };
 
+export const CommentDataInputSX = {
+  '.MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      borderColor: 'orange',
+    },
+    minHeight: 100,
+    alignItems: 'start'
+  },
+};
+
 export const AdminDataInputSX = {
   backgroundColor: 'rgb(240,240,240)',
   '.MuiOutlinedInput-root': {

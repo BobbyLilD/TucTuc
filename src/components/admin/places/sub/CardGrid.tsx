@@ -1,21 +1,38 @@
 import { Grid } from '@mui/material';
-import React from 'react';
+import { inject } from 'mobx-react';
+import React, { useEffect } from 'react';
+import { RestaurantAdmin, Stores } from '../../../../types';
 import CardComponent from './PlaceCard';
 
-const CardGrid = () => {
+type CardGridProps ={ 
+  placesList: RestaurantAdmin[];
+  getPlaces: () => void;
+}
+
+const CardGrid = ({placesList, getPlaces}:CardGridProps) => {
+  useEffect(() => {
+    getPlaces();
+  }, [])
+
+  let cards: JSX.Element[] = [];
+  if(placesList != undefined){
+    for(let i = 0; i < placesList.length; i++){
+      cards.push(
+      <Grid item key={placesList[i].id} xs={3}>
+        <CardComponent index={i} />
+      </Grid>
+      )
+    }
+  }
+
   return (
       <Grid container spacing={2} >
-        <Grid item xs={4}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4}>
-          <CardComponent />
-        </Grid>
-        <Grid item xs={4}>
-          <CardComponent />
-        </Grid>
+        {cards}
       </Grid>
   );
 };
 
-export default CardGrid;
+export default inject(({adminPanelStore}: Stores) => ({
+  placesList: adminPanelStore.placesList,
+  getPlaces: adminPanelStore.getPlaces
+}))(CardGrid);
