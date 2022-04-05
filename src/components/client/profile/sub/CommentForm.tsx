@@ -1,7 +1,7 @@
 import { Button, Paper, Rating, TextField, Typography } from '@mui/material';
 import { inject } from 'mobx-react';
 import React, { useState } from 'react';
-import { Stores } from '../../../../types';
+import { comment, Stores } from '../../../../types';
 import {
   BackBtn,
   CommentDataInputSX,
@@ -16,6 +16,9 @@ import { Box } from '@mui/system';
 
 type CommentFormProps = {
   changeFormState: () => void;
+  selectedComment: comment;
+  deleteComment: (id: string) => void;
+  changeSelectedComment: (index: number) => void;
 };
 
 interface IFormInput {
@@ -26,18 +29,28 @@ const StyledInput = styled.form`
   width: 500px;
 `;
 
-const CommentForm = ({ changeFormState }: CommentFormProps) => {
+const CommentForm = ({ changeFormState, selectedComment, deleteComment, changeSelectedComment }: CommentFormProps) => {
   const { register, handleSubmit } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log(data);
     console.log(rating);
   };
 
-  const [rating, setRating] = useState(2.5);
+  let defaultValues: comment = {
+    text: '',
+    rating: 2.5
+  }
+  if(selectedComment != undefined){
+    defaultValues.text = selectedComment.text;
+    defaultValues.rating = selectedComment.rating;
+    defaultValues.id = selectedComment.id;
+  }
+
+  const [rating, setRating] = useState(defaultValues.rating);
 
   return (
     <>
-      <Button sx={BackBtn} onClick={changeFormState}>
+      <Button sx={BackBtn} onClick={() => {changeFormState(); changeSelectedComment(undefined);}}>
         <ArrowBackIosIcon />
         назад
       </Button>
@@ -47,6 +60,7 @@ const CommentForm = ({ changeFormState }: CommentFormProps) => {
       <Paper elevation={3} sx={{ marginTop: 2, p: 3, width: 'fit-content' }}>
         <StyledInput onSubmit={handleSubmit(onSubmit)}>
           <TextField
+            defaultValue={defaultValues.text}
             fullWidth
             multiline
             sx={CommentDataInputSX}
@@ -57,18 +71,24 @@ const CommentForm = ({ changeFormState }: CommentFormProps) => {
               Рейтинг заведения:
             </Typography>
             <Rating
-              defaultValue={2.5}
               precision={0.5}
               value={rating}
               onChange={(event, newValue) => setRating(newValue)}
             />
           </Box>
+          <Box sx={{display: 'flex', justifyContent: 'end', marginTop: 1}}>
           <Button
-            sx={{ ...OrangeBaseButton, ...{ marginLeft: '70%', marginTop: 1 } }}
+            sx={OrangeBaseButton}
             type="submit"
           >
             Отправить
           </Button>
+          {selectedComment != undefined && 
+          <Button sx={{...OrangeBaseButton, ...{marginLeft: 1}}} onClick={() => deleteComment(selectedComment.id)}>
+            Удалить
+          </Button>
+          }
+          </Box>
         </StyledInput>
       </Paper>
     </>
@@ -77,4 +97,7 @@ const CommentForm = ({ changeFormState }: CommentFormProps) => {
 
 export default inject(({ clientStore }: Stores) => ({
   changeFormState: clientStore.changeShowCommentForm,
+  selectedComment: clientStore.selectedComment,
+  changeSelectedComment: clientStore.changeSelectedComment,
+  deleteComment: clientStore.deleteComment
 }))(CommentForm);

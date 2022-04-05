@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Category, City, Item, Restaurant } from '../types';
+import { Category, City, comment, Item, Restaurant } from '../types';
 
 class RestaurantsStore {
   restaurantsList: Map<string,Restaurant>;
@@ -9,6 +9,25 @@ class RestaurantsStore {
   searchQuery: string | undefined;
   selectedRestaurant: Restaurant| undefined;
   cities: Map<string, City> | undefined;
+
+  showCommentList: boolean;
+  commentList: comment[];
+
+  changeCommentListShow = () => {
+    this.showCommentList = !this.showCommentList
+  }
+
+  getCommentsByPlaceID = (id: string) => {
+    let newComment: comment = {
+      id: 'kajbskakd',
+      name: 'Иван',
+      date: new Date('2017-02-02'),
+      text: 'fhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdf',
+      rating: 3.5,
+    };
+    let newArray: comment[] = [newComment, newComment, newComment, newComment];
+    this.commentList = new Array(...newArray);
+  };
 
   getCities = () => {
     this.cities = new Map();
@@ -61,7 +80,9 @@ class RestaurantsStore {
       rating: 4.2,
       categories: ['Японская', 'Итальянская', 'Японская', 'Итальянская'],
       delivery: 800,
-      items: ['0','1','2','3']
+      items: ['0','1','2','3'],
+      locationIDs: new Array(),
+      commentIDs: new Array(),
     };
     this.selectedRestaurant = newRest;
   }
@@ -73,7 +94,9 @@ class RestaurantsStore {
       rating: 4.2,
       categories: ['Японская', 'Итальянская', 'Японская', 'Итальянская'],
       delivery: 800,
-      items: ['0','1','2','3']
+      items: ['0','1','2','3'],
+      locationIDs: new Array(),
+      commentIDs: new Array(),
     };
     for (let i = 0; i < 7; i++) {
       this.restaurantsList.set(i.toString(),newRest);
@@ -113,10 +136,12 @@ class RestaurantsStore {
 
   constructor() {
     this.itemsList = new Array();
+    this.commentList = new Array();
     this.restaurantsList = new Map();
     this.categories = [];
     this.searchQuery = '';
     this.selectedCategories = new Array();
+    this.showCommentList = false;
 
     makeObservable(this, {
       restaurantsList: observable,
@@ -138,7 +163,13 @@ class RestaurantsStore {
       getItems: action,
 
       cities: observable,
-      getCities: action
+      getCities: action,
+
+      showCommentList: observable,
+      changeCommentListShow: action,
+
+      commentList: observable,
+      getCommentsByPlaceID: action,
     });
   }
 }

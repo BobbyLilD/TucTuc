@@ -14,16 +14,19 @@ class ClientStore {
   newOrder: Order | undefined;
   orderList: Order[] | undefined;
   selectedCity: string;
+  selectedComment: comment | undefined;
 
-  commentList: comment[];
+  changeSelectedComment = (index: number) => {
+    if (index == undefined) {
+      this.selectedComment = undefined;
+    } else {
+      this.selectedComment = this.orderList![index].comment;
+    }
+  };
 
-  getCommentsByPlaceID = (id: string) => {
-      let newComment: comment = {
-          id:'kajbskakd',
-          text: 'fhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdffhsdfhkshfkshfksdf',
-          rating: 3.5
-      }
-  }
+  deleteOrder = (id: string) => {};
+
+  deleteComment = (id: string) => {};
 
   changeShowCommentForm = () => {
     this.showOrderList = false;
@@ -57,7 +60,7 @@ class ClientStore {
       address: { address: 'Moscow', flat: '50', floor: 9, entranceCode: '50' },
       promocode: undefined,
       paymentMethod: undefined,
-      comment: undefined,
+      comment: { id: 'sfhsjfks', text: 'dlhdshkhsdfhsf', rating: 3 },
       items: itemsList,
       servings: 4,
       deliveryPrice: 20,
@@ -95,7 +98,7 @@ class ClientStore {
       address: { address: 'Moscow', flat: '50', floor: 9, entranceCode: '50' },
       promocode: undefined,
       paymentMethod: undefined,
-      comment: undefined,
+      comment: { id: 'sfhsjfks', text: 'dlhdshkhsdfhsf', rating: 3 },
       items: itemsList,
       servings: 4,
       deliveryPrice: 20,
@@ -180,7 +183,6 @@ class ClientStore {
   };
 
   constructor() {
-    this.commentList = new Array();
     this.selectedCity = 'None';
     this.deliveryPrice = 500;
     this.orderSum = 0 + this.deliveryPrice;
@@ -196,12 +198,16 @@ class ClientStore {
 
       showCommentForm: observable,
       changeShowCommentForm: action,
+      selectedComment: observable,
+      changeSelectedComment: action,
+      deleteComment: action,
 
       showOrderList: observable,
       changeShowOrderList: action,
       orderList: observable,
       getOrderList: action,
       getOrderListPreview: action,
+      deleteOrder: action,
 
       showInfoForm: observable,
       changeShowInfoForm: action,

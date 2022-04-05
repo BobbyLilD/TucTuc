@@ -22,9 +22,11 @@ type OrderCardProps = {
   index: number;
   orderList: Order[];
   changeCommentState: () => void;
+  changeSelectedComment: (index: number) => void;
+  deleteOrder: (id: string) => void;
 };
 
-const OrderCard = ({ index, orderList, changeCommentState }: OrderCardProps) => {
+const OrderCard = ({ index, orderList, changeCommentState, changeSelectedComment, deleteOrder }: OrderCardProps) => {
   const curOrder: Order = orderList[index];
   let orderItems: JSX.Element[] = [];
   for (let i of curOrder.items.keys()) {
@@ -72,10 +74,10 @@ const OrderCard = ({ index, orderList, changeCommentState }: OrderCardProps) => 
       </Typography>
       <Box sx={{ display: 'flex', width: '100%', marginBottom: 1 }}>
         <Button sx={WhiteBaseButton}>Повторить</Button>
-        <Button sx={WhiteBaseButton}>Отменить</Button>
+        <Button sx={WhiteBaseButton} onClick={() => deleteOrder(curOrder.id!)}>Отменить</Button>
       </Box>
       {curOrder.comment != undefined ? (
-        <Button sx={OrangeBaseButton} onClick={changeCommentState}>
+        <Button sx={OrangeBaseButton} onClick={() => {changeCommentState(); changeSelectedComment(index)}}>
           Изменить комментарий
         </Button>
       ) : (
@@ -90,4 +92,6 @@ const OrderCard = ({ index, orderList, changeCommentState }: OrderCardProps) => 
 export default inject(({ clientStore }: Stores) => ({
   orderList: clientStore.orderList,
   changeCommentState: clientStore.changeShowCommentForm,
+  changeSelectedComment: clientStore.changeSelectedComment,
+  deleteOrder: clientStore.deleteOrder,
 }))(OrderCard);

@@ -50,6 +50,8 @@ export type Restaurant = {
   categories: string[];
   delivery: number| undefined;
   imageLocation?: string;
+  locationIDs: string[];
+  commentIDs: string[];
 }
 
 export type RestaurantAdmin={
@@ -156,7 +158,9 @@ export type userData = {
 }
 
 export type comment = {
-  id: string;
+  id?: string;
+  name?: string;
+  date?: Date;
   text: string;
   rating: number;
 }

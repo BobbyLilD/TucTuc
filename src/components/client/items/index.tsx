@@ -1,15 +1,25 @@
-import React, { useEffect } from "react";
-import Footer from "../base/Footer";
-import ControlBlock from "./sub/ControlBlock";
-import ItemGrid from "./sub/ItemGrid";
+import { inject } from 'mobx-react';
+import React, { useEffect } from 'react';
+import { Stores } from '../../../types';
+import Footer from '../base/Footer';
+import CommentList from './sub/CommentList';
+import ControlBlock from './sub/ControlBlock';
+import ItemGrid from './sub/ItemGrid';
 
-const ItemsComponent = () => {
+type ItemsComponentProps = {
+  showCommentList: boolean;
+};
 
-    return(<>
-    <ControlBlock/>
-    <ItemGrid/>
-    <Footer paddingPercentage={10}/>
-    </>)
-}
+const ItemsComponent = ({ showCommentList }: ItemsComponentProps) => {
+  return (
+    <>
+      <ControlBlock />
+      {!showCommentList ? <ItemGrid /> : <CommentList />}
+      <Footer paddingPercentage={10} />
+    </>
+  );
+};
 
-export default ItemsComponent;
+export default inject(({ restaurantsStore }: Stores) => ({
+  showCommentList: restaurantsStore.showCommentList,
+}))(ItemsComponent);
