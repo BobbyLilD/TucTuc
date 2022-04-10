@@ -13,3 +13,11 @@ export const makeDate = () => {
   });
   return formatter.format(new Date());
 }
+
+export const getDate = (date: Date): string => {
+  return ('0' + date.getDate()).slice(-2) +
+  '.' +
+  ('0' + (date.getMonth() + 1)).slice(-2) +
+  '.' +
+  date.getFullYear();
+}

@@ -1,7 +1,17 @@
-import { Box, Button, Grid, Input, Paper, TextField, Toolbar, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Input,
+  Paper,
+  TextField,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { inject } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { Item, Restaurant, RestaurantAdmin, Stores } from '../../../../types';
+import { Item, NewRestaurantEntityAdmin, Restaurant, RestaurantAdmin, Stores } from '../../../../types';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ItemCard from './ItemCard';
 import TemporaryDrawer from './PlaceFormDrawer';
@@ -13,6 +23,10 @@ import {
   StyledLabel,
 } from '../../../common/StyledComponents';
 import { emailRegex, letterRegex, phoneRegex } from '../../../../commons/const';
+import LocationRecord from './LocationRecord';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import PlaceItemList from './PlaceItemList';
+import LocationRecordsList from './LocationRecordsList';
 
 type CityFormProps = {
   changePlaceState: () => void;
@@ -21,8 +35,10 @@ type CityFormProps = {
   changePhotoState: () => void;
   selectedItem: number;
   placesList: RestaurantAdmin[];
-  itemsList: Item[];
   getItemsByPlaceID: (id: string) => void;
+  newPlaceEntity: NewRestaurantEntityAdmin;
+  initPlace: () => void;
+  changeSelectedItem: (index: number) => void;
 };
 
 interface IFormInput {
@@ -40,30 +56,31 @@ const PlaceForm = ({
   changePhotoState,
   selectedItem,
   placesList,
-  itemsList,
   getItemsByPlaceID,
+  newPlaceEntity,
+  initPlace,
+  changeSelectedItem
 }: CityFormProps) => {
-  const { register, handleSubmit } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
-
   let newItem: RestaurantAdmin = {
     name: undefined,
     phone: undefined,
     email: undefined,
     imageSource: undefined,
     items: new Array(),
+    locationRecords: new Array(),
   };
-  let cards: JSX.Element[] = [];
+  useEffect(() => {
+    initPlace();
+    if(selectedItem != undefined){
+      getItemsByPlaceID(placesList[selectedItem].id!)
+    }
+  }, []);
   if (selectedItem != undefined) {
     newItem = placesList[selectedItem];
-    getItemsByPlaceID(newItem.id);
   }
 
-  if (itemsList != undefined) {
-    for (let i = 0; i < itemsList.length; i++) {
-      cards.push(<ItemCard index={i} />);
-    }
-  }
+  const { register, handleSubmit } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 
   return (
     <>
@@ -154,34 +171,15 @@ const PlaceForm = ({
               </Button>
             </Grid>
             <Grid item xs={2} sx={{ display: 'flex' }}>
-              <Button onClick={changePlaceState} sx={StyledButtonFlex}>
+              <Button onClick={() => {changePlaceState(); changeSelectedItem(undefined);}} sx={StyledButtonFlex}>
                 Выйти
               </Button>
             </Grid>
           </Grid>
           {/* </Grid> */}
         </Paper>
-        <Paper
-          elevation={2}
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'start',
-            width: '100%',
-            marginBottom: 2,
-          }}
-        >
-          <Box
-            display={'flex'}
-            flexDirection={'row'}
-            justifyContent={'start'}
-            width={'80vw'}
-            overflow={'scroll'}
-            padding={2}
-          >
-            {cards}
-          </Box>
-        </Paper>
+        <LocationRecordsList />
+        <PlaceItemList />
       </Box>
     </>
   );
@@ -193,7 +191,10 @@ export default inject(({ adminPanelStore }: Stores) => ({
   photoSet: adminPanelStore.photoSet,
   changePhotoState: adminPanelStore.changePhotoSet,
   selectedItem: adminPanelStore.selectedItem,
-  itemsList: adminPanelStore.itemsList,
+  // itemsList: adminPanelStore.itemsList,
   placesList: adminPanelStore.placesList,
   getItemsByPlaceID: adminPanelStore.getItemsByPlaceID,
+  newPlaceEntity: adminPanelStore.newPlace,
+  initPlace: adminPanelStore.initPlace,
+  changeSelectedItem: adminPanelStore.changeSelectedItem
 }))(PlaceForm);

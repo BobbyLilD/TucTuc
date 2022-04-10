@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Admin, Category, City, Client, Item, OrderAdmin, RestaurantAdmin } from '../types';
+import { Admin, Category, City, Client, Item, locationRecord, NewRestaurantEntityAdmin, OrderAdmin, RestaurantAdmin } from '../types';
 
 class AdminPanelStore {
   cityAdd: boolean;
@@ -22,10 +22,15 @@ class AdminPanelStore {
   selectedItem: number | undefined;
   selectedFoodItem: number | undefined;
 
-  newPlace: RestaurantAdmin | undefined;
+  newPlace: NewRestaurantEntityAdmin | undefined;
   newOrder: OrderAdmin | undefined;
   itemsInOrder: Map<string, Item> | undefined;
   itemsInPlace: Map<string, Item> | undefined;
+
+  addLocationRecordToNewPlace = () => {
+    this.newPlace?.locationRecords.push({address: ''})
+    console.log(this.newPlace?.locationRecords.length)
+  }
 
   selectOrderCity = (id: string) => {
     this.newOrder!.cityID = id;
@@ -72,6 +77,14 @@ class AdminPanelStore {
   }
 
   //INITTERS
+  createRecordList = (): locationRecord[] => {
+    let Item: locationRecord = {
+      address: 'jdljgdfgjdfdg'
+    }
+    let newList = [Item,Item,Item]
+    return newList
+  }
+
   initPlace = () => {
     this.newPlace = {
       name: '',
@@ -79,6 +92,7 @@ class AdminPanelStore {
       email: '',
       items: new Array(),
       imageSource: undefined,
+      locationRecords:this.createRecordList()
     };
   };
 
@@ -102,8 +116,9 @@ class AdminPanelStore {
       name: 'mcBoba',
       phone: '4957647564886',
       email: 'mcboba@gmail.com',
-      items: undefined,
+      items: new Array(),
       imageSource: undefined,
+      locationRecords: new Array()
     };
     this.placesList = new Array(...[newPlace]);
   };
@@ -116,6 +131,7 @@ class AdminPanelStore {
       email: 'mcboba@gmail.com',
       items: new Array(),
       imageSource: undefined,
+      locationRecords: new Array()
     };
     let newArray: RestaurantAdmin[] = [newPlace, newPlace, newPlace, newPlace, newPlace];
     this.placesList = new Array(...newArray);
@@ -128,7 +144,7 @@ class AdminPanelStore {
       description: 'dbgdfgdfjdfg',
       price: 124034,
       category: 'Японская',
-      discount: 30,
+      discount: {percentage: 30, expirationDate: '01.02.2017'},
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
@@ -144,12 +160,12 @@ class AdminPanelStore {
       description: 'dbgdfgdfjdfg',
       price: 124034,
       category: 'Японская',
-      discount: 30,
+      discount: {percentage: 30, expirationDate: '01.02.2017'},
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
     let newList: Item[] = [newItem, newItem, newItem, newItem];
-    this.itemsList = new Array(...newList);
+    this.newPlace!.items = new Array(...newList);
   };
 
   getCities = () => {
@@ -189,7 +205,7 @@ class AdminPanelStore {
       description: 'dbgdfgdfjdfg',
       price: 124034,
       category: 'Японская',
-      discount: 30,
+      discount: {percentage: 30},
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
@@ -332,6 +348,7 @@ class AdminPanelStore {
       newPlace: observable,
       initPlace: action,
       itemsInPlace: observable,
+      addLocationRecordToNewPlace: action,
 
       selectedFoodItem: observable,
       changeSelectedFoodItem: action,

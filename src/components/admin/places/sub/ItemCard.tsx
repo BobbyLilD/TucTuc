@@ -22,13 +22,14 @@ const StyledImage = styled.img`
 type ItemCardProps = {
   itemsList: Item[];
   index: number;
+  showItemForm: () => void;
+  changeSelectedFoodItem: (index: number) => void;
 }
 
-const ItemCard = ({itemsList, index}: ItemCardProps) => {
+const ItemCard = ({itemsList, index, showItemForm, changeSelectedFoodItem}: ItemCardProps) => {
   let curCard: Item = itemsList[index];
 
   return (
-    // <Badge badgeContent={'30%'} sx={{fontSize: 20, , bgcolor: orange[500]}}>
     <Card
       sx={{
         minWidth: 296,
@@ -53,7 +54,7 @@ const ItemCard = ({itemsList, index}: ItemCardProps) => {
           fontSize: 16
         }}
       >
-        {curCard.discount}%
+        {curCard.discount.percentage}%
       </Typography>}
       <StyledImage src={defaultImage} />
       <CardContent sx={{paddingTop: 0}}>
@@ -62,11 +63,15 @@ const ItemCard = ({itemsList, index}: ItemCardProps) => {
           {curCard.description}
         </Typography>
         <Typography sx={{marginBottom: 1}}>{curCard.price} р.</Typography>
-        <Button sx={StyledButton}>Изменить</Button>
+        <Button sx={StyledButton} onClick={() => {changeSelectedFoodItem(index); showItemForm();}}>Изменить</Button>
       </CardContent>
     </Card>
     // </Badge>
   );
 };
 
-export default inject(({adminPanelStore}: Stores) => ({itemsList: adminPanelStore.itemsList}))(ItemCard);
+export default inject(({adminPanelStore}: Stores) => ({
+  itemsList: adminPanelStore.newPlace.items,
+  showItemForm: adminPanelStore.changeItemAdd,
+  changeSelectedFoodItem: adminPanelStore.changeSelectedFoodItem
+}))(ItemCard);

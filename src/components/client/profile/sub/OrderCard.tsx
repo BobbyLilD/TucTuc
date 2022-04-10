@@ -3,6 +3,7 @@ import { Box } from '@mui/system';
 import { inject } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { Order, Stores } from '../../../../types';
+import { getDate } from '../../../../utils/helpers';
 import { OrangeBaseButton } from '../../../common/StyledComponents';
 
 const WhiteBaseButton = {
@@ -37,12 +38,7 @@ const OrderCard = ({ index, orderList, changeCommentState, changeSelectedComment
     );
   }
 
-  let dateString =
-    ('0' + curOrder.orderDate.getDate()).slice(-2) +
-    '.' +
-    ('0' + (curOrder.orderDate.getMonth() + 1)).slice(-2) +
-    '.' +
-    curOrder.orderDate.getFullYear();
+  let dateString = getDate(curOrder.orderDate);
 
   return (
     <Box sx={{ width: '100%', marginY: 2, paddingBottom: 2, borderBottom: '1px solid lightgrey' }}>

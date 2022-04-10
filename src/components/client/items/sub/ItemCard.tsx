@@ -66,7 +66,7 @@ const ItemCard = ({ item, restaurantID, addToCart, loggenIn, changeAuthState }: 
 
   return (
     <Card sx={{ minWidth: 0, width: 'fit-content', position: 'relative' }}>
-      <Typography sx={Badge}>{item.discount}%</Typography>
+      <Typography sx={Badge}>{item.discount.percentage}%</Typography>
       <StyledImage src={FoodDefault} />
       <CardContent sx={ContentContainer}>
         <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>

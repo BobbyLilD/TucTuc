@@ -61,17 +61,28 @@ export type RestaurantAdmin={
   email: string| undefined;
   items: string[] | Item[] | undefined;
   imageSource: FormData | undefined;
+  locationRecords: locationRecord[];
+}
+
+export type NewRestaurantEntityAdmin={
+  id?: string;
+  name: string | undefined;
+  phone: string | undefined;
+  email: string| undefined;
+  items: Item[];
+  imageSource: FormData | undefined;
+  locationRecords: locationRecord[];
 }
 
 export type Item = {
   id?: string;
-  placeID: string;
+  placeID?: string;
   name: string;
   description: string;
   price: number | undefined;
   category: string;
   imageSource: string;
-  discount: number | undefined;
+  discount?: Promo;
 }
 
 export type CartItem = {
@@ -163,4 +174,15 @@ export type comment = {
   date?: Date;
   text: string;
   rating: number;
+}
+
+export type locationRecord = {
+  id?: string;
+  address: string;
+}
+
+export type Promo = {
+  id?: string;
+  percentage: number;
+  expirationDate?: string;
 }

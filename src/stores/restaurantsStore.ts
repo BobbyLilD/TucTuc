@@ -61,7 +61,7 @@ class RestaurantsStore {
       placeID: '21312',
       name: 'Удон с курицей',
       price: 450,
-      discount: 30,
+      discount: {percentage: 30},
       description: `Вкусное и яркое блюдо азиатской кухни порадует всех! Имея дома в шкафчике удон, 
         всегда можно быстро приготовить ужин для всей семьи`,
       category: 'Японская',

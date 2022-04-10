@@ -6,6 +6,7 @@ import { Button } from '@mui/material';
 import { StyledButton } from '../../../common/StyledComponents';
 import { City, OrderAdmin, RestaurantAdmin, Stores } from '../../../../types';
 import { inject } from 'mobx-react';
+import { getDate } from '../../../../utils/helpers';
 
 type CardComponentProps = {
   ordersList: OrderAdmin[];
@@ -24,12 +25,7 @@ const CardComponent = ({
   citiesList,
   placesList,
 }: CardComponentProps) => {
-  let dateString =
-    ('0' + ordersList[index].orderDate.getDate()).slice(-2) +
-    '.' +
-    ('0' + (ordersList[index].orderDate.getMonth() + 1)).slice(-2) +
-    '.' +
-    ordersList[index].orderDate.getFullYear();
+  let dateString = getDate(ordersList[index].orderDate);
 
   return (
     // <Badge badgeContent={'30%'} sx={{fontSize: 20, , bgcolor: orange[500]}}>

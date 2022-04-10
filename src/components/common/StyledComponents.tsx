@@ -134,15 +134,15 @@ export const CommentDataInputSX = {
 };
 
 export const AdminDataInputSX = {
-  backgroundColor: 'rgb(240,240,240)',
   '.MuiOutlinedInput-root': {
+    backgroundColor: 'rgb(240,240,240)',
     '&.Mui-focused fieldset': {
       borderColor: 'orange',
     },
   },
   '.MuiOutlinedInput-input': {
     paddingY: 1.25,
-  },
+  }
 };
 
 export const ListSelectSX = {
@@ -178,3 +178,18 @@ export const Icon = {
   color: 'orange',
   fontSize: 16,
 };
+
+export const CheckboxSX = {
+  ':hover': {
+    backgroundColor: 'transparent'
+  }, 
+  '&.Mui-checked': {
+    color: 'orange'
+  }
+}
+
+export const IconButton = {
+  minWidth: 0,
+  minHeight: 0,
+  p: 0,
+}
