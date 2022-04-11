@@ -62,7 +62,7 @@ const OrderItemCard = observer(({id, itemsInOrder, newOrder, addItemToOrder, rem
           color: 'white',
         }}
       >
-        {curItem.discount}%
+        {curItem.discount.percentage}%
       </Typography>
       <StyledImage src={defaultImage} />
       <CardContent sx={{ paddingTop: 0, marginTop: 1 }}>

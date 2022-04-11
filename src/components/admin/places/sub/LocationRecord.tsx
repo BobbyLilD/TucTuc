@@ -1,5 +1,5 @@
 import { Box } from '@mui/system';
-import React, { MouseEventHandler, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
@@ -14,29 +14,33 @@ import { inject } from 'mobx-react';
 type LocationRecordProps = {
   locationRecords: locationRecord[];
   index: number;
+  saveChangesToLocationRecord: (data: locationRecord, index: number) => void;
 };
 
 interface IFormInput {
-  Address: string;
+  address: string;
 }
 
-const LocationRecord = ({ locationRecords, index }: LocationRecordProps) => {
-  const { register, handleSubmit } = useForm<IFormInput>();
+const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord }: LocationRecordProps) => {
+  const { register, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log(data);
     setShow(!show);
+    saveChangesToLocationRecord(data, index);
+    setDefaultValues(data);
   };
-  const [show, setShow] = useState(locationRecords[index].address == '');
-  const onShowChange: MouseEventHandler<HTMLButtonElement> = (event) => {
-    setShow(!show);
-  };
+  const [show, setShow] = useState(false);
 
-  let recordValues: locationRecord = {
-    address: 'Москва, Гагаринский переулок, 24/7с1',
-  };
-  if (index != undefined) {
-    recordValues = locationRecords[index];
-  }
+  const [defaultValues, setDefaultValues] = useState<locationRecord>({address: ''});
+
+  useEffect(() => {
+    console.log('records length is ' + locationRecords.length)
+    setDefaultValues(locationRecords[index]);
+  }, [locationRecords])
+
+  useEffect(() => {
+    reset(defaultValues)
+  }, [defaultValues])
 
   return (
     <>
@@ -44,7 +48,7 @@ const LocationRecord = ({ locationRecords, index }: LocationRecordProps) => {
         <Box sx={{ display: 'flex', width: '80%' }}>
           {!show && (
             <>
-              <Typography variant="subtitle1">Адрес: {recordValues.address}</Typography>
+              <Typography variant="subtitle1">Адрес: {defaultValues.address}</Typography>
             </>
           )}
           {show && (
@@ -52,14 +56,14 @@ const LocationRecord = ({ locationRecords, index }: LocationRecordProps) => {
               <TextField
                 fullWidth
                 sx={{ ...AdminDataInputSX, ...{ flex: 1 } }}
-                defaultValue={recordValues.address}
+                defaultValue={defaultValues.address}
                 placeholder="Адрес"
-                {...register('Address', { required: true })}
+                {...register('address', { required: true })}
               />
               <IconButton type="submit">
                 <CheckIcon sx={{ color: 'green' }} />
               </IconButton>
-              <IconButton onClick={onShowChange}>
+              <IconButton onClick={() => {setShow(!show); reset();}}>
                 <CloseIcon sx={{ color: 'red' }} />
               </IconButton>
             </form>
@@ -67,7 +71,7 @@ const LocationRecord = ({ locationRecords, index }: LocationRecordProps) => {
         </Box>
         <Box sx={{ marginRight: 2 }}>
           {!show && (
-            <IconButton onClick={onShowChange}>
+            <IconButton onClick={() => {setShow(!show)}}>
               <EditIcon sx={{ color: 'gray' }} />
             </IconButton>
           )}
@@ -82,5 +86,6 @@ const LocationRecord = ({ locationRecords, index }: LocationRecordProps) => {
 };
 
 export default inject(({adminPanelStore}: Stores) => ({
-  locationRecords: adminPanelStore.newPlace.locationRecords
+  locationRecords: adminPanelStore.newPlace.locationRecords,
+  saveChangesToLocationRecord: adminPanelStore.saveChangesToLocationRecord
 }))(LocationRecord);

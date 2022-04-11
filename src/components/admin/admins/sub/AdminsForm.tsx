@@ -1,4 +1,4 @@
-import { Button, Grid, Input, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, Input, Paper, TextField, Typography } from '@mui/material';
 import { inject } from 'mobx-react';
 import React from 'react';
 import { Admin, Stores } from '../../../../types';
@@ -74,12 +74,20 @@ const CityForm = ({ adminAddChangeState, adminsList, selectedItem, changeSelecte
               />
             </Grid>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4}>
+            <Box sx={{display: 'flex'}}>
             <Button type="submit" sx={StyledButton}>
               Сохранить
             </Button>
+            <Button sx={{...StyledButton, ...{marginX: 1}}}>
+              Понизить
+            </Button>
+            <Button sx={StyledButton}>
+              Заблокировать
+            </Button>
+            </Box>
           </Grid>
-          <Grid item xs={9}></Grid>
+          <Grid item xs={7}></Grid>
           <Grid item xs={1}>
             <Button onClick={() => {adminAddChangeState();
             changeSelectedItem(undefined);}} sx={StyledButton}>

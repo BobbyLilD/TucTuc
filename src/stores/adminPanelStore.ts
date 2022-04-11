@@ -12,7 +12,7 @@ class AdminPanelStore {
   clientEdit: boolean;
 
   citiesList: City[] | undefined;
-  itemsList: Item[] | undefined;
+  itemsList: Item[];
   categoriesList: Category[] | undefined;
   clientsList: Client[] | undefined;
   ordersList: OrderAdmin[] | undefined;
@@ -27,14 +27,15 @@ class AdminPanelStore {
   itemsInOrder: Map<string, Item> | undefined;
   itemsInPlace: Map<string, Item> | undefined;
 
+  saveChangesToLocationRecord = (data: locationRecord, index: number) => {
+    this.newPlace!.locationRecords[index] = data;
+    console.log(this.newPlace?.locationRecords[index].address);
+  }
+
   addLocationRecordToNewPlace = () => {
     this.newPlace?.locationRecords.push({address: ''})
     console.log(this.newPlace?.locationRecords.length)
   }
-
-  selectOrderCity = (id: string) => {
-    this.newOrder!.cityID = id;
-  };
 
   selectOrderPlace = (id: string) => {
     this.newOrder!.placeID = id;
@@ -72,6 +73,13 @@ class AdminPanelStore {
     this.selectedItem = index;
   };
 
+  changeSelectedPlaceItem = (index: number) => {
+    this.selectedItem = index;
+    const {items, ...rest} = this.placesList![index];
+    this.newPlace = {items: this.itemsList, ...rest};
+    console.log('records length in db is ' + this.newPlace.locationRecords.length);
+  }
+
   changeSelectedFoodItem = (index: number) => {
     this.selectedFoodItem = index;
   }
@@ -92,7 +100,7 @@ class AdminPanelStore {
       email: '',
       items: new Array(),
       imageSource: undefined,
-      locationRecords:this.createRecordList()
+      locationRecords: new Array()
     };
   };
 
@@ -102,13 +110,20 @@ class AdminPanelStore {
       email: undefined,
       items: new Map(),
       servings: undefined,
-      cityID: '',
+      locationrecordID: '',
       placeID: '',
+      destAddress: '',
+      status: ''
     };
     this.itemsInOrder = new Map();
   };
 
   //GETTERS
+
+  getLocationRecordsByID = (id: string) => {
+    this.newPlace!.locationRecords = this.createRecordList();
+    console.log('records added');
+  }
 
   getRestaurantByID = (id: string) => {
     let newPlace: RestaurantAdmin = {
@@ -131,7 +146,7 @@ class AdminPanelStore {
       email: 'mcboba@gmail.com',
       items: new Array(),
       imageSource: undefined,
-      locationRecords: new Array()
+      locationRecords: [{address: 'shskjdfs'}, {address: 'khsdfskdjf'}]
     };
     let newArray: RestaurantAdmin[] = [newPlace, newPlace, newPlace, newPlace, newPlace];
     this.placesList = new Array(...newArray);
@@ -153,7 +168,22 @@ class AdminPanelStore {
     this.itemsInOrder = new Map(newList);
   };
 
-  getItemsByPlaceID = (id: string) => {
+  getItemsByPlaceIDForOrderForm = (id: string) => {
+    const newItem: Item = {
+      id: 'sbdjsdbg',
+      name: 'Удон с курицей',
+      description: 'dbgdfgdfjdfg',
+      price: 124034,
+      category: 'Японская',
+      discount: {percentage: 30, expirationDate: '01.02.2017'},
+      imageSource: 'kndlfngd',
+      placeID: 'kndklfng',
+    };
+    let newList: Item[] = [newItem, newItem, newItem, newItem];
+    this.itemsList = new Array(...newList);
+  }
+
+  getItemsByPlaceIDForPlaceForm = (id: string) => {
     const newItem: Item = {
       id: 'sbdjsdbg',
       name: 'Удон с курицей',
@@ -236,7 +266,9 @@ class AdminPanelStore {
       orderSum: 1200,
       email: 'mcboba@gmail.com',
       placeID: '0',
-      cityID: '0',
+      locationrecordID: '0',
+      destAddress: 'Москва, Колотушкина, 35',
+      status: 'Завершен'
     };
     let newList: OrderAdmin[] = [newItem, newItem, newItem, newItem];
     this.ordersList = new Array(...newList);
@@ -276,6 +308,7 @@ class AdminPanelStore {
 
   constructor() {
     this.adminsList = new Array();
+    this.itemsList = new Array();
     this.cityAdd = false;
     this.adminAdd = false;
     this.placeAdd = false;
@@ -320,7 +353,8 @@ class AdminPanelStore {
 
       itemsList: observable,
       getItems: action,
-      getItemsByPlaceID: action,
+      getItemsByPlaceIDForPlaceForm: action,
+      getItemsByPlaceIDForOrderForm: action,
       getItemsByIDs: action,
 
       ordersList: observable,
@@ -342,13 +376,14 @@ class AdminPanelStore {
       removeItemFromOrder: action,
       initOrder: action,
       deleteItemFromOrder: action,
-      selectOrderCity: action,
       selectOrderPlace: action,
 
       newPlace: observable,
       initPlace: action,
       itemsInPlace: observable,
       addLocationRecordToNewPlace: action,
+      saveChangesToLocationRecord: action,
+      changeSelectedPlaceItem: action,
 
       selectedFoodItem: observable,
       changeSelectedFoodItem: action,

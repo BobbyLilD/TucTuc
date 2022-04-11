@@ -67,6 +67,6 @@ const CardComponent = ({index, placesList, changeSelectedItem, changeFormState}:
 
 export default inject(({adminPanelStore}: Stores) => ({
   placesList: adminPanelStore.placesList,
-  changeSelectedItem: adminPanelStore.changeSelectedItem,
+  changeSelectedItem: adminPanelStore.changeSelectedPlaceItem,
   changeFormState: adminPanelStore.changePlaceAdd
 }))(CardComponent);

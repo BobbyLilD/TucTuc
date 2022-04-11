@@ -193,7 +193,7 @@ export default inject(({ adminPanelStore }: Stores) => ({
   selectedItem: adminPanelStore.selectedItem,
   // itemsList: adminPanelStore.itemsList,
   placesList: adminPanelStore.placesList,
-  getItemsByPlaceID: adminPanelStore.getItemsByPlaceID,
+  getItemsByPlaceID: adminPanelStore.getItemsByPlaceIDForPlaceForm,
   newPlaceEntity: adminPanelStore.newPlace,
   initPlace: adminPanelStore.initPlace,
   changeSelectedItem: adminPanelStore.changeSelectedItem

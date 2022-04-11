@@ -122,6 +122,6 @@ const ItemModal = ({ itemAdd, itemChangeState, getItems, itemsList }: ItemFormPr
 export default inject(({ adminPanelStore }: Stores) => ({
   itemAdd: adminPanelStore.itemAddToPlace,
   itemChangeState: adminPanelStore.changeItemAdd,
-  getItems: adminPanelStore.getItemsByPlaceID,
+  getItems: adminPanelStore.getItemsByPlaceIDForOrderForm,
   itemsList: adminPanelStore.itemsList
 }))(ItemModal);

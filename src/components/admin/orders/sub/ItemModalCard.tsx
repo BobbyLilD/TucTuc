@@ -75,7 +75,7 @@ const ItemModalCard = observer(({
                   fontSize: 14
                 }}
               >
-                {curItem.discount}%
+                {curItem.discount.percentage}%
               </Typography>
             )}
             <StyledImage src={defaultImage} />

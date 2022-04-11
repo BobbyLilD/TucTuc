@@ -2,7 +2,7 @@ import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { Button } from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 import { StyledButton } from '../../../common/StyledComponents';
 import { City, OrderAdmin, RestaurantAdmin, Stores } from '../../../../types';
 import { inject } from 'mobx-react';
@@ -39,32 +39,38 @@ const CardComponent = ({
       }}
     >
       <CardContent sx={{ paddingTop: 2 }}>
-        <Typography variant="h5" fontWeight={600}>
-          ID: {ordersList[index].id}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <Typography variant="h6" fontWeight={600}>
+            ID: {ordersList[index].id}
+          </Typography>
+          <Typography variant="subtitle1" sx={{color: 'gray'}}>
+            {dateString}
+          </Typography>
+        </Box>
+        <Typography variant='subtitle1' fontWeight={600}>
+            Статус: {ordersList[index].status}
         </Typography>
-        <Typography variant="h6" paddingTop={1}>
-          Город:{' '}
-          {citiesList != undefined &&
-            citiesList.filter((x) => x.id == ordersList[index].cityID)[0].name}
-        </Typography>
-        <Typography variant="h6" paddingTop={1}>
+        <Divider/>
+        <Typography variant="subtitle1" paddingTop={0.5}>
           Заведение:{' '}
           {placesList != undefined &&
             placesList.filter((x) => x.id == ordersList[index].placeID)[0].name}
         </Typography>
+        <Typography variant='subtitle1' >
+          Адрес: {ordersList[index].destAddress}
+        </Typography>
+        <Divider/>
         <Typography variant="subtitle1" paddingTop={1}>
           Кол-во товаров: {ordersList[index].items.size}
         </Typography>
-        <Typography variant="subtitle1" paddingTop={1}>
+        <Typography variant="subtitle1" >
           Кол-во персон: {ordersList[index].servings}
         </Typography>
-        <Typography variant="subtitle1" paddingTop={1}>
-          {ordersList[index].orderSum - ordersList[index].deliveryPrice} +{' '}
-          {ordersList[index].deliveryPrice} = {ordersList[index].orderSum}р.
-        </Typography>
+        <Divider/>
         <Typography variant="subtitle1" paddingY={1}>
-          Дата заказа: {dateString}
+          Стоимость: {ordersList[index].orderSum} р.
         </Typography>
+
         <Button
           sx={{ ...StyledButton, ...{ marginRight: 1 } }}
           onClick={() => {

@@ -59,7 +59,7 @@ export type RestaurantAdmin={
   name: string | undefined;
   phone: string | undefined;
   email: string| undefined;
-  items: string[] | Item[] | undefined;
+  items: string[] | undefined;
   imageSource: FormData | undefined;
   locationRecords: locationRecord[];
 }
@@ -129,7 +129,9 @@ export type OrderAdmin = {
   orderSum?: number;
   orderDate?: Date;
   placeID: string | undefined;
-  cityID: string | undefined;
+  locationrecordID: string | undefined;
+  destAddress: string | undefined;
+  status: string | undefined;
 }
 
 export type City = {

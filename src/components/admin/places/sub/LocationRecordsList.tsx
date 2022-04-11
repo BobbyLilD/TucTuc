@@ -1,5 +1,5 @@
 import { Paper, Box, Typography, IconButton } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { locationRecord, NewRestaurantEntityAdmin, Stores } from '../../../../types';
 import LocationRecord from './LocationRecord';
@@ -13,14 +13,15 @@ type LocationsRecordsListProps = {
 
 const LocationRecordsList = observer(
   ({ newPlaceEntity, addLocationRecord }: LocationsRecordsListProps) => {
-    let locationRecordLines: JSX.Element[] = [];
-    if (newPlaceEntity != undefined) {
-      for (let i = 0; i < newPlaceEntity.locationRecords.length; i++) {
-        if (newPlaceEntity.locationRecords[i].address != '')
-          locationRecordLines.push(<LocationRecord index={i} key={i} />);
-        else locationRecordLines.push(<LocationRecord index={i} key={i} />);
+    const [locationRecords, setLocationRecords] = useState<locationRecord[]>(new Array());
+    useEffect(() => {
+      console.log('getting records')
+      if (newPlaceEntity != undefined) {
+        setLocationRecords(newPlaceEntity.locationRecords);
       }
-    }
+      console.log('getting records' + newPlaceEntity.locationRecords.length)
+      console.log('got records' + locationRecords.length)
+    }, [newPlaceEntity.locationRecords]);
 
     return (
       <Paper elevation={2} sx={{ width: '100%', marginBottom: 2, paddingX: 2, paddingY: 1 }}>
@@ -32,10 +33,9 @@ const LocationRecordsList = observer(
             <AddCircleOutlineIcon sx={{ color: 'green' }} />
           </IconButton>
         </Box>
-        {newPlaceEntity != undefined &&
-          newPlaceEntity.locationRecords.map((value, index) => (
-            <LocationRecord index={index} key={index} />
-          ))}
+        {locationRecords.map((value, index) => (
+          <LocationRecord index={index} key={index} />
+        ))}
       </Paper>
     );
   },

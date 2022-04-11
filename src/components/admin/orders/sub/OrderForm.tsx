@@ -22,7 +22,7 @@ import OrderItemCard from './OrderItemCard';
 import { emailRegex, numbRegex, phoneRegex } from '../../../../commons/const';
 
 interface IFromInput {
-  City: string;
+  Status: string;
   Place: string;
   ClientPhone: string;
   ClientEmail: string;
@@ -39,10 +39,10 @@ type OrderFormProps = {
   selectedItem: number;
   ordersList: OrderAdmin[];
   getItemsByIDList: (IDs: string[]) => void;
-  citiesList: City[];
+  // citiesList: City[];
   placesList: RestaurantAdmin[];
   itemsInOrder: Map<string,Item>;
-  selectOrderCity: (id: string) => void;
+  // selectOrderCity: (id: string) => void;
   selectOrderPlace: (id: string) => void;
 };
 
@@ -54,10 +54,10 @@ const OrderForm = ({
   selectedItem,
   ordersList,
   getItemsByIDList,
-  citiesList,
+  // citiesList,
   placesList,
   itemsInOrder,
-  selectOrderCity,
+  // selectOrderCity,
   selectOrderPlace
 }: OrderFormProps) => {
   const { register, handleSubmit } = useForm<IFromInput>();
@@ -69,15 +69,17 @@ const OrderForm = ({
     selectOrderPlace(event.target.value);
   };
 
-  const [city, setCity] = React.useState('');
-  const handleCityChange = (event: SelectChangeEvent) => {
-    setCity(event.target.value as string);
-    selectOrderCity(event.target.value);
+  const [status, setStatus] = React.useState('');
+  const handleStatusChange = (event: SelectChangeEvent) => {
+    setStatus(event.target.value as string);
+    // selectOrderCity(event.target.value);
   };
 
   useEffect(() => {
     initOrder();
   }, []);
+
+  const statusList = ['В обработке', 'Готовится', 'В пути', 'Доставлен']
 
   //BUILD CARD LIST
   let cards: JSX.Element[] = [];
@@ -97,12 +99,12 @@ const OrderForm = ({
   }
 
   //BUILD CITY LIST
-  let cityMenuItems: JSX.Element[] = [];
-  for(let i = 0; i < citiesList.length; i++){
-    cityMenuItems.push(
-      <MenuItem value={citiesList[i].id}>{citiesList[i].name}</MenuItem>
-    )
-  }
+  // let cityMenuItems: JSX.Element[] = [];
+  // for(let i = 0; i < citiesList.length; i++){
+  //   cityMenuItems.push(
+  //     <MenuItem value={citiesList[i].id}>{citiesList[i].name}</MenuItem>
+  //   )
+  // }
 
   //BUILD PLACE LIST
   let placeMenuItems: JSX.Element[] = [];
@@ -133,18 +135,18 @@ const OrderForm = ({
             </Grid>
             <Grid item xs={3}>
               <FormControl fullWidth sx={ListSelectSX}>
-                <InputLabel id="city-select-label">Город</InputLabel>
+                <InputLabel id="city-select-label">Статус</InputLabel>
                 <Select
-                  {...register('City', { required: true })}
+                  {...register('Status', { required: true })}
                   labelId="city-select-label"
                   id="city-select"
-                  value={city}
-                  label="Город"
-                  onChange={handleCityChange}
-                  sx={{}}
+                  value={status}
+                  label="Статус"
+                  onChange={handleStatusChange}
                   defaultValue=''
                 >
-                  {cityMenuItems}
+                  {/* {cityMenuItems} */}
+                  {statusList.map((value) => <MenuItem value={value}>{value}</MenuItem> )}
                 </Select>
               </FormControl>
             </Grid>
@@ -189,7 +191,7 @@ const OrderForm = ({
                 fullWidth
               />
             </Grid>
-            <Grid xs={4}></Grid>
+            <Grid item xs={4}></Grid>
             <Grid item xs={2}>
               <Button sx={StyledButton} onClick={changeItemState}>
                 Добавить товар
@@ -244,6 +246,6 @@ export default inject(({ adminPanelStore }: Stores) => ({
   placesList: adminPanelStore.placesList,
   citiesList: adminPanelStore.citiesList,
   itemsInOrder: adminPanelStore.itemsInOrder,
-  selectOrderCity: adminPanelStore.selectOrderCity,
+  // selectOrderCity: adminPanelStore.selectOrderCity,
   selectOrderPlace: adminPanelStore.selectOrderPlace
 }))(OrderForm);
