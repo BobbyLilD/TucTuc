@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Category, City, comment, Item, Restaurant } from '../types';
+import { Category, City, comment, Item, locationRecord, Restaurant } from '../types';
 
 class RestaurantsStore {
   restaurantsList: Map<string,Restaurant>;
@@ -9,12 +9,22 @@ class RestaurantsStore {
   searchQuery: string | undefined;
   selectedRestaurant: Restaurant| undefined;
   cities: Map<string, City> | undefined;
+  locationRecordsList: locationRecord[] | undefined;
 
   showCommentList: boolean;
   commentList: comment[];
 
   changeCommentListShow = () => {
     this.showCommentList = !this.showCommentList
+  }
+
+  getLocationRecordsByID = (id: string) => {
+    let newRecord: locationRecord = {
+      id: 'shflsdfhlsdf',
+      address: 'Москва, Колотушкина, 35'
+    }
+    const newArr = [newRecord, newRecord, newRecord]
+    this.locationRecordsList = new Array(...newArr);
   }
 
   getCommentsByPlaceID = (id: string) => {
@@ -170,6 +180,9 @@ class RestaurantsStore {
 
       commentList: observable,
       getCommentsByPlaceID: action,
+      
+      locationRecordsList: observable,
+      getLocationRecordsByID: action
     });
   }
 }

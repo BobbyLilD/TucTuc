@@ -27,7 +27,6 @@ import {
 import { inject } from 'mobx-react';
 import { Category, City, Stores } from '../../../../types';
 
-
 type ControlBlockProps = {
   categories: Category[];
   selectedCategories: string[];
@@ -55,23 +54,6 @@ const ControlBlock = ({
     getCategories();
     getCitiesList();
   }, []);
-
-  let items: JSX.Element[] = [];
-  for (let key of categories) {
-    items.push(
-      <ToggleButton sx={CategoryBox} value={key.id} aria-label="bold">
-        <FastfoodIcon sx={{ marginRight: 1 }} />
-        {key.name}
-      </ToggleButton>,
-    );
-  }
-
-  let cities: JSX.Element[] = [];
-  if (citiesList != undefined) {
-    for (let key of citiesList.keys()) {
-      cities.push(<MenuItem value={key}>{citiesList.get(key).name}</MenuItem>);
-    }
-  }
 
   return (
     <>
@@ -103,12 +85,11 @@ const ControlBlock = ({
               </Search>
             </Toolbar>
           </AppBar>
-          {/* <Button sx={CityButton}>
-            <LocationOnIcon sx={{ marginRight: 1 }} />
-            Санкт-Петербург
-          </Button> */}
 
-          <FormControl variant='standard' sx={{display: 'flex', flexDirection:"row", marginBottom: 1}}>
+          <FormControl
+            variant="standard"
+            sx={{ display: 'flex', flexDirection: 'row', marginBottom: 1 }}
+          >
             <LocationOnIcon sx={{ marginRight: 1, marginTop: 0.5, marginLeft: 0.5 }} />
             <Select
               value={selectedCity}
@@ -118,7 +99,10 @@ const ControlBlock = ({
               sx={CitySelect}
             >
               <MenuItem value={'None'}>Выбрать город</MenuItem>
-              {cities}
+              {citiesList != undefined &&
+                Array.from(citiesList.keys()).map((value) => (
+                  <MenuItem value={value}>{citiesList.get(value).name}</MenuItem>
+                ))}
             </Select>
           </FormControl>
           <ToggleButtonGroup
@@ -128,7 +112,12 @@ const ControlBlock = ({
             }}
             sx={CategoryBoxContainer}
           >
-            {items}
+            {categories.map((value) => (
+              <ToggleButton sx={CategoryBox} value={value.id} key={value.id} aria-label="bold">
+                <FastfoodIcon sx={{ marginRight: 1 }} />
+                {value.name}
+              </ToggleButton>
+            ))}
           </ToggleButtonGroup>
         </ControlDiv>
         <StyledImage src={banner} />
