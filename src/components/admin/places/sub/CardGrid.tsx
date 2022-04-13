@@ -4,35 +4,29 @@ import React, { useEffect } from 'react';
 import { RestaurantAdmin, Stores } from '../../../../types';
 import CardComponent from './PlaceCard';
 
-type CardGridProps ={ 
+type CardGridProps = {
   placesList: RestaurantAdmin[];
   getPlaces: () => void;
-}
+};
 
-const CardGrid = ({placesList, getPlaces}:CardGridProps) => {
+const CardGrid = ({ placesList, getPlaces }: CardGridProps) => {
   useEffect(() => {
     getPlaces();
-  }, [])
-
-  let cards: JSX.Element[] = [];
-  if(placesList != undefined){
-    for(let i = 0; i < placesList.length; i++){
-      cards.push(
-      <Grid item key={placesList[i].id} xs={3}>
-        <CardComponent index={i} />
-      </Grid>
-      )
-    }
-  }
+  }, []);
 
   return (
-      <Grid container spacing={2} >
-        {cards}
-      </Grid>
+    <Grid container spacing={2}>
+      {placesList != undefined &&
+        placesList.map((value, index) => (
+          <Grid item key={value.id} xs={3} >
+            <CardComponent index={index} />
+          </Grid>
+        ))}
+    </Grid>
   );
 };
 
-export default inject(({adminPanelStore}: Stores) => ({
+export default inject(({ adminPanelStore }: Stores) => ({
   placesList: adminPanelStore.placesList,
-  getPlaces: adminPanelStore.getPlaces
+  getPlaces: adminPanelStore.getPlaces,
 }))(CardGrid);

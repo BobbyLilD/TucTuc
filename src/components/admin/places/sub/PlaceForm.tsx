@@ -11,7 +11,13 @@ import {
 } from '@mui/material';
 import { inject } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { Item, NewRestaurantEntityAdmin, Restaurant, RestaurantAdmin, Stores } from '../../../../types';
+import {
+  Item,
+  NewRestaurantEntityAdmin,
+  Restaurant,
+  RestaurantAdmin,
+  Stores,
+} from '../../../../types';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ItemCard from './ItemCard';
 import TemporaryDrawer from './PlaceFormDrawer';
@@ -27,6 +33,7 @@ import LocationRecord from './LocationRecord';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PlaceItemList from './PlaceItemList';
 import LocationRecordsList from './LocationRecordsList';
+import AddAdminModal from './AddAdminModal';
 
 type CityFormProps = {
   changePlaceState: () => void;
@@ -39,6 +46,7 @@ type CityFormProps = {
   newPlaceEntity: NewRestaurantEntityAdmin;
   initPlace: () => void;
   changeSelectedItem: (index: number) => void;
+  changeAddAdminToPlace: () => void;
 };
 
 interface IFormInput {
@@ -59,7 +67,8 @@ const PlaceForm = ({
   getItemsByPlaceID,
   newPlaceEntity,
   initPlace,
-  changeSelectedItem
+  changeSelectedItem,
+  changeAddAdminToPlace
 }: CityFormProps) => {
   let newItem: RestaurantAdmin = {
     name: undefined,
@@ -70,8 +79,8 @@ const PlaceForm = ({
     locationRecords: new Array(),
   };
   useEffect(() => {
-    if(selectedItem != undefined){
-      getItemsByPlaceID(placesList[selectedItem].id!)
+    if (selectedItem != undefined) {
+      getItemsByPlaceID(placesList[selectedItem].id!);
     }
   }, []);
   if (selectedItem != undefined) {
@@ -84,6 +93,7 @@ const PlaceForm = ({
   return (
     <>
       <TemporaryDrawer />
+      <AddAdminModal />
       <Box
         onSubmit={handleSubmit(onSubmit)}
         sx={{
@@ -129,7 +139,7 @@ const PlaceForm = ({
             <Grid item xs={12}>
               <Typography variant="h5">Добавление/изменение заведения</Typography>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={5} sx={{ display: 'flex', alignItems: 'center' }}>
               <TextField
                 variant="outlined"
                 fullWidth
@@ -139,7 +149,7 @@ const PlaceForm = ({
                 {...register('Name', { required: true, pattern: letterRegex })}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center' }}>
               <TextField
                 variant="outlined"
                 fullWidth
@@ -148,6 +158,13 @@ const PlaceForm = ({
                 defaultValue={newItem.phone}
                 {...register('Phone', { required: true, pattern: phoneRegex })}
               />
+            </Grid>
+            <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
+              {newItem.id != undefined && (
+                <Button sx={{ ...StyledButtonFlex, ...{ fontSize: 12 } }} onClick={changeAddAdminToPlace}>
+                  Добавить администратора
+                </Button>
+              )}
             </Grid>
             <Grid item xs={5}>
               <TextField
@@ -170,7 +187,13 @@ const PlaceForm = ({
               </Button>
             </Grid>
             <Grid item xs={2} sx={{ display: 'flex' }}>
-              <Button onClick={() => {changePlaceState(); changeSelectedItem(undefined);}} sx={StyledButtonFlex}>
+              <Button
+                onClick={() => {
+                  changePlaceState();
+                  changeSelectedItem(undefined);
+                }}
+                sx={StyledButtonFlex}
+              >
                 Выйти
               </Button>
             </Grid>
@@ -195,5 +218,6 @@ export default inject(({ adminPanelStore }: Stores) => ({
   getItemsByPlaceID: adminPanelStore.getItemsByPlaceIDForPlaceForm,
   newPlaceEntity: adminPanelStore.newPlace,
   initPlace: adminPanelStore.initPlace,
-  changeSelectedItem: adminPanelStore.changeSelectedItem
+  changeSelectedItem: adminPanelStore.changeSelectedItem,
+  changeAddAdminToPlace: adminPanelStore.changeAddAdminToPlace
 }))(PlaceForm);

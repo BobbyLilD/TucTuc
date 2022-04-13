@@ -1,15 +1,26 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Admin, Category, City, Client, Item, locationRecord, NewRestaurantEntityAdmin, OrderAdmin, RestaurantAdmin } from '../types';
+import {
+  Admin,
+  Category,
+  City,
+  Client,
+  Item,
+  locationRecord,
+  NewRestaurantEntityAdmin,
+  OrderAdmin,
+  RestaurantAdmin,
+} from '../types';
 
 class AdminPanelStore {
-  cityAdd: boolean;
-  placeAdd: boolean;
-  itemAddToPlace: boolean;
-  photoSet: boolean;
-  adminAdd: boolean;
-  categoryAdd: boolean;
-  orderAdd: boolean;
-  clientEdit: boolean;
+  cityAdd: boolean = false;
+  placeAdd: boolean = false;
+  itemAddToPlace: boolean = false;
+  photoSet: boolean = false;
+  adminAdd: boolean = false;
+  categoryAdd: boolean = false;
+  orderAdd: boolean = false;
+  clientEdit: boolean = false;
+  addAdminToPlace: boolean = false;
 
   citiesList: City[] | undefined;
   itemsList: Item[];
@@ -28,19 +39,21 @@ class AdminPanelStore {
   itemsInOrder: Map<string, Item> | undefined;
   itemsInPlace: Map<string, Item> | undefined;
 
+  postAdminToPlace = (id: string) => {};
+
   deleteLocationRecord = (index: number) => {
-    this.newPlace?.locationRecords.splice(index,1);
-  }
+    this.newPlace?.locationRecords.splice(index, 1);
+  };
 
   saveChangesToLocationRecord = (data: locationRecord, index: number) => {
     this.newPlace!.locationRecords[index] = data;
     console.log(this.newPlace?.locationRecords[index].address);
-  }
+  };
 
   addLocationRecordToNewPlace = () => {
-    this.newPlace?.locationRecords.push({address: ''})
-    console.log(this.newPlace?.locationRecords.length)
-  }
+    this.newPlace?.locationRecords.push({ address: '' });
+    console.log(this.newPlace?.locationRecords.length);
+  };
 
   selectOrderPlace = (id: string) => {
     this.newOrder!.placeID = id;
@@ -81,23 +94,23 @@ class AdminPanelStore {
 
   changeSelectedPlaceItem = (index: number) => {
     this.selectedItem = index;
-    const {items, ...rest} = this.placesList![index];
-    this.newPlace = {items: this.itemsList, ...rest};
+    const { items, ...rest } = this.placesList![index];
+    this.newPlace = { items: this.itemsList, ...rest };
     console.log('records length in db is ' + this.newPlace.locationRecords.length);
-  }
+  };
 
   changeSelectedFoodItem = (index: number) => {
     this.selectedFoodItem = index;
-  }
+  };
 
   //INITTERS
   createRecordList = (): locationRecord[] => {
     let Item: locationRecord = {
-      address: 'jdljgdfgjdfdg'
-    }
-    let newList = [Item,Item,Item]
-    return newList
-  }
+      address: 'jdljgdfgjdfdg',
+    };
+    let newList = [Item, Item, Item];
+    return newList;
+  };
 
   initPlace = () => {
     this.newPlace = {
@@ -106,9 +119,9 @@ class AdminPanelStore {
       email: '',
       items: new Array(),
       imageSource: undefined,
-      locationRecords: new Array()
+      locationRecords: new Array(),
     };
-    console.log('place init')
+    console.log('place init');
   };
 
   initOrder = () => {
@@ -121,21 +134,31 @@ class AdminPanelStore {
       placeID: '',
       destAddress: '',
       status: '',
-      placeAddress: ''
+      placeAddress: '',
     };
     this.itemsInOrder = new Map();
   };
 
   //GETTERS
+  getAdminByPhone = (phone: string) => {
+    let newAdmin: Admin = {
+      id: 'dlf',
+      name: 'Bob',
+      surname: 'Ross',
+      phone: '34573975493',
+      email: 'bobross@gmail.com',
+    };
+    this.adminsList = new Array(newAdmin);
+  };
 
   getLocationRecordsByIDForOrder = (id: string) => {
     this.locationrecordsList = this.createRecordList();
-  }
+  };
 
   getLocationRecordsByID = (id: string) => {
     this.newPlace!.locationRecords = this.createRecordList();
     console.log('records added');
-  }
+  };
 
   getRestaurantByID = (id: string) => {
     let newPlace: RestaurantAdmin = {
@@ -145,7 +168,7 @@ class AdminPanelStore {
       email: 'mcboba@gmail.com',
       items: new Array(),
       imageSource: undefined,
-      locationRecords: new Array()
+      locationRecords: new Array(),
     };
     this.placesList = new Array(...[newPlace]);
   };
@@ -158,7 +181,7 @@ class AdminPanelStore {
       email: 'mcboba@gmail.com',
       items: new Array(),
       imageSource: undefined,
-      locationRecords: [{address: 'shskjdfs'}, {address: 'khsdfskdjf'}]
+      locationRecords: [{ address: 'shskjdfs' }, { address: 'khsdfskdjf' }],
     };
     let newArray: RestaurantAdmin[] = [newPlace, newPlace, newPlace, newPlace, newPlace];
     this.placesList = new Array(...newArray);
@@ -171,7 +194,7 @@ class AdminPanelStore {
       description: 'dbgdfgdfjdfg',
       price: 124034,
       category: 'Японская',
-      discount: {percentage: 30, expirationDate: '01.02.2017'},
+      discount: { percentage: 30, expirationDate: '01.02.2017' },
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
@@ -187,13 +210,13 @@ class AdminPanelStore {
       description: 'dbgdfgdfjdfg',
       price: 124034,
       category: 'Японская',
-      discount: {percentage: 30, expirationDate: '01.02.2017'},
+      discount: { percentage: 30, expirationDate: '01.02.2017' },
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
     let newList: Item[] = [newItem, newItem, newItem, newItem];
     this.itemsList = new Array(...newList);
-  }
+  };
 
   getItemsByPlaceIDForPlaceForm = (id: string) => {
     const newItem: Item = {
@@ -202,7 +225,7 @@ class AdminPanelStore {
       description: 'dbgdfgdfjdfg',
       price: 124034,
       category: 'Японская',
-      discount: {percentage: 30, expirationDate: '01.02.2017'},
+      discount: { percentage: 30, expirationDate: '01.02.2017' },
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
@@ -247,7 +270,7 @@ class AdminPanelStore {
       description: 'dbgdfgdfjdfg',
       price: 124034,
       category: 'Японская',
-      discount: {percentage: 30},
+      discount: { percentage: 30 },
       imageSource: 'kndlfngd',
       placeID: 'kndklfng',
     };
@@ -281,13 +304,17 @@ class AdminPanelStore {
       locationrecordID: '0',
       destAddress: 'Москва, Колотушкина, 35',
       status: 'Завершен',
-      placeAddress: 'Москва, Колотушкина, 358'
+      placeAddress: 'Москва, Колотушкина, 358',
     };
     let newList: OrderAdmin[] = [newItem, newItem, newItem, newItem];
     this.ordersList = new Array(...newList);
   };
 
   //FORM MARKERS
+
+  changeAddAdminToPlace = () => {
+    this.addAdminToPlace = !this.addAdminToPlace;
+  };
 
   changeCityAdd = () => {
     this.cityAdd = !this.cityAdd;
@@ -322,14 +349,14 @@ class AdminPanelStore {
   constructor() {
     this.adminsList = new Array();
     this.itemsList = new Array();
-    this.cityAdd = false;
-    this.adminAdd = false;
-    this.placeAdd = false;
-    this.itemAddToPlace = false;
-    this.photoSet = false;
-    this.categoryAdd = false;
-    this.orderAdd = false;
-    this.clientEdit = false;
+    // this.cityAdd = false;
+    // this.adminAdd = false;
+    // this.placeAdd = false;
+    // this.itemAddToPlace = false;
+    // this.photoSet = false;
+    // this.categoryAdd = false;
+    // this.orderAdd = false;
+    // this.clientEdit = false;
 
     makeObservable(this, {
       //FORM MARKERS
@@ -356,6 +383,9 @@ class AdminPanelStore {
 
       clientEdit: observable,
       changeClientAdd: action,
+
+      addAdminToPlace: observable,
+      changeAddAdminToPlace: action,
 
       //LIST INIT
       citiesList: observable,
@@ -401,7 +431,6 @@ class AdminPanelStore {
 
       selectedFoodItem: observable,
       changeSelectedFoodItem: action,
-
     });
   }
 }
