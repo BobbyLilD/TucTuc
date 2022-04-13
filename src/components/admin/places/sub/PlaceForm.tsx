@@ -70,7 +70,6 @@ const PlaceForm = ({
     locationRecords: new Array(),
   };
   useEffect(() => {
-    initPlace();
     if(selectedItem != undefined){
       getItemsByPlaceID(placesList[selectedItem].id!)
     }

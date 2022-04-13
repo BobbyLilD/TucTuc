@@ -128,7 +128,8 @@ export type OrderAdmin = {
   deliveryPrice?: number;
   orderSum?: number;
   orderDate?: Date;
-  placeID: string | undefined;
+  placeID: string;
+  placeAddress: string | undefined;
   locationrecordID: string | undefined;
   destAddress: string | undefined;
   status: string | undefined;

@@ -56,8 +56,11 @@ const CardComponent = ({
           {placesList != undefined &&
             placesList.filter((x) => x.id == ordersList[index].placeID)[0].name}
         </Typography>
+        <Typography variant='subtitle1'>
+          Адрес заведения: {ordersList[index].placeAddress}
+        </Typography>
         <Typography variant='subtitle1' >
-          Адрес: {ordersList[index].destAddress}
+          Адрес клиента: {ordersList[index].destAddress}
         </Typography>
         <Divider/>
         <Typography variant="subtitle1" paddingTop={1}>

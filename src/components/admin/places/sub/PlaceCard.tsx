@@ -35,7 +35,7 @@ const CardComponent = ({index, placesList, changeSelectedItem, changeFormState}:
       minWidth: 268,
       maxWidth: 268,
       height: 'fit-content',
-      border: `1px solid ${orange[500]}`,
+      border: `1px solid lightray`,
       marginRight: 2,
       position: 'relative',
     }}>

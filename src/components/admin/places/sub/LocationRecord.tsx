@@ -15,13 +15,14 @@ type LocationRecordProps = {
   locationRecords: locationRecord[];
   index: number;
   saveChangesToLocationRecord: (data: locationRecord, index: number) => void;
+  deleteLocationRecord: (index: number) => void;
 };
 
 interface IFormInput {
   address: string;
 }
 
-const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord }: LocationRecordProps) => {
+const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord, deleteLocationRecord }: LocationRecordProps) => {
   const { register, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log(data);
@@ -36,6 +37,8 @@ const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord }:
   useEffect(() => {
     console.log('records length is ' + locationRecords.length)
     setDefaultValues(locationRecords[index]);
+    if(defaultValues.address == '')
+    setShow(true);
   }, [locationRecords])
 
   useEffect(() => {
@@ -75,7 +78,7 @@ const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord }:
               <EditIcon sx={{ color: 'gray' }} />
             </IconButton>
           )}
-          <IconButton sx={{ marginLeft: 1 }}>
+          <IconButton sx={{ marginLeft: 1 }} onClick={() => deleteLocationRecord(index)}>
             <DeleteIcon sx={{ color: 'red' }} />
           </IconButton>
         </Box>
@@ -87,5 +90,6 @@ const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord }:
 
 export default inject(({adminPanelStore}: Stores) => ({
   locationRecords: adminPanelStore.newPlace.locationRecords,
-  saveChangesToLocationRecord: adminPanelStore.saveChangesToLocationRecord
+  saveChangesToLocationRecord: adminPanelStore.saveChangesToLocationRecord,
+  deleteLocationRecord: adminPanelStore.deleteLocationRecord
 }))(LocationRecord);

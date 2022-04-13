@@ -19,8 +19,8 @@ const LocationRecordsList = observer(
       if (newPlaceEntity != undefined) {
         setLocationRecords(newPlaceEntity.locationRecords);
       }
-      console.log('getting records' + newPlaceEntity.locationRecords.length)
-      console.log('got records' + locationRecords.length)
+      // console.log('getting records' + newPlaceEntity.locationRecords.length)
+      // console.log('got records' + locationRecords.length)
     }, [newPlaceEntity.locationRecords]);
 
     return (
@@ -34,7 +34,7 @@ const LocationRecordsList = observer(
           </IconButton>
         </Box>
         {locationRecords.map((value, index) => (
-          <LocationRecord index={index} key={index} />
+          <LocationRecord index={index} key={index}/>
         ))}
       </Paper>
     );

@@ -12,8 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 import { inject } from 'mobx-react';
-import React, { useEffect } from 'react';
-import { City, Item, OrderAdmin, RestaurantAdmin, Stores } from '../../../../types';
+import React, { useEffect, useState } from 'react';
+import { City, Item, OrderAdmin, RestaurantAdmin, Stores, locationRecord } from '../../../../types';
 import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form';
 import { AdminDataInputSX, StyledButton, ListSelectSX } from '../../../common/StyledComponents';
@@ -22,11 +22,15 @@ import OrderItemCard from './OrderItemCard';
 import { emailRegex, numbRegex, phoneRegex } from '../../../../commons/const';
 
 interface IFromInput {
-  Status: string;
-  Place: string;
-  ClientPhone: string;
-  ClientEmail: string;
-  Persons: number;
+  status: string;
+  place: string;
+  phone: string;
+  email: string;
+  servings: number;
+  address: string;
+  flat: string;
+  floor: string;
+  location: string;
   Items: [];
 }
 
@@ -41,9 +45,10 @@ type OrderFormProps = {
   getItemsByIDList: (IDs: string[]) => void;
   // citiesList: City[];
   placesList: RestaurantAdmin[];
-  itemsInOrder: Map<string,Item>;
+  itemsInOrder: Map<string, Item>;
   // selectOrderCity: (id: string) => void;
   selectOrderPlace: (id: string) => void;
+  locationRecordsList: locationRecord[];
 };
 
 const OrderForm = ({
@@ -58,7 +63,9 @@ const OrderForm = ({
   placesList,
   itemsInOrder,
   // selectOrderCity,
-  selectOrderPlace
+  locationRecordsList,
+  selectOrderPlace,
+  
 }: OrderFormProps) => {
   const { register, handleSubmit } = useForm<IFromInput>();
   const onSubmit: SubmitHandler<IFromInput> = (data) => console.log(data);
@@ -72,14 +79,15 @@ const OrderForm = ({
   const [status, setStatus] = React.useState('');
   const handleStatusChange = (event: SelectChangeEvent) => {
     setStatus(event.target.value as string);
-    // selectOrderCity(event.target.value);
   };
+
+  const [location, setLocation] = useState('');
 
   useEffect(() => {
     initOrder();
   }, []);
 
-  const statusList = ['В обработке', 'Готовится', 'В пути', 'Доставлен']
+  const statusList = ['В обработке', 'Готовится', 'В пути', 'Доставлен'];
 
   //BUILD CARD LIST
   let cards: JSX.Element[] = [];
@@ -96,22 +104,6 @@ const OrderForm = ({
     for (let key of itemsInOrder.keys()) {
       cards.push(<OrderItemCard id={key} />);
     }
-  }
-
-  //BUILD CITY LIST
-  // let cityMenuItems: JSX.Element[] = [];
-  // for(let i = 0; i < citiesList.length; i++){
-  //   cityMenuItems.push(
-  //     <MenuItem value={citiesList[i].id}>{citiesList[i].name}</MenuItem>
-  //   )
-  // }
-
-  //BUILD PLACE LIST
-  let placeMenuItems: JSX.Element[] = [];
-  for(let i = 0; i < placesList.length; i++){
-    placeMenuItems.push(
-      <MenuItem value={placesList[i].id}>{placesList[i].name}</MenuItem>
-    )
   }
 
   return (
@@ -137,16 +129,17 @@ const OrderForm = ({
               <FormControl fullWidth sx={ListSelectSX}>
                 <InputLabel id="city-select-label">Статус</InputLabel>
                 <Select
-                  {...register('Status', { required: true })}
+                  {...register('status', { required: true })}
                   labelId="city-select-label"
                   id="city-select"
                   value={status}
                   label="Статус"
                   onChange={handleStatusChange}
-                  defaultValue=''
+                  defaultValue=""
                 >
-                  {/* {cityMenuItems} */}
-                  {statusList.map((value) => <MenuItem value={value}>{value}</MenuItem> )}
+                  {statusList.map((value) => (
+                    <MenuItem value={value}>{value}</MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -154,24 +147,45 @@ const OrderForm = ({
               <FormControl fullWidth sx={ListSelectSX}>
                 <InputLabel id="place-select-label">Заведение</InputLabel>
                 <Select
-                  {...register('Place', { required: true })}
+                  {...register('place', { required: true })}
                   labelId="place-select-label"
                   id="place-select"
                   value={place}
                   label="Заведение"
                   onChange={handlePlaceChange}
-                  defaultValue=''
+                  defaultValue=""
                 >
-                  {placeMenuItems}
+                  {placesList.map((value) => (
+                    <MenuItem value={value.id}>{value.name}</MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}></Grid>
+            <Grid item xs={3}>
+              <FormControl fullWidth sx={ListSelectSX}>
+                <InputLabel id="location-select-label">Филлиал</InputLabel>
+                <Select
+                  disabled={place == ''}
+                  {...register('location', { required: true })}
+                  labelId="location-select-label"
+                  value={location}
+                  onChange={(event) => setLocation(event.target.value)}
+                >
+                  {locationRecordsList != undefined &&
+                    locationRecordsList.map((value) => (
+                      <MenuItem value={value.id} key={value.id}>
+                        {value.address}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={3}></Grid>
             <Grid item xs={3}>
               <TextField
                 sx={AdminDataInputSX}
                 placeholder="Телефон клиента"
-                {...register('ClientPhone', { required: true, pattern: phoneRegex })}
+                {...register('phone', { required: true, pattern: phoneRegex })}
                 fullWidth
               />
             </Grid>
@@ -179,7 +193,7 @@ const OrderForm = ({
               <TextField
                 sx={AdminDataInputSX}
                 placeholder="Email клиента"
-                {...register('ClientEmail', { required: true, pattern: emailRegex })}
+                {...register('email', { required: true, pattern: emailRegex })}
                 fullWidth
               />
             </Grid>
@@ -187,11 +201,36 @@ const OrderForm = ({
               <TextField
                 sx={AdminDataInputSX}
                 placeholder="Кол-во персон"
-                {...register('Persons', { required: true, pattern: numbRegex })}
+                {...register('servings', { required: true, pattern: numbRegex })}
                 fullWidth
               />
             </Grid>
             <Grid item xs={4}></Grid>
+            <Grid item xs={5}>
+              <TextField
+                sx={AdminDataInputSX}
+                placeholder="Адрес клиента"
+                fullWidth
+                {...register('address', { required: true })}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <TextField
+                sx={AdminDataInputSX}
+                placeholder="Квартира"
+                fullWidth
+                {...register('flat', { required: true })}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <TextField
+                sx={AdminDataInputSX}
+                placeholder="Этаж"
+                fullWidth
+                {...register('floor', { required: true, pattern: numbRegex })}
+              />
+            </Grid>
+            <Grid item xs={5}></Grid>
             <Grid item xs={2}>
               <Button sx={StyledButton} onClick={changeItemState}>
                 Добавить товар
@@ -227,6 +266,7 @@ const OrderForm = ({
             padding={2}
           >
             {cards}
+            {/* {Array.from(itemsInOrder.keys()).map((value) => <OrderItemCard)} */}
           </Box>
         </Paper>
       </Box>
@@ -247,5 +287,6 @@ export default inject(({ adminPanelStore }: Stores) => ({
   citiesList: adminPanelStore.citiesList,
   itemsInOrder: adminPanelStore.itemsInOrder,
   // selectOrderCity: adminPanelStore.selectOrderCity,
-  selectOrderPlace: adminPanelStore.selectOrderPlace
+  selectOrderPlace: adminPanelStore.selectOrderPlace,
+  locationRecordsList: adminPanelStore.locationrecordsList
 }))(OrderForm);

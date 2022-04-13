@@ -18,6 +18,7 @@ class AdminPanelStore {
   ordersList: OrderAdmin[] | undefined;
   placesList: RestaurantAdmin[] | undefined;
   adminsList: Admin[] | undefined;
+  locationrecordsList: locationRecord[] | undefined;
 
   selectedItem: number | undefined;
   selectedFoodItem: number | undefined;
@@ -26,6 +27,10 @@ class AdminPanelStore {
   newOrder: OrderAdmin | undefined;
   itemsInOrder: Map<string, Item> | undefined;
   itemsInPlace: Map<string, Item> | undefined;
+
+  deleteLocationRecord = (index: number) => {
+    this.newPlace?.locationRecords.splice(index,1);
+  }
 
   saveChangesToLocationRecord = (data: locationRecord, index: number) => {
     this.newPlace!.locationRecords[index] = data;
@@ -39,6 +44,7 @@ class AdminPanelStore {
 
   selectOrderPlace = (id: string) => {
     this.newOrder!.placeID = id;
+    this.getLocationRecordsByIDForOrder(id);
   };
 
   addItemToOrder = (id: string, item?: Item) => {
@@ -102,6 +108,7 @@ class AdminPanelStore {
       imageSource: undefined,
       locationRecords: new Array()
     };
+    console.log('place init')
   };
 
   initOrder = () => {
@@ -113,12 +120,17 @@ class AdminPanelStore {
       locationrecordID: '',
       placeID: '',
       destAddress: '',
-      status: ''
+      status: '',
+      placeAddress: ''
     };
     this.itemsInOrder = new Map();
   };
 
   //GETTERS
+
+  getLocationRecordsByIDForOrder = (id: string) => {
+    this.locationrecordsList = this.createRecordList();
+  }
 
   getLocationRecordsByID = (id: string) => {
     this.newPlace!.locationRecords = this.createRecordList();
@@ -268,7 +280,8 @@ class AdminPanelStore {
       placeID: '0',
       locationrecordID: '0',
       destAddress: 'Москва, Колотушкина, 35',
-      status: 'Завершен'
+      status: 'Завершен',
+      placeAddress: 'Москва, Колотушкина, 358'
     };
     let newList: OrderAdmin[] = [newItem, newItem, newItem, newItem];
     this.ordersList = new Array(...newList);
@@ -384,6 +397,7 @@ class AdminPanelStore {
       addLocationRecordToNewPlace: action,
       saveChangesToLocationRecord: action,
       changeSelectedPlaceItem: action,
+      deleteLocationRecord: action,
 
       selectedFoodItem: observable,
       changeSelectedFoodItem: action,

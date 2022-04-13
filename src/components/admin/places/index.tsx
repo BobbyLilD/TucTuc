@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import { inject } from "mobx-react";
-import React from "react";
+import React, { useEffect } from "react";
 import CardGrid from "./sub/CardGrid";
 import {Stores} from '../../../types';
 import SearchBlock from "../../common/SearchBlock";
@@ -11,9 +11,11 @@ import {AdminContentSubContainer} from '../../common/StyledComponents';
 type CitiesProps = {
     placeAdd: boolean,
     changePlaceAdd: ()=>void,
+    initPlace: () => void;
 }
 
-const placesComponent = ({placeAdd, changePlaceAdd}: CitiesProps) => {
+const placesComponent = ({placeAdd, changePlaceAdd, initPlace}: CitiesProps) => {
+    initPlace();
     return(
         <>
             {placeAdd ? (
@@ -32,5 +34,6 @@ const placesComponent = ({placeAdd, changePlaceAdd}: CitiesProps) => {
 
 export default inject(({adminPanelStore} : Stores) => ({
     placeAdd: adminPanelStore.placeAdd,
-    changePlaceAdd: adminPanelStore.changePlaceAdd
+    changePlaceAdd: adminPanelStore.changePlaceAdd,
+    initPlace: adminPanelStore.initPlace
 }))(placesComponent);
