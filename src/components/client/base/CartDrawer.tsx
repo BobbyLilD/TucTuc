@@ -13,11 +13,13 @@ import { Box } from '@mui/system';
 import { inject } from 'mobx-react';
 import React, { useState } from 'react';
 import CartItem from '../common/CartItem';
-import { CartItem as cartItem, locationRecord, Stores } from '../../../types';
+import { CartItem as cartItem, locationRecord, Order, Stores } from '../../../types';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useHistory } from 'react-router-dom';
 import { IncDecButton, Icon, ListSelectSX } from '../../common/StyledComponents';
+import { observer } from 'mobx-react-lite';
+import { DrawerSX, BoxBetweenTop, BoxBetweenBottom, LocationSelectSX, OrderButton } from './sub/StyledComponents';
 
 type CartDrawerProps = {
   shown: boolean;
@@ -25,69 +27,22 @@ type CartDrawerProps = {
   cart: Map<string, cartItem>;
   addServing: () => void;
   removeServing: () => void;
-  servings: number;
-  deliveryPrice: number;
-  orderSum: number;
+  newOrder: Order;
   locationRecords: locationRecord[];
+  setLocationInOrder: (id: string) => void;
 };
 
-const BoxBetweenTop = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginTop: 2,
-};
-
-const BoxBetweenBottom = {
-  display: 'flex',
-  justifyContent: 'space-between',
-};
-
-const DrawerSX = {
-  width: 300,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'stretch',
-  paddingX: '5%',
-};
-
-const OrderButton = {
-  backgroundColor: 'orange',
-  marginTop: 2,
-  color: 'white',
-  ':hover': {
-    backgroundColor: 'orange',
-  },
-};
-
-const LocationSelectSX = {...ListSelectSX,  ...{
-  '.MuiSelect-select': {
-    paddingY: 0.5
-  },
-  '.MuiInputBase-root':{
-    ':after': {
-      borderBottom: '2px solid black' 
-    }
-  }
-}}
-
-const CartDrawer = ({
+const CartDrawer = observer(({
   shown,
   changeShowState,
   cart,
   addServing,
   removeServing,
-  servings,
-  orderSum,
-  deliveryPrice,
+  newOrder,
   locationRecords,
+  setLocationInOrder,
 }: CartDrawerProps) => {
   const [location, setLocation] = useState('None');
-  // let items = [];
-  // for(let key of cart.keys()){
-  //   items.push(
-  //     <CartItem key={key} itemID={key}/>
-  //   )
-  // }
 
   let histoty = useHistory();
   const forwardOrder = () => {
@@ -107,66 +62,79 @@ const CartDrawer = ({
           ))}
         </Box>
         <Divider />
-        <Box sx={BoxBetweenTop}>
-          <Typography variant="subtitle2">Приборы</Typography>
-          <Box sx={{ display: 'flex' }}>
-            <Button sx={IncDecButton} onClick={removeServing}>
-              <RemoveCircleIcon sx={Icon} />
-            </Button>
-            <Typography variant="subtitle2">{servings}</Typography>
-            <Button sx={IncDecButton} onClick={addServing}>
-              <AddCircleIcon sx={Icon} />
-            </Button>
-          </Box>
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 0.5 }}>
-          <Typography variant="subtitle2">Доставка</Typography>
-          <Typography variant="subtitle2">{deliveryPrice} руб.</Typography>
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-          <Typography variant="subtitle2">Стоимость</Typography>
-          <Typography variant="subtitle2">{orderSum - deliveryPrice} руб.</Typography>
-        </Box>
-        <Box sx={BoxBetweenBottom}>
-          <Typography variant="subtitle2">Доставка</Typography>
-          <Typography variant="subtitle2">{deliveryPrice} руб.</Typography>
-        </Box>
-        <Box sx={BoxBetweenBottom}>
-          <Typography variant="subtitle2">Итого</Typography>
-          <Typography variant="subtitle2">{orderSum} руб.</Typography>
-        </Box>
+        {newOrder != undefined && (
+          <>
+            <Box sx={BoxBetweenTop}>
+              <Typography variant="subtitle2">Приборы</Typography>
+              <Box sx={{ display: 'flex' }}>
+                <Button sx={IncDecButton} onClick={removeServing}>
+                  <RemoveCircleIcon sx={Icon} />
+                </Button>
+                <Typography variant="subtitle2">{newOrder.servings}</Typography>
+                <Button sx={IncDecButton} onClick={addServing}>
+                  <AddCircleIcon sx={Icon} />
+                </Button>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 0.5 }}>
+              <Typography variant="subtitle2">Доставка</Typography>
+              <Typography variant="subtitle2">{newOrder.deliveryPrice} руб.</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
+              <Typography variant="subtitle2">Стоимость</Typography>
+              <Typography variant="subtitle2">
+                {newOrder.orderSum - newOrder.deliveryPrice} руб.
+              </Typography>
+            </Box>
+            <Box sx={BoxBetweenBottom}>
+              <Typography variant="subtitle2">Доставка</Typography>
+              <Typography variant="subtitle2">{newOrder.deliveryPrice} руб.</Typography>
+            </Box>
+            <Box sx={BoxBetweenBottom}>
+              <Typography variant="subtitle2">Итого</Typography>
+              <Typography variant="subtitle2">{newOrder.orderSum} руб.</Typography>
+            </Box>
+          </>
+        )}
 
-            <Divider />
-        <Typography variant='subtitle2' sx={{marginTop: 1}} >Выбрать филлиал</Typography>
-        <FormControl fullWidth sx={LocationSelectSX} variant='standard'>
-          <Select
-            labelId="locationSelectLabel"
-            value={location}
-            onChange={(event) => {
-              setLocation(event.target.value);
-            }}
-          >
-            {locationRecords != undefined && locationRecords.map((value) => (
-              <MenuItem value={value.id}>{value.address}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button sx={OrderButton} onClick={forwardOrder}>
-          Оформить заказ
-        </Button>
+        <Divider />
+        {cart.size > 0 && (
+          <>
+            <Typography variant="subtitle2" sx={{ marginTop: 1 }}>
+              Выбрать филлиал
+            </Typography>
+            <FormControl fullWidth sx={LocationSelectSX} variant="standard">
+              <Select
+                labelId="locationSelectLabel"
+                value={location}
+                onChange={(event) => {
+                  setLocation(event.target.value);
+                  setLocationInOrder(event.target.value);
+                }}
+              >
+                {locationRecords != undefined &&
+                  locationRecords.map((value) => (
+                    <MenuItem value={value.id}>{value.address}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            <Button sx={OrderButton} onClick={forwardOrder}>
+              Оформить заказ
+            </Button>
+          </>
+        )}
       </Box>
     </Drawer>
   );
-};
+})
 
-export default inject(({ clientStore, restaurantsStore }: Stores) => ({
+export default inject(({ clientStore }: Stores) => ({
   shown: clientStore.showCart,
   changeShowState: clientStore.changeShowCart,
   cart: clientStore.cart,
-  servings: clientStore.servings,
   addServing: clientStore.addServing,
   removeServing: clientStore.removeServing,
-  deliveryPrice: clientStore.deliveryPrice,
-  orderSum: clientStore.orderSum,
-  locationRecords: restaurantsStore.locationRecordsList
+  newOrder: clientStore.newOrder,
+  locationRecords: clientStore.locationRecordsList,
+  setLocationInOrder: clientStore.setLocationInOrder,
 }))(CartDrawer);

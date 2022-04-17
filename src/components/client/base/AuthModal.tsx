@@ -8,6 +8,7 @@ import { numbRegex, phoneRegex } from '../../../commons/const';
 import { DataInputSX, WhiteBaseButton } from '../../common/StyledComponents';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import styled from '@emotion/styled';
+import { AuthForm, authModalContainer } from './sub/StyledComponents';
 
 type AuthModalProps = {
   shown: boolean;
@@ -18,30 +19,7 @@ type AuthModalProps = {
   changeUserRegistrationState: () => void;
 };
 
-const modalContainer = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '400px',
-  height: '200px',
-  bgcolor: 'white',
-  border: '2px solid #000',
-  boxShadow: 24,
-  paddingX: 4,
-  paddingY: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  borderRadius: '12px',
-};
 
-const AuthForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: space-evenly;
-  flex: 1;
-`;
 
 interface IFromPhoneInput {
   Phone: string;
@@ -81,7 +59,7 @@ const AuthModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={modalContainer}>
+      <Box sx={authModalContainer}>
         <Typography variant="h5">Войти в личный кабинет</Typography>
         {!phoneVerified && (
           <AuthForm onSubmit={phoneFormReturn.handleSubmit(onPhoneSubmit)}>

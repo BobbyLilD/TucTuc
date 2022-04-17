@@ -16,6 +16,10 @@ import { useForm } from 'react-hook-form';
 import { phoneRegex } from '../../../commons/const';
 import { DataInputSX } from '../../common/StyledComponents';
 import {useHistory} from 'react-router-dom';
+import { Order, Stores } from '../../../types';
+import { inject } from 'mobx-react';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 
 const orderContainer = {
   width: 500,
@@ -85,9 +89,10 @@ type OrderComponentProps = {
   name: string;
   surname: string;
   phone: string;
+  newOrder: Order;
 };
 
-const OrderComponent = ({ name, surname, phone }: OrderComponentProps) => {
+const OrderComponent = ({ name, surname, phone, newOrder }: OrderComponentProps) => {
   const history = useHistory();
   const { register, handleSubmit } = useForm<IFormInput>();
   const onSubmit = (data) => console.log(data);
@@ -97,7 +102,7 @@ const OrderComponent = ({ name, surname, phone }: OrderComponentProps) => {
       <Box sx={orderContainer}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Button sx={BackBtn} onClick={history.goBack}>
-            {'< '}назад
+            <ArrowBackIosIcon/> назад
           </Button>
           <Typography variant="h5" fontWeight={600} sx={{ marginBottom: 4 }}>
             Оформление заказа
@@ -116,7 +121,7 @@ const OrderComponent = ({ name, surname, phone }: OrderComponentProps) => {
             <Grid item xs={6}>
               <TextField
                 variant="outlined"
-                placeholder="Фамилия"
+                placeholder="Имя"
                 value={surname}
                 fullWidth
                 sx={DataInputSX}
@@ -230,11 +235,11 @@ const OrderComponent = ({ name, surname, phone }: OrderComponentProps) => {
               sx={CommentInputSX}
             />
           <Typography variant="subtitle1" marginTop={2}>
-            Стоимость: 2000 руб.
+            Стоимость: {newOrder.orderSum - newOrder.deliveryPrice} руб.
           </Typography>
-          <Typography variant="subtitle1">Доставка: 2000 руб.</Typography>
+          <Typography variant="subtitle1">Доставка: {newOrder.deliveryPrice} руб.</Typography>
           <Typography variant="subtitle1" fontWeight={600}>
-            К оплате: 4000 руб.
+            К оплате: {newOrder.orderSum} руб.
           </Typography>
           <Button sx={orderBtn} type="submit">
             Оформить заказ
@@ -246,4 +251,6 @@ const OrderComponent = ({ name, surname, phone }: OrderComponentProps) => {
   );
 };
 
-export default OrderComponent;
+export default inject(({clientStore}: Stores) => ({
+  newOrder: clientStore.newOrder
+}))(OrderComponent);

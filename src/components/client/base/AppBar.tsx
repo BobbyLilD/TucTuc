@@ -12,6 +12,7 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/system';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { StyledNavLink } from '../../common/StyledComponents';
+import { StyledLogo, UserButton, CartBadge } from './sub/StyledComponents';
 
 type AppBarProps = {
   loggedIn: boolean;
@@ -21,38 +22,7 @@ type AppBarProps = {
   userData: userData;
 };
 
-const StyledLogo = styled.img`
-  width: 100px;
-  height: auto;
-  object-fit: 'scale-down';
-`;
 
-const CartBadge = {
-  position: 'absolute',
-  bottom: 4,
-  right: 8,
-  fontSize: 10,
-  color: 'white',
-  borderRadius: '120px',
-  backgroundColor: 'darkorange',
-  paddingX: '4px',
-};
-
-const NavButton = {
-  color: grey[500],
-  'text-transform': 'none',
-  ':hover': {
-    backgroundColor: 'transparent'
-  }
-};
-
-const UserButton = {
-  color: orange[600],
-  'text-transform': 'none',
-  ':hover': {
-    backgroundColor: 'transparent'
-  }
-};
 
 const AppBarClient = ({
   changeCartState,
@@ -83,11 +53,11 @@ const AppBarClient = ({
         <StyledNavLink to="/restaurants">
           <StyledLogo src={logo} />
         </StyledNavLink>
-        <Box>
+        {/* <Box>
           <Button sx={NavButton}>Еда</Button>
           <Button sx={NavButton}>Цветы</Button>
           <Button sx={NavButton}>Акции</Button>
-        </Box>
+        </Box> */}
         <Box sx={{ position: 'relative' }}>
           {!loggedIn && 
           <Button sx={UserButton} onClick={changeAuthState}>

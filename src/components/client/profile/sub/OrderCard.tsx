@@ -38,7 +38,7 @@ const OrderCard = ({ index, orderList, changeCommentState, changeSelectedComment
     );
   }
 
-  let dateString = getDate(curOrder.orderDate);
+  let dateString = getDate(curOrder.deliveryDate);
 
   return (
     <Box sx={{ width: '100%', marginY: 2, paddingBottom: 2, borderBottom: '1px solid lightgrey' }}>

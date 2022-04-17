@@ -13,15 +13,19 @@ type LocationsRecordsListProps = {
 
 const LocationRecordsList = observer(
   ({ newPlaceEntity, addLocationRecord }: LocationsRecordsListProps) => {
-    const [locationRecords, setLocationRecords] = useState<locationRecord[]>(new Array());
-    useEffect(() => {
-      console.log('getting records')
-      if (newPlaceEntity != undefined) {
-        setLocationRecords(newPlaceEntity.locationRecords);
-      }
-      // console.log('getting records' + newPlaceEntity.locationRecords.length)
-      // console.log('got records' + locationRecords.length)
-    }, [newPlaceEntity.locationRecords]);
+    // const [locationRecords, setLocationRecords] = useState<locationRecord[]>(new Array());
+    // useEffect(() => {
+    //   console.log('getting records')
+    //   if (newPlaceEntity != undefined) {
+    //     setLocationRecords(newPlaceEntity.locationRecords);
+    //   }
+    //   // console.log('getting records' + newPlaceEntity.locationRecords.length)
+    //   // console.log('got records' + locationRecords.length)
+    // }, [newPlaceEntity.locationRecords]);
+
+    // if (newPlaceEntity != undefined) {
+    //   setLocationRecords(newPlaceEntity.locationRecords);
+    // }
 
     return (
       <Paper elevation={2} sx={{ width: '100%', marginBottom: 2, paddingX: 2, paddingY: 1 }}>
@@ -33,9 +37,14 @@ const LocationRecordsList = observer(
             <AddCircleOutlineIcon sx={{ color: 'green' }} />
           </IconButton>
         </Box>
-        {locationRecords.map((value, index) => (
+        {/* {locationRecords.map((value, index) => (
           <LocationRecord index={index} key={index}/>
-        ))}
+        ))} */}
+        {newPlaceEntity != undefined && newPlaceEntity.locationRecords.length}
+        {newPlaceEntity != undefined &&
+          newPlaceEntity.locationRecords.map((value, index) => (
+            <LocationRecord index={index} key={index} />
+          ))}
       </Paper>
     );
   },

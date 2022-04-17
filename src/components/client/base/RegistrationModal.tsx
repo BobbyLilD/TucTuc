@@ -8,6 +8,7 @@ import { emailRegex, letterRegex, numbRegex, phoneRegex } from '../../../commons
 import { DataInputSX, WhiteBaseButton } from '../../common/StyledComponents';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import styled from '@emotion/styled';
+import { registerModalContainer, AuthForm } from './sub/StyledComponents';
 
 type AuthModalProps = {
   shown: boolean;
@@ -15,30 +16,7 @@ type AuthModalProps = {
   registerUser: (data: userData) => void;
 };
 
-const modalContainer = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '400px',
-  height: '400px',
-  bgcolor: 'white',
-  border: '2px solid #000',
-  boxShadow: 24,
-  paddingX: 4,
-  paddingY: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  borderRadius: '12px',
-};
 
-const AuthForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: space-evenly;
-  flex: 1;
-`;
 
 interface IFromInput {
   Name: string;
@@ -70,7 +48,7 @@ const RegistrationModal = ({ shown, changeRegisterState, registerUser }: AuthMod
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={modalContainer}>
+      <Box sx={registerModalContainer}>
         <Typography variant="h5">Регистрация</Typography>
         <AuthForm onSubmit={handleSubmit(onFormSubmit)}>
           <TextField

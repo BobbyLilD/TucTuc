@@ -97,6 +97,7 @@ class AdminPanelStore {
     const { items, ...rest } = this.placesList![index];
     this.newPlace = { items: this.itemsList, ...rest };
     console.log('records length in db is ' + this.newPlace.locationRecords.length);
+    console.log(this.newPlace);
   };
 
   changeSelectedFoodItem = (index: number) => {
@@ -181,7 +182,7 @@ class AdminPanelStore {
       email: 'mcboba@gmail.com',
       items: new Array(),
       imageSource: undefined,
-      locationRecords: [{ address: 'shskjdfs' }, { address: 'khsdfskdjf' }],
+      locationRecords: new Array({ address: 'shskjdfs' }, { address: 'khsdfskdjf' }),
     };
     let newArray: RestaurantAdmin[] = [newPlace, newPlace, newPlace, newPlace, newPlace];
     this.placesList = new Array(...newArray);

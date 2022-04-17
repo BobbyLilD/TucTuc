@@ -89,30 +89,32 @@ export type CartItem = {
   name: string;
   quantity: number;
   price: number;
-  restaurantID: string;
 }
 
 export type Order = {
   id?: string|undefined;
-  name: string | undefined;
-  surname: string | undefined;
-  phone: string | undefined;
   address: UserAddress | undefined;
-  promocode: string | undefined;
   paymentMethod: string | undefined;
   comment: comment | undefined;
   items: Map<Item, number>;
   servings: number | undefined;
   deliveryPrice: number | undefined;
-  orderDate: Date | undefined;
   deliveryDate?: Date;
   orderSum: number;
-  placeName: string | undefined;
   delivered?: boolean;
-  city: string | undefined;
+  placeInfo: PlaceInfo | undefined;
+  locationID?: string;
+}
+
+export type PlaceInfo = {
+  id: string;
+  name?: string;
+  phome?: string;
+  imageSource?: string;
 }
 
 export type UserAddress = {
+  city: string | undefined;
   address: string | undefined;
   flat: string | undefined;
   floor: number | undefined;

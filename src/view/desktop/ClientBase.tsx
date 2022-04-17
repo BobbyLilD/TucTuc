@@ -15,10 +15,12 @@ import RegistrationModal from '../../components/client/base/RegistrationModal';
 
 type ClientBaseProps = {
     checkAccessToken: () => void;
+    initNewOrder: () => void;
 }
 
-const ClientBase = ({checkAccessToken}: ClientBaseProps) => {
+const ClientBase = ({checkAccessToken, initNewOrder}: ClientBaseProps) => {
     useEffect(() => {
+        initNewOrder();
         checkAccessToken();
     }, [])
 
@@ -41,4 +43,7 @@ const ClientBase = ({checkAccessToken}: ClientBaseProps) => {
   );
 };
 
-export default inject(({userStore}:Stores)=>({checkAccessToken: userStore.checkAccessToken}))(ClientBase);
+export default inject(({userStore, clientStore}:Stores)=>({
+    checkAccessToken: userStore.checkAccessToken,
+    initNewOrder: clientStore.initNewOrder
+}))(ClientBase);

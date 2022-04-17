@@ -2,10 +2,11 @@ import { Box, Button, Grid, Input, Modal, TextField } from '@mui/material';
 import { inject } from 'mobx-react';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { StyledImageInput, StyledLabel, StyledButton } from '../../../common/StyledComponents';
+import { StyledImageInput, StyledButton } from '../../../common/StyledComponents';
 import { Stores } from '../../../../types';
 import { letterRegex } from '../../../../commons/const';
 import {AdminDataInputSX} from '../../../common/StyledComponents';
+import styled from '@emotion/styled';
 
 type CategoryFormProps = {
   categoryAdd: boolean;
@@ -33,6 +34,19 @@ const style = {
   'flex-direction': 'column',
   'justify-content': 'space-evenly'
 };
+
+export const StyledLabel = styled.label`
+  border: 1px solid orange;
+  text-align: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  // width: inherit;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 8pt;
+  text-transform: uppercase;
+  text-align: center;
+`;
 
 const CategoryForm = ({ categoryAdd, categoryChangeState }: CategoryFormProps) => {
   const { register, handleSubmit } = useForm<IFromInput>();
