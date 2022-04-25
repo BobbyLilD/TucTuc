@@ -16,13 +16,20 @@ type LocationRecordProps = {
   index: number;
   saveChangesToLocationRecord: (data: locationRecord, index: number) => void;
   deleteLocationRecord: (index: number) => void;
+  showForm: boolean;
 };
 
 interface IFormInput {
   address: string;
 }
 
-const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord, deleteLocationRecord }: LocationRecordProps) => {
+const LocationRecord = ({
+  locationRecords,
+  index,
+  showForm,
+  saveChangesToLocationRecord,
+  deleteLocationRecord,
+}: LocationRecordProps) => {
   const { register, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log(data);
@@ -30,20 +37,17 @@ const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord, d
     saveChangesToLocationRecord(data, index);
     setDefaultValues(data);
   };
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(showForm);
 
-  const [defaultValues, setDefaultValues] = useState<locationRecord>({address: ''});
+  const [defaultValues, setDefaultValues] = useState<locationRecord>({ address: '' });
 
   useEffect(() => {
-    console.log('records length is ' + locationRecords.length)
     setDefaultValues(locationRecords[index]);
-    if(defaultValues.address == '')
-    setShow(true);
-  }, [locationRecords])
+  }, []);
 
   useEffect(() => {
-    reset(defaultValues)
-  }, [defaultValues])
+    reset(defaultValues);
+  }, [defaultValues]);
 
   return (
     <>
@@ -59,14 +63,18 @@ const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord, d
               <TextField
                 fullWidth
                 sx={{ ...AdminDataInputSX, ...{ flex: 1 } }}
-                defaultValue={defaultValues.address}
                 placeholder="Адрес"
                 {...register('address', { required: true })}
               />
               <IconButton type="submit">
                 <CheckIcon sx={{ color: 'green' }} />
               </IconButton>
-              <IconButton onClick={() => {setShow(!show); reset();}}>
+              <IconButton
+                onClick={() => {
+                  setShow(!show);
+                  reset();
+                }}
+              >
                 <CloseIcon sx={{ color: 'red' }} />
               </IconButton>
             </form>
@@ -74,7 +82,11 @@ const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord, d
         </Box>
         <Box sx={{ marginRight: 2 }}>
           {!show && (
-            <IconButton onClick={() => {setShow(!show)}}>
+            <IconButton
+              onClick={() => {
+                setShow(!show);
+              }}
+            >
               <EditIcon sx={{ color: 'gray' }} />
             </IconButton>
           )}
@@ -88,8 +100,8 @@ const LocationRecord = ({ locationRecords, index, saveChangesToLocationRecord, d
   );
 };
 
-export default inject(({adminPanelStore}: Stores) => ({
+export default inject(({ adminPanelStore }: Stores) => ({
   locationRecords: adminPanelStore.newPlace.locationRecords,
   saveChangesToLocationRecord: adminPanelStore.saveChangesToLocationRecord,
-  deleteLocationRecord: adminPanelStore.deleteLocationRecord
+  deleteLocationRecord: adminPanelStore.deleteLocationRecord,
 }))(LocationRecord);

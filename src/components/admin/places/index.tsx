@@ -15,7 +15,10 @@ type CitiesProps = {
 }
 
 const placesComponent = ({placeAdd, changePlaceAdd, initPlace}: CitiesProps) => {
-    initPlace();
+    useEffect(() => {
+        initPlace();
+    },[])
+    
     return(
         <>
             {placeAdd ? (

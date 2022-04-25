@@ -60,7 +60,7 @@ export type RestaurantAdmin={
   phone: string | undefined;
   email: string| undefined;
   items: string[] | undefined;
-  imageSource: FormData | undefined;
+  imageSource: File | undefined;
   locationRecords: locationRecord[];
 }
 
@@ -70,7 +70,7 @@ export type NewRestaurantEntityAdmin={
   phone: string | undefined;
   email: string| undefined;
   items: Item[];
-  imageSource: FormData | undefined;
+  imageSource: File | undefined;
   locationRecords: locationRecord[];
 }
 

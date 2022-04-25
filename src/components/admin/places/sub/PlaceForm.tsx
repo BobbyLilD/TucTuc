@@ -71,24 +71,10 @@ const PlaceForm = ({
 }: CityFormProps) => {
   const { register, handleSubmit,reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
-  const [defaultValues, setDefaultValues] = useState<RestaurantAdmin>({
-    name: null,
-    phone: null,
-    email: null,
-    imageSource: null,
-    items: new Array(),
-    locationRecords: new Array(),
-  })
-  useEffect(() => {
-    if (selectedItem != undefined) {
-      setDefaultValues(placesList[selectedItem]);
-      getItemsByPlaceID(placesList[selectedItem].id!);
-    }
-  }, []);
 
   useEffect(()=> {
-    reset({...defaultValues})
-  }, [defaultValues])
+    reset({...newPlaceEntity})
+  }, [newPlaceEntity])
 
   return (
     <>
@@ -158,7 +144,7 @@ const PlaceForm = ({
               />
             </Grid>
             <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
-              {defaultValues.id != undefined && (
+              {newPlaceEntity.id != undefined && (
                 <Button sx={{ ...StyledButtonFlex, ...{ fontSize: 12 } }} onClick={changeAddAdminToPlace}>
                   Добавить администратора
                 </Button>
@@ -187,7 +173,7 @@ const PlaceForm = ({
               <Button
                 onClick={() => {
                   changePlaceState();
-                  changeSelectedItem(undefined);
+                  initPlace();
                   reset();
                 }}
                 sx={StyledButtonFlex}
@@ -196,7 +182,6 @@ const PlaceForm = ({
               </Button>
             </Grid>
           </Grid>
-          {/* </Grid> */}
         </Paper>
         <LocationRecordsList />
         <PlaceItemList />
