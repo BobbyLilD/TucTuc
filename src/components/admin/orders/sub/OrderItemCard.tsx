@@ -87,6 +87,7 @@ const OrderItemCard = observer(({id, itemsInOrder, newOrder, addItemToOrder, rem
               <AddCircleIcon sx={Icon} />
             </Button>
             <Typography variant="h6">{newOrder.items.get(curItem.id)}</Typography>
+            {/* <Typography variant="h6">{newOrder.items.size}</Typography> */}
             <Button
               onClick={() => {
                 removeItemFromOrder(curItem.id)
@@ -102,7 +103,6 @@ const OrderItemCard = observer(({id, itemsInOrder, newOrder, addItemToOrder, rem
         }}>Удалить</Button>
       </CardContent>
     </Card>
-    // </Badge>
   );
 })
 

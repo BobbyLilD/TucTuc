@@ -15,20 +15,11 @@ const CardGrid = ({ orderList, getOrders }: CardGridProps) => {
     getOrders();
   }, []);
 
-  let cards: JSX.Element[] = [];
-  if (orderList != undefined) {
-    for (let i = 0; i < orderList.length; i++) {
-      cards.push(
-        <Grid item xs={4} sx={ItemInAdminGrid}>
-          <CardComponent index={i} />
-        </Grid>,
-      );
-    }
-  }
-
   return (
     <Grid container rowSpacing={3}>
-      {cards}
+      {orderList != undefined && orderList.map((value, index) => <Grid item xs={4} sx={ItemInAdminGrid}>
+        <CardComponent index={index} key={value.id}/>
+      </Grid>)}
     </Grid>
   );
 };

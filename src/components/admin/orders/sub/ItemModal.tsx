@@ -51,17 +51,6 @@ const ItemModal = ({ itemAdd, itemChangeState, getItems, itemsList }: ItemFormPr
     getItems();
   }, []);
 
-  let itemCards: JSX.Element[] = [];
-  if (itemsList != undefined) {
-    for (let i = 0; i < itemsList.length; i++) {
-      itemCards.push(
-        <Grid item xs={6}>
-          <ItemModalCard index={i}/>
-        </Grid>,
-      );
-    }
-  }
-
   return (
     <Modal
       open={itemAdd}
@@ -112,7 +101,11 @@ const ItemModal = ({ itemAdd, itemChangeState, getItems, itemsList }: ItemFormPr
         </Box>
 
         <Grid container spacing={2} sx={{ marginTop: 0.5, height: 400, overflow: 'scroll' }}>
-          {itemCards}
+          {itemsList.map((value, index) => (
+            <Grid item xs={6}>
+              <ItemModalCard index={index} key={value.id} />
+            </Grid>
+          ))}
         </Grid>
       </Box>
     </Modal>
@@ -123,5 +116,5 @@ export default inject(({ adminPanelStore }: Stores) => ({
   itemAdd: adminPanelStore.itemAddToPlace,
   itemChangeState: adminPanelStore.changeItemAdd,
   getItems: adminPanelStore.getItemsByPlaceIDForOrderForm,
-  itemsList: adminPanelStore.itemsList
+  itemsList: adminPanelStore.itemsList,
 }))(ItemModal);

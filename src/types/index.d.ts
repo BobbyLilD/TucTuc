@@ -93,7 +93,7 @@ export type CartItem = {
 
 export type Order = {
   id?: string|undefined;
-  address: UserAddress | undefined;
+  address: Address;
   paymentMethod: string | undefined;
   comment: comment | undefined;
   items: Map<Item, number>;
@@ -113,12 +113,14 @@ export type PlaceInfo = {
   imageSource?: string;
 }
 
-export type UserAddress = {
-  city: string | undefined;
-  address: string | undefined;
-  flat: string | undefined;
-  floor: number | undefined;
-  entranceCode: string | undefined;
+export type Address = {
+  city: string;
+  street: string;
+  house: string;
+  entrance: string;
+  floor: string;
+  apartment: string;
+  intercom: string;
 }
 
 export type OrderAdmin = {
@@ -133,7 +135,7 @@ export type OrderAdmin = {
   placeID: string;
   placeAddress: string | undefined;
   locationrecordID: string | undefined;
-  destAddress: string | undefined;
+  destAddress: Address;
   status: string | undefined;
 }
 

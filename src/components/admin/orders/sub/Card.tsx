@@ -6,13 +6,13 @@ import { Box, Button, Divider } from '@mui/material';
 import { StyledButton } from '../../../common/StyledComponents';
 import { City, OrderAdmin, RestaurantAdmin, Stores } from '../../../../types';
 import { inject } from 'mobx-react';
-import { getDate } from '../../../../utils/helpers';
+import { buildAddress, getDate } from '../../../../utils/helpers';
 
 type CardComponentProps = {
   ordersList: OrderAdmin[];
   changeOrderState: () => void;
   index: number;
-  changeSelectedItem: (index: number) => void;
+  changeSelectedOrder: (index: number) => void;
   citiesList: City[];
   placesList: RestaurantAdmin[];
 };
@@ -20,8 +20,8 @@ type CardComponentProps = {
 const CardComponent = ({
   ordersList,
   index,
+  changeSelectedOrder,
   changeOrderState,
-  changeSelectedItem,
   citiesList,
   placesList,
 }: CardComponentProps) => {
@@ -60,7 +60,7 @@ const CardComponent = ({
           Адрес заведения: {ordersList[index].placeAddress}
         </Typography>
         <Typography variant='subtitle1' >
-          Адрес клиента: {ordersList[index].destAddress}
+          Адрес клиента: {buildAddress(ordersList[index].destAddress)}
         </Typography>
         <Divider/>
         <Typography variant="subtitle1" paddingTop={1}>
@@ -77,8 +77,8 @@ const CardComponent = ({
         <Button
           sx={{ ...StyledButton, ...{ marginRight: 1 } }}
           onClick={() => {
+            changeSelectedOrder(index);
             changeOrderState();
-            changeSelectedItem(index);
           }}
         >
           Изменить
@@ -93,7 +93,7 @@ const CardComponent = ({
 export default inject(({ adminPanelStore }: Stores) => ({
   ordersList: adminPanelStore.ordersList,
   changeOrderState: adminPanelStore.changeOrderAdd,
-  changeSelectedItem: adminPanelStore.changeSelectedItem,
+  changeSelectedOrder: adminPanelStore.changeSelectedOrder,
   citiesList: adminPanelStore.citiesList,
   placesList: adminPanelStore.placesList,
 }))(CardComponent);

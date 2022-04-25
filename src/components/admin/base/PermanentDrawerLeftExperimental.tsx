@@ -8,6 +8,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { NavLink } from 'react-router-dom';
 import { AdminComponents } from '../../../commons/const';
 import styled from '@emotion/styled';
+import { inject } from 'mobx-react';
+import { Stores } from '../../../types';
 const drawerWidth = 240;
 
 const StyledNavLink = styled(NavLink)`
@@ -15,7 +17,11 @@ text-decoration: none;
 color: black;
 font-weight: 600;`;
 
-export default function PermanentDrawerLeft() {
+type DrawerProps = {
+  clearSelectedItemAndFormsStatus: () => void;
+}
+
+const PermanentDrawerLeft = ({clearSelectedItemAndFormsStatus}:DrawerProps) => {
   return (
     <Drawer
       sx={{
@@ -34,7 +40,7 @@ export default function PermanentDrawerLeft() {
       <List>
         {Object.keys(AdminComponents).map((key) => (
           <StyledNavLink key={key} to={AdminComponents[key][0]} >
-            <ListItem button >
+            <ListItem button onClick={clearSelectedItemAndFormsStatus}>
               <ListItemText primary={key} />
             </ListItem>
           </StyledNavLink>
@@ -43,3 +49,7 @@ export default function PermanentDrawerLeft() {
     </Drawer>
   );
 }
+
+export default inject(({adminPanelStore}:Stores) => ({
+  clearSelectedItemAndFormsStatus: adminPanelStore.clearSelectedItemAndFormsStatus
+}))(PermanentDrawerLeft)

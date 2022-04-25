@@ -39,6 +39,28 @@ class AdminPanelStore {
   itemsInOrder: Map<string, Item> | undefined;
   itemsInPlace: Map<string, Item> | undefined;
 
+  clearSelectedItemAndFormsStatus = () => {
+    this.cityAdd = false;
+    this.placeAdd = false;
+    this.itemAddToPlace = false;
+    this.photoSet = false;
+    this.adminAdd = false;
+    this.categoryAdd = false;
+    this.orderAdd = false;
+    this.clientEdit = false;
+    this.addAdminToPlace = false;
+    this.selectedItem = undefined;
+  };
+
+  changeSelectedOrder = (index: number) => {
+      this.newOrder = this.ordersList![index];
+      this.getItemsByIDs(Array.from(this.newOrder.items.keys()));
+  };
+
+  clearItemsInOrder = () => {
+    this.itemsInOrder = new Map();
+  };
+
   postAdminToPlace = (id: string) => {};
 
   deleteLocationRecord = (index: number) => {
@@ -97,7 +119,7 @@ class AdminPanelStore {
     const { items, ...rest } = this.placesList![index];
     this.newPlace = { items: this.itemsList, ...rest };
     console.log('records length in db is ' + this.newPlace.locationRecords.length);
-    console.log(this.newPlace);
+    console.table(this.newPlace);
   };
 
   changeSelectedFoodItem = (index: number) => {
@@ -129,11 +151,19 @@ class AdminPanelStore {
     this.newOrder = {
       phone: undefined,
       email: undefined,
-      items: new Map(),
+      items: new Map<string, number>(),
       servings: undefined,
       locationrecordID: '',
       placeID: '',
-      destAddress: '',
+      destAddress: {
+        city: 'Москва',
+        street: 'Колотушкина',
+        house: '25A',
+        entrance: '3',
+        floor: '4',
+        apartment: '42',
+        intercom: '42',
+      },
       status: '',
       placeAddress: '',
     };
@@ -202,6 +232,7 @@ class AdminPanelStore {
     let newList: Map<string, Item> = new Map();
     newList.set(newItem.id!, newItem);
     this.itemsInOrder = new Map(newList);
+    console.table(this.newOrder);
   };
 
   getItemsByPlaceIDForOrderForm = (id: string) => {
@@ -292,10 +323,12 @@ class AdminPanelStore {
   };
 
   getOrders = () => {
+    let newMap = new Map<string, number>();
+    newMap.set('sbdjsdbg', 2);
     const newItem: OrderAdmin = {
       id: 'ddnndfnld',
       phone: '+79162963580',
-      items: new Map(),
+      items: new Map(newMap),
       servings: 22,
       deliveryPrice: 656,
       orderDate: new Date('2017-04-03'),
@@ -303,7 +336,15 @@ class AdminPanelStore {
       email: 'mcboba@gmail.com',
       placeID: '0',
       locationrecordID: '0',
-      destAddress: 'Москва, Колотушкина, 35',
+      destAddress: {
+        city: 'Москва',
+        street: 'Колотушкина',
+        house: '25A',
+        entrance: '3',
+        floor: '4',
+        apartment: '42',
+        intercom: '42',
+      },
       status: 'Завершен',
       placeAddress: 'Москва, Колотушкина, 358',
     };
@@ -350,14 +391,6 @@ class AdminPanelStore {
   constructor() {
     this.adminsList = new Array();
     this.itemsList = new Array();
-    // this.cityAdd = false;
-    // this.adminAdd = false;
-    // this.placeAdd = false;
-    // this.itemAddToPlace = false;
-    // this.photoSet = false;
-    // this.categoryAdd = false;
-    // this.orderAdd = false;
-    // this.clientEdit = false;
 
     makeObservable(this, {
       //FORM MARKERS
@@ -387,6 +420,8 @@ class AdminPanelStore {
 
       addAdminToPlace: observable,
       changeAddAdminToPlace: action,
+
+      clearSelectedItemAndFormsStatus: action,
 
       //LIST INIT
       citiesList: observable,
@@ -421,6 +456,8 @@ class AdminPanelStore {
       initOrder: action,
       deleteItemFromOrder: action,
       selectOrderPlace: action,
+      clearItemsInOrder: action,
+      changeSelectedOrder: action,
 
       newPlace: observable,
       initPlace: action,

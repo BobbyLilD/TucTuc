@@ -1,3 +1,5 @@
+import { Address } from "../types";
+
 export const isSafari = () =>
   navigator.userAgent.toLowerCase().indexOf('safari/') !== -1 &&
   navigator.userAgent.toLowerCase().indexOf('chrome/') === -1;
@@ -20,4 +22,8 @@ export const getDate = (date: Date): string => {
   ('0' + (date.getMonth() + 1)).slice(-2) +
   '.' +
   date.getFullYear();
+}
+
+export const buildAddress = (address: Address) => {
+  return address.city + ', ' + address.street + ', ' + address.house
 }

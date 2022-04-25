@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { inject } from 'mobx-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Item,
   NewRestaurantEntityAdmin,
@@ -50,11 +50,10 @@ type CityFormProps = {
 };
 
 interface IFormInput {
-  Name: String;
-  Photo: string; //NEED TO CHANGE TO IMAGE
-  Phone: string;
-  Email: string;
-  Items: Array<string>;
+  name : String;
+  photo: string; //NEED TO CHANGE TO IMAGE
+  phone: string;
+  email: string;
 }
 
 const PlaceForm = ({
@@ -70,25 +69,26 @@ const PlaceForm = ({
   changeSelectedItem,
   changeAddAdminToPlace
 }: CityFormProps) => {
-  let newItem: RestaurantAdmin = {
-    name: undefined,
-    phone: undefined,
-    email: undefined,
-    imageSource: undefined,
+  const { register, handleSubmit,reset } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const [defaultValues, setDefaultValues] = useState<RestaurantAdmin>({
+    name: null,
+    phone: null,
+    email: null,
+    imageSource: null,
     items: new Array(),
     locationRecords: new Array(),
-  };
+  })
   useEffect(() => {
     if (selectedItem != undefined) {
+      setDefaultValues(placesList[selectedItem]);
       getItemsByPlaceID(placesList[selectedItem].id!);
     }
   }, []);
-  if (selectedItem != undefined) {
-    newItem = placesList[selectedItem];
-  }
 
-  const { register, handleSubmit } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  useEffect(()=> {
+    reset({...defaultValues})
+  }, [defaultValues])
 
   return (
     <>
@@ -130,7 +130,7 @@ const PlaceForm = ({
               <ImagePreview />
             ) : (
               <StyledLabel>
-                <StyledImageInput {...register('Photo')} type="file" onChange={changePhotoState} />
+                <StyledImageInput {...register('photo')} type="file" onChange={changePhotoState} />
                 Загрузить фото
               </StyledLabel>
             )}
@@ -145,8 +145,7 @@ const PlaceForm = ({
                 fullWidth
                 sx={AdminDataInputSX}
                 placeholder="Название"
-                defaultValue={newItem.name}
-                {...register('Name', { required: true, pattern: letterRegex })}
+                {...register('name', { required: true, pattern: letterRegex })}
               />
             </Grid>
             <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -155,12 +154,11 @@ const PlaceForm = ({
                 fullWidth
                 sx={AdminDataInputSX}
                 placeholder="Телефон"
-                defaultValue={newItem.phone}
-                {...register('Phone', { required: true, pattern: phoneRegex })}
+                {...register('phone', { required: true, pattern: phoneRegex })}
               />
             </Grid>
             <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
-              {newItem.id != undefined && (
+              {defaultValues.id != undefined && (
                 <Button sx={{ ...StyledButtonFlex, ...{ fontSize: 12 } }} onClick={changeAddAdminToPlace}>
                   Добавить администратора
                 </Button>
@@ -172,8 +170,7 @@ const PlaceForm = ({
                 fullWidth
                 sx={AdminDataInputSX}
                 placeholder="Email"
-                defaultValue={newItem.email}
-                {...register('Email', { required: true, pattern: emailRegex })}
+                {...register('email', { required: true, pattern: emailRegex })}
               />
             </Grid>
             <Grid item xs={3} sx={{ display: 'flex' }}>
@@ -191,6 +188,7 @@ const PlaceForm = ({
                 onClick={() => {
                   changePlaceState();
                   changeSelectedItem(undefined);
+                  reset();
                 }}
                 sx={StyledButtonFlex}
               >
